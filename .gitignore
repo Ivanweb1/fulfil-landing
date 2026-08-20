@@ -1,0 +1,18 @@
+# Артефакты сборки под Tilda — не нужны для GitHub Pages
+tilda-*.html
+tilda-*.txt
+tilda-*.zip
+tilda-photo-*.webp
+prototype-source.html
+build_tilda_vibe.py
+COPY-*.cmd
+PHOTOS-FOR-TILDA.txt
+TILDA-README.md
+
+# Прочее
+.DS_Store
+Thumbs.db
+
+# Не используются на странице (фото кейсов убраны в пользу цифр), остаются локально
+assets/case-*.png
+assets/warehouse.webp
