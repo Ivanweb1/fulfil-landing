@@ -173,3 +173,24 @@ priceTabs.forEach((tab, index) => {
     });
   });
 });
+
+const siteHeader = document.querySelector('.site-header');
+const menuButton = document.querySelector('.menu-button');
+
+function setMenu(open) {
+  if (!siteHeader || !menuButton) return;
+  siteHeader.classList.toggle('is-open', open);
+  menuButton.setAttribute('aria-expanded', String(open));
+}
+
+menuButton?.addEventListener('click', () => setMenu(!siteHeader.classList.contains('is-open')));
+
+document.querySelectorAll('.main-nav a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') setMenu(false);
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 1180) setMenu(false);
+}, { passive: true });

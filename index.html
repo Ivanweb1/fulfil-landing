@@ -8,14 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=4" />
+    <link rel="stylesheet" href="styles.css?v=6" />
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Fulfil.pro — на главную">
         <img src="assets/fulfil-logo.png" alt="Fulfil.pro" />
       </a>
-      <nav class="main-nav" aria-label="Основная навигация">
+      <nav class="main-nav" id="mainNav" aria-label="Основная навигация">
         <div class="main-nav__group">
           <button class="main-nav__toggle" type="button" aria-expanded="false">Направления <i aria-hidden="true">▾</i></button>
           <div class="main-nav__sub">
@@ -29,6 +29,7 @@
         <a href="#marketplaces">Маркетплейсы</a>
         <a href="#tariffs">Тарифы</a>
         <a href="#calculator">Рассчитать стоимость</a>
+        <a class="main-nav__phone" href="tel:+79265352447">+7 (926) 535-24-47</a>
       </nav>
       <div class="header-actions">
         <a class="phone" href="tel:+79265352447">
@@ -37,6 +38,9 @@
         </a>
         <a class="button button--compact" href="#calculator">Рассчитать стоимость <span>↗</span></a>
       </div>
+      <button class="menu-button" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+      </button>
     </header>
 
     <main id="top">
@@ -424,6 +428,6 @@
     <button class="back-to-top" type="button" aria-label="Наверх">↑</button>
 
     <div class="toast" role="status" aria-live="polite">Спасибо! Заявка принята — менеджер свяжется с вами.</div>
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=6"></script>
   </body>
 </html>
