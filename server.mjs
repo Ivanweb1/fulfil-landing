@@ -11,7 +11,7 @@ createServer(async (request, response) => {
     const path = normalize(join(root, relative));
     if (!path.startsWith(normalize(root))) throw new Error('Invalid path');
     const body = await readFile(path);
-    response.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream' });
+    response.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
     response.end(body);
   } catch {
     response.writeHead(404);

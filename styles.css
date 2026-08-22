@@ -613,3 +613,300 @@ img.team__photo { display: block; border: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ─────────────────────────────────────────────────────────
+   Внутренние страницы: первый экран
+   ───────────────────────────────────────────────────────── */
+.page-hero { padding: clamp(30px, 3.4vw, 48px) 0 clamp(48px, 5vw, 76px); background: var(--white); }
+.breadcrumbs { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.breadcrumbs a { transition: color .2s ease; }
+.breadcrumbs a:hover { color: var(--blue); }
+.breadcrumbs b { font-weight: 500; color: var(--ink); }
+.page-hero__top { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(380px, .85fr); gap: clamp(40px, 5vw, 90px); align-items: start; margin-top: clamp(30px, 3.4vw, 46px); }
+.page-hero__mark { display: inline-flex; align-items: center; height: 46px; padding: 0 18px; border: 1px solid var(--line); background: #fff; }
+.page-hero__mark img { max-width: 96px; max-height: 24px; display: block; }
+.page-hero h1 { margin: 26px 0 0; font-size: clamp(42px, 5.2vw, 78px); line-height: .96; }
+.page-hero h1 span { color: var(--blue); }
+.page-hero__lead { max-width: 620px; margin: 24px 0 0; color: #4d586b; font-size: clamp(14px, 1.15vw, 17px); line-height: 1.6; }
+.page-hero__actions { margin-top: clamp(28px, 3vw, 40px); display: flex; align-items: center; flex-wrap: wrap; gap: 28px; }
+.page-hero .lead-card { max-width: none; margin: 0; }
+.page-hero__metrics { list-style: none; margin: clamp(44px, 5vw, 72px) 0 0; padding: 26px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #aeb7c5; }
+.page-hero__metrics li { padding: 0 clamp(20px, 2.4vw, 40px); border-left: 1px solid var(--line); }
+.page-hero__metrics li:first-child { padding-left: 0; border-left: 0; }
+.page-hero__metrics li:last-child { padding-right: 0; }
+.page-hero__metrics strong { display: block; font-family: "Onest", sans-serif; font-size: clamp(24px, 2.5vw, 36px); font-weight: 600; line-height: 1; letter-spacing: -.05em; white-space: nowrap; }
+.page-hero__metrics span { display: block; margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+
+@media (max-width: 1100px) {
+  .page-hero__top { grid-template-columns: 1fr; gap: 40px; }
+  .page-hero .lead-card { max-width: 620px; }
+}
+
+@media (max-width: 780px) {
+  .page-hero__metrics { grid-template-columns: 1fr 1fr; gap: 26px 0; }
+  .page-hero__metrics li, .page-hero__metrics li:first-child { padding: 0 18px; border-left: 1px solid var(--line); }
+  .page-hero__metrics li:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .page-hero__actions { align-items: stretch; flex-direction: column; gap: 16px; }
+  .page-hero__actions .button { justify-content: space-between; }
+}
+
+/* Страница Ozon: что входит в фулфилмент */
+.svc__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, auto); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.svc__grid article { display: grid; grid-row: span 3; grid-template-rows: subgrid; align-content: start; padding: 30px clamp(20px, 2.4vw, 38px) 34px; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.svc__grid article:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+.svc__grid article:nth-child(3n) { padding-right: 0; }
+.svc__grid article:nth-last-child(-n + 3) { border-bottom: 0; padding-bottom: 0; }
+.svc__icon { display: block; padding-bottom: 22px; color: var(--blue); }
+.svc__icon svg { width: 30px; height: 30px; display: block; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.svc__grid h3 { margin: 0; padding-bottom: 12px; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 21px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.svc__grid p { margin: 0; color: #4d586b; font-size: 14px; line-height: 1.6; }
+
+@media (max-width: 1100px) {
+  .svc__grid { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(9, auto); }
+  .svc__grid article:nth-child(3n + 1) { padding-left: clamp(20px, 2.4vw, 38px); border-left: 1px solid var(--line); }
+  .svc__grid article:nth-child(3n) { padding-right: clamp(20px, 2.4vw, 38px); }
+  .svc__grid article:nth-child(2n + 1) { padding-left: 0; border-left: 0; }
+  .svc__grid article:nth-child(2n) { padding-right: 0; }
+  .svc__grid article:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
+  .svc__grid article:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+}
+
+@media (max-width: 780px) {
+  .svc__grid { grid-template-columns: 1fr; grid-template-rows: none; }
+  .svc__grid article, .svc__grid article:nth-child(3n + 1), .svc__grid article:nth-child(2n + 1), .svc__grid article:nth-child(3n), .svc__grid article:nth-child(2n) { grid-row: auto; grid-template-rows: none; padding: 26px 0 28px; border-left: 0; border-bottom: 1px solid var(--line); }
+  .svc__grid article:last-child { border-bottom: 0; padding-bottom: 0; }
+  .svc__icon { padding-bottom: 18px; }
+}
+
+/* Страница Ozon: почему выбирают */
+.adv__grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(8, auto); gap: 0 clamp(40px, 4.6vw, 84px); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.adv { display: grid; grid-row: span 2; grid-template-rows: subgrid; align-content: start; padding: 26px 0 28px; border-bottom: 1px solid var(--line); }
+.adv:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+.adv__head { display: flex; align-items: center; gap: 14px; padding-bottom: 12px; }
+.adv__icon { flex: none; color: var(--blue); }
+.adv__icon svg { width: 26px; height: 26px; display: block; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.adv h3 { margin: 0; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.adv p { margin: 0; padding-left: 40px; color: #4d586b; font-size: 14px; line-height: 1.6; }
+
+@media (max-width: 780px) {
+  .adv__grid { grid-template-columns: 1fr; grid-template-rows: none; }
+  .adv { grid-row: auto; grid-template-rows: none; padding: 22px 0 24px; }
+  .adv:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+  .adv:last-child { border-bottom: 0; padding-bottom: 0; }
+  .adv p { padding-left: 0; }
+}
+
+/* Страница Ozon: тарифы с вкладками */
+.pricetabs { display: flex; flex-wrap: wrap; gap: 0 clamp(20px, 2.6vw, 44px); margin-top: clamp(34px, 3.8vw, 52px); border-bottom: 1px solid rgba(255,255,255,.18); }
+.pricetab { position: relative; padding: 0 0 16px; border: 0; background: none; color: #8f9bb2; font-family: "Onest", sans-serif; font-size: clamp(14px, 1.25vw, 17px); font-weight: 500; letter-spacing: -.02em; cursor: pointer; transition: color .25s ease; }
+.pricetab::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--blue-bright); transform: scaleX(0); transform-origin: left; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.pricetab:hover { color: #c3ccdc; }
+.pricetab.is-active { color: #fff; }
+.pricetab.is-active::after { transform: scaleX(1); }
+
+.pricelist { display: none; }
+.pricelist.is-active { display: block; }
+.pricelist__caption { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr) 230px; gap: 40px; padding: 22px 24px 14px; border-bottom: 1px solid rgba(255,255,255,.18); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.38); }
+.pricelist__caption span:last-child { text-align: right; }
+.pricelist__rows { list-style: none; margin: 0; padding: 0; }
+.pricerow { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr) 230px; gap: 40px; align-items: center; padding: 22px 24px; border-bottom: 1px solid rgba(255,255,255,.13); transition: background .25s ease; }
+.pricerow::before { content: ""; position: absolute; left: 0; top: -1px; bottom: -1px; width: 2px; background: var(--blue-bright); transform: scaleY(0); transform-origin: bottom; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.pricerow:hover { background: rgba(255,255,255,.045); }
+.pricerow:hover::before { transform: scaleY(1); transform-origin: top; }
+.pricerow h3 { margin: 0; font-family: "Onest", sans-serif; font-size: clamp(16px, 1.35vw, 20px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.pricerow p { margin: 0; color: #8f9bb2; font-size: 13px; }
+.pricerow__price { justify-self: end; display: flex; align-items: baseline; gap: 8px; font-family: "Onest", sans-serif; white-space: nowrap; }
+.pricerow__price i { font-style: normal; font-size: 12px; font-weight: 500; color: #8f9bb2; }
+.pricerow__price b { font-size: clamp(24px, 2.4vw, 34px); font-weight: 600; line-height: 1; letter-spacing: -.045em; color: #fff; font-variant-numeric: tabular-nums; }
+.pricerow__price em { font-style: normal; font-size: 15px; font-weight: 500; color: #9bb7ed; }
+.pricerow__price--free b { font-size: clamp(17px, 1.5vw, 21px); color: var(--green); }
+
+.price .included { margin-top: clamp(34px, 3.8vw, 54px); padding-top: clamp(26px, 2.8vw, 38px); border-top: 1px solid rgba(255,255,255,.18); display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 40px; }
+.price .included__label { padding-top: 4px; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--green); }
+.price .included ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); }
+.price .included li { padding: 0 clamp(20px, 2.4vw, 36px); border-left: 1px solid rgba(255,255,255,.14); }
+.price .included li:first-child { padding-left: 0; border-left: 0; }
+.price .included li h3 { margin: 0; font-family: "Onest", sans-serif; font-size: 16px; font-weight: 500; line-height: 1.3; letter-spacing: -.025em; color: #fff; }
+.price .tariffs-footer { margin-top: clamp(34px, 3.8vw, 54px); padding-top: clamp(26px, 2.8vw, 38px); border-top: 1px solid rgba(255,255,255,.18); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px 40px; }
+.price .tariff-actions { display: flex; align-items: center; gap: 28px; }
+.price .text-link { color: #fff; border-color: rgba(255,255,255,.45); }
+.price .tariffs-footer > strong { font-family: "Onest", sans-serif; font-size: clamp(16px, 1.4vw, 20px); font-weight: 500; letter-spacing: -.03em; color: #9bb7ed; }
+
+@media (max-width: 1100px) {
+  .pricelist__caption, .pricerow { grid-template-columns: minmax(0, 1fr) minmax(0, .7fr) 180px; gap: 26px; }
+  .price .included { grid-template-columns: 1fr; gap: 22px; }
+}
+
+@media (max-width: 780px) {
+  .pricetabs { gap: 0 20px; }
+  .pricelist__caption { display: none; }
+  .pricerow { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 18px; padding: 18px 0; align-items: start; }
+  .pricerow h3, .pricerow p { grid-column: 1; }
+  .pricerow__price { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .pricerow::before { display: none; }
+  .price .included ul { grid-template-columns: 1fr; gap: 18px; }
+  .price .included li, .price .included li:first-child { padding: 0 0 0 18px; border-left: 1px solid rgba(255,255,255,.14); }
+  .price .tariff-actions { align-items: stretch; flex-direction: column; gap: 18px; width: 100%; }
+}
+
+/* Страница Ozon: отзывы селлеров */
+.trust__row { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, auto); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.trust__row article { display: grid; grid-row: span 3; grid-template-rows: subgrid; align-content: start; padding: 30px clamp(20px, 2.4vw, 40px) 0; border-left: 1px solid var(--line); }
+.trust__row article:first-child { padding-left: 0; border-left: 0; }
+.trust__row article:last-child { padding-right: 0; }
+.trust__row article > p { margin: 0 0 26px; font-family: "Onest", sans-serif; font-size: clamp(16px, 1.35vw, 19px); font-weight: 500; line-height: 1.45; letter-spacing: -.025em; color: var(--ink); }
+.trust__result { position: relative; align-self: start; margin-bottom: 26px; padding-left: 20px; }
+.trust__result::before { content: ""; position: absolute; left: 0; top: 3px; bottom: 3px; width: 2px; background: var(--blue); }
+.trust__result small { display: block; margin-bottom: 7px; color: var(--blue); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.trust__result strong { display: block; font-family: "Onest", sans-serif; font-size: 15px; font-weight: 500; line-height: 1.35; letter-spacing: -.02em; }
+.trust__author { padding: 20px 0 34px; border-top: 1px solid var(--line); }
+.trust__author strong { display: block; font-size: 14px; }
+.trust__author span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; }
+.trust .reviews__clients { margin: clamp(38px, 4.2vw, 60px) 0 0; }
+.trust__links { margin-top: clamp(30px, 3.4vw, 44px); display: flex; flex-wrap: wrap; justify-content: center; gap: 18px clamp(28px, 3.2vw, 52px); }
+
+@media (max-width: 780px) {
+  .trust__row { grid-template-columns: 1fr; grid-template-rows: none; }
+  .trust__row article { grid-row: auto; grid-template-rows: none; padding: 26px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+  .trust__row article:first-child { border-top: 0; }
+  .trust__links { align-items: flex-start; flex-direction: column; gap: 4px; }
+}
+
+/* Страница Ozon: финальная форма на два поля */
+@media (min-width: 781px) {
+  .final-cta .final-form:has(label:nth-child(2):last-of-type) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+}
+
+/* Страница Wildberries: «Как начать работу» — лента из пяти шагов */
+.start__row { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, auto); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.start__row article { display: grid; grid-row: span 3; grid-template-rows: subgrid; align-content: start; padding: 28px clamp(16px, 1.9vw, 30px) 0; border-left: 1px solid var(--line); }
+.start__row article:first-child { padding-left: 0; border-left: 0; }
+.start__row article:last-child { padding-right: 0; }
+.start__num { display: block; padding-bottom: 20px; font-family: "Onest", sans-serif; font-size: clamp(30px, 3vw, 44px); font-weight: 600; line-height: .85; letter-spacing: -.06em; color: #ccd4e0; font-variant-numeric: tabular-nums; transition: color .3s ease; }
+.start__row article:hover .start__num { color: var(--blue); }
+.start__row h3 { margin: 0; padding-bottom: 10px; font-family: "Onest", sans-serif; font-size: clamp(15px, 1.3vw, 18px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.start__row p { margin: 0; color: #4d586b; font-size: 13px; line-height: 1.55; }
+
+/* Страница Wildberries: отзывы без блока результата */
+.trust__row--plain { grid-template-rows: repeat(3, auto); }
+.trust__stars { display: block; margin-bottom: 18px; color: var(--blue); font-size: 14px; letter-spacing: .18em; }
+
+/* Страница Wildberries: плашки под финальной формой */
+.final-badges { list-style: none; margin: clamp(28px, 3vw, 40px) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.final-badges li { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border: 1px solid rgba(255,255,255,.22); color: #c3ccdc; font-size: 13px; }
+
+@media (max-width: 1100px) {
+  .start__row { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, auto); row-gap: 30px; }
+  .start__row article:first-child { padding-left: clamp(16px, 1.9vw, 30px); border-left: 1px solid var(--line); }
+  .start__row article:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+}
+
+@media (max-width: 780px) {
+  .start__row { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 0; }
+  .start__row article, .start__row article:first-child, .start__row article:nth-child(3n + 1) { grid-row: auto; grid-template-rows: none; padding: 22px 0 24px; border-left: 0; border-bottom: 1px solid var(--line); }
+  .start__row article:last-child { border-bottom: 0; padding-bottom: 0; }
+  .start__num { padding-bottom: 12px; }
+}
+
+/* ─── Страница FBS ───────────────────────────────────────── */
+.page-hero__mark--text { font-family: "Onest", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .02em; color: var(--blue); }
+.quiz.quiz--light { background: var(--paper); }
+.quiz--light .quiz__option, .quiz--light .quiz__contact input, .quiz--light .quiz__row small { background: #fff; }
+
+/* Сравнение FBS и FBO */
+.compare__table { --cmp: minmax(0, .9fr) minmax(0, 1.05fr) minmax(0, 1.05fr); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.compare__caption { display: grid; grid-template-columns: var(--cmp); gap: clamp(24px, 3vw, 56px); padding: 18px 0 14px; border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.compare__caption span:nth-child(2) { color: var(--blue); }
+.compare__row { display: grid; grid-template-columns: var(--cmp); gap: clamp(24px, 3vw, 56px); align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line); transition: background .25s ease; }
+.compare__row:hover { background: rgba(49,94,181,.03); }
+.compare__row h3 { margin: 0; font-family: "Onest", sans-serif; font-size: clamp(15px, 1.3vw, 18px); font-weight: 500; line-height: 1.25; letter-spacing: -.03em; }
+.compare__row p { margin: 0; color: #4d586b; font-size: 14px; line-height: 1.55; }
+.compare__row .compare__fbs { color: var(--ink); font-weight: 500; }
+
+/* Маркетплейсы: сетка 3x2 */
+.mp__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, auto); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.mp__grid article { display: grid; grid-row: span 3; grid-template-rows: subgrid; align-content: start; padding: 30px clamp(20px, 2.4vw, 38px) 32px; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.mp__grid article:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+.mp__grid article:nth-child(3n) { padding-right: 0; }
+.mp__grid article:nth-last-child(-n + 3) { border-bottom: 0; padding-bottom: 0; }
+.mp__logo { display: flex; align-items: center; min-height: 44px; padding-bottom: 22px; }
+.mp__logo img { max-width: 130px; max-height: 32px; display: block; object-fit: contain; }
+.mp__logo img[src*="lemanapro"] { height: 44px; width: auto; max-height: none; }
+.mp__logo img[src*="megamarket"] { max-height: 24px; }
+.mp__field { padding-bottom: 18px; }
+.mp__field:last-child { padding-bottom: 0; }
+.mp__field small { display: block; margin-bottom: 8px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.mp__value { display: block; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.03em; color: var(--ink); }
+.mp__value--daily { color: var(--blue); }
+.mp__grid p { margin: 0; max-width: 300px; color: #4d586b; font-size: 14px; line-height: 1.55; }
+
+/* Фулфилмент-центр */
+.fc__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(34px, 4vw, 72px); align-items: start; margin-top: clamp(38px, 4.2vw, 58px); }
+.fc__list { list-style: none; margin: 0; padding: 0; }
+.fc__list li { position: relative; padding: 16px 0 16px 28px; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.5; }
+.fc__list li:first-child { padding-top: 0; }
+.fc__list li:first-child::before { top: 10px; }
+.fc__list li::before { content: ""; position: absolute; left: 0; top: 26px; width: 13px; height: 1px; background: var(--blue); }
+.fc__address { margin: 26px 0 0; font-size: 15px; line-height: 1.5; }
+.fc__address span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.fc__photo { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; }
+.fc__photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* Кейсы: кнопка под сеткой */
+.cases__cta { margin-top: clamp(30px, 3.4vw, 44px); display: flex; justify-content: center; }
+
+/* Отзывы без блока результата: две строки вместо трёх */
+.trust__row--pair { grid-template-rows: repeat(2, auto); }
+.trust__row--pair article { grid-row: span 2; }
+
+@media (max-width: 1100px) {
+  .compare__table { --cmp: minmax(0, .85fr) minmax(0, 1fr) minmax(0, 1fr); }
+  .mp__grid { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(9, auto); }
+  .mp__grid article:nth-child(3n + 1) { padding-left: clamp(20px, 2.4vw, 38px); border-left: 1px solid var(--line); }
+  .mp__grid article:nth-child(3n) { padding-right: clamp(20px, 2.4vw, 38px); }
+  .mp__grid article:nth-child(2n + 1) { padding-left: 0; border-left: 0; }
+  .mp__grid article:nth-child(2n) { padding-right: 0; }
+  .mp__grid article:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); padding-bottom: 32px; }
+  .mp__grid article:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+  .fc__grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 780px) {
+  .compare__caption { display: none; }
+  .compare__row { grid-template-columns: 1fr; gap: 10px; padding: 20px 0; }
+  .compare__row .compare__fbs::before { content: "FBS — "; color: var(--blue); font-weight: 700; }
+  .compare__row p:last-child::before { content: "FBO — "; color: var(--muted); font-weight: 700; }
+  .mp__grid { grid-template-columns: 1fr; grid-template-rows: none; }
+  .mp__grid article, .mp__grid article:nth-child(3n + 1), .mp__grid article:nth-child(2n + 1), .mp__grid article:nth-child(3n), .mp__grid article:nth-child(2n) { grid-row: auto; grid-template-rows: none; padding: 24px 0 26px; border-left: 0; border-bottom: 1px solid var(--line); }
+  .mp__grid article:last-child { border-bottom: 0; padding-bottom: 0; }
+  .mp__logo { min-height: 0; padding-bottom: 16px; }
+  .fc__photo { aspect-ratio: 16 / 10; }
+}
+/* Лемана ПРО — квадратный знак, при общей высоте 30px он вдвое мельче остальных */
+.mp__logo img[src*="lemanapro"] { height: 42px; width: auto; max-height: none; }
+.mp__logo img[src*="megamarket"] { max-height: 34px; }
+
+/* Выпадающий пункт меню со внутренними страницами */
+.main-nav__group { position: relative; display: flex; align-items: center; }
+.main-nav__toggle { padding: 10px 0; display: inline-flex; align-items: center; gap: 7px; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.main-nav__toggle i { font-size: 10px; font-style: normal; color: var(--blue); transition: transform .25s ease; }
+.main-nav__group:hover .main-nav__toggle i, .main-nav__group:focus-within .main-nav__toggle i { transform: rotate(180deg); }
+.main-nav__sub { position: absolute; left: -18px; top: calc(100% + 18px); z-index: 30; min-width: 268px; padding: 6px 0; border: 1px solid var(--line); background: #fff; box-shadow: 0 18px 44px rgba(13,29,59,.12); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .22s ease, transform .22s ease, visibility .22s ease; }
+.main-nav__sub::before { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: 20px; }
+.main-nav__group:hover .main-nav__sub, .main-nav__group:focus-within .main-nav__sub { opacity: 1; visibility: visible; transform: translateY(0); }
+.main-nav__sub a { display: block; padding: 12px 18px; font-size: 13px; font-weight: 500; transition: background .2s ease, color .2s ease; }
+.main-nav__sub a::after { display: none; }
+.main-nav__sub a:hover { color: var(--blue); background: var(--paper); }
+.main-nav__sub a[aria-current="page"] { color: var(--blue); font-weight: 700; }
+
+/* Первый экран внутренних страниц: фото справа */
+.page-hero__visual { margin: 0; align-self: stretch; min-height: 460px; overflow: hidden; background: var(--paper); }
+.page-hero__visual img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.page-hero__slot { width: 100%; height: 100%; min-height: 460px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border: 1px dashed #b9c2d0; color: #97a2b5; }
+.page-hero__slot svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.page-hero__slot span { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.page-hero__copy .lead-card { max-width: none; margin: clamp(30px, 3.2vw, 44px) 0 0; }
+
+@media (max-width: 1100px) {
+  .page-hero__visual, .page-hero__slot { min-height: 320px; }
+}

@@ -32,7 +32,7 @@ form?.addEventListener('submit', (event) => {
   window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
 });
 
-const quizSteps = [
+const defaultQuizSteps = [
   { question: 'На какие маркетплейсы нужно отгрузить товары?', options: ['Wildberries', 'Ozon', 'Яндекс Маркет', 'Мегамаркет', 'Лемана ПРО', 'Авито', 'Lamoda', 'М.Видео'] },
   { question: 'Какое количество единиц нужно обработать?', options: ['500–1 000', '1 001–3 000', '3 001–5 000', 'Более 5 000'] },
   { question: 'Какие услуги вам нужны?', options: ['Полный цикл фулфилмента', 'Упаковка и маркировка', 'Хранение', 'Доставка на маркетплейсы'] },
@@ -40,9 +40,14 @@ const quizSteps = [
   { question: 'Как с вами удобнее связаться?', options: ['Позвонить', 'WhatsApp', 'Telegram'] }
 ];
 
+const quizSteps = window.QUIZ_STEPS || defaultQuizSteps;
+const quizCountsContact = window.QUIZ_COUNT_CONTACT === true;
+const quizTotalSteps = quizSteps.length + (quizCountsContact ? 1 : 0);
+
 const quizContent = document.querySelector('#quizContent');
 const quizStepNumber = document.querySelector('#quizStepNum');
 const quizProgress = document.querySelector('#quizProgress');
+const quizTotal = document.querySelector('#quizTotal');
 const quizNext = document.querySelector('#quizNext');
 const quizBack = document.querySelector('#quizBack');
 const quizHint = document.querySelector('.quiz__hint');
@@ -52,8 +57,10 @@ let quizStage = 'questions';
 
 function renderQuizProgress(activeIndex) {
   if (!quizProgress) return;
-  quizProgress.innerHTML = quizSteps.map((step, index) => `<i class="${index <= activeIndex ? 'is-done' : ''}"></i>`).join('');
+  quizProgress.innerHTML = Array.from({ length: quizTotalSteps }, (item, index) => `<i class="${index <= activeIndex ? 'is-done' : ''}"></i>`).join('');
 }
+
+if (quizTotal) quizTotal.textContent = String(quizTotalSteps).padStart(2, '0');
 
 function renderQuiz() {
   if (!quizContent) return;
@@ -70,7 +77,7 @@ function renderQuiz() {
   if (quizStage === 'contact') {
     quizContent.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="tel" placeholder="+7 (___) ___-__-__"></div>';
     renderQuizProgress(quizSteps.length);
-    if (quizStepNumber) quizStepNumber.textContent = String(quizSteps.length).padStart(2, '0');
+    if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');
     if (quizBack) quizBack.disabled = false;
     if (quizNext) quizNext.innerHTML = 'Получить расчет <span>↗</span>';
@@ -148,3 +155,21 @@ if (flowSteps.length) {
   window.addEventListener('resize', updateFlowSteps, { passive: true });
   updateFlowSteps();
 }
+
+const priceTabs = [...document.querySelectorAll('.pricetab')];
+const pricePanels = [...document.querySelectorAll('.pricelist')];
+
+priceTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => {
+    priceTabs.forEach((item, itemIndex) => {
+      const active = itemIndex === index;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-selected', String(active));
+    });
+    pricePanels.forEach((panel, panelIndex) => {
+      const active = panelIndex === index;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+    });
+  });
+});

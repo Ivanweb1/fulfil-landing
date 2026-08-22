@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=4" />
   </head>
   <body>
     <header class="site-header">
@@ -16,7 +16,16 @@
         <img src="assets/fulfil-logo.png" alt="Fulfil.pro" />
       </a>
       <nav class="main-nav" aria-label="Основная навигация">
+        <div class="main-nav__group">
+          <button class="main-nav__toggle" type="button" aria-expanded="false">Направления <i aria-hidden="true">▾</i></button>
+          <div class="main-nav__sub">
+            <a href="wildberries.html">Фулфилмент для Wildberries</a>
+            <a href="ozon.html">Фулфилмент для Ozon</a>
+            <a href="fbs.html">Фулфилмент по модели FBS</a>
+          </div>
+        </div>
         <a href="#services">Услуги</a>
+        </div>
         <a href="#marketplaces">Маркетплейсы</a>
         <a href="#tariffs">Тарифы</a>
         <a href="#calculator">Рассчитать стоимость</a>
@@ -147,7 +156,7 @@
         <div class="container quiz__widget">
           <div class="quiz__rail">
             <span class="quiz__rail-label">Шаг</span>
-            <div class="quiz__counter"><b id="quizStepNum">01</b><i></i><span>05</span></div>
+            <div class="quiz__counter"><b id="quizStepNum">01</b><i></i><span id="quizTotal">05</span></div>
             <div class="quiz__segments" id="quizProgress" aria-hidden="true"></div>
             <p class="quiz__badge">◇ Свяжемся в течение 1 часа</p>
           </div>
@@ -415,6 +424,6 @@
     <button class="back-to-top" type="button" aria-label="Наверх">↑</button>
 
     <div class="toast" role="status" aria-live="polite">Спасибо! Заявка принята — менеджер свяжется с вами.</div>
-    <script src="script.js"></script>
+    <script src="script.js?v=4"></script>
   </body>
 </html>
