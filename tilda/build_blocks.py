@@ -408,7 +408,10 @@ def js_array_to_json(source: str) -> list:
 
 def prepare_html(html: str, block: Block) -> str:
     # Ссылки на соседние страницы → адреса страниц Тильды.
+    # Отдельно — ссылки с якорем вида index.html#tariffs: их даёт единое меню,
+    # когда нужного раздела на текущей странице нет.
     for source, target in PAGE_URLS.items():
+        html = html.replace(f'href="{source}#', f'href="{target}#')
         html = html.replace(f'href="{source}"', f'href="{target}"')
 
     # Прайс лежит в Тильде, а не рядом с блоком.
