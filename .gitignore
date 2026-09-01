@@ -1,4 +1,7 @@
-# Артефакты сборки под Tilda — не нужны для GitHub Pages
+# Сборка блоков под Tilda — генерируется из исходников, см. tilda/README.md
+tilda/out/
+
+# Артефакты старой сборки под Tilda — не нужны для GitHub Pages
 tilda-*.html
 tilda-*.txt
 tilda-*.zip
@@ -16,3 +19,6 @@ Thumbs.db
 # Не используются на странице (фото кейсов убраны в пользу цифр), остаются локально
 assets/case-*.png
 assets/warehouse.webp
+
+# Прайс-лист: живёт в Google Drive и в Тильде, в репозитории не нужен.
+assets/docs/

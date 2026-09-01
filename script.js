@@ -33,11 +33,11 @@ form?.addEventListener('submit', (event) => {
 });
 
 const defaultQuizSteps = [
-  { question: 'На какие маркетплейсы нужно отгрузить товары?', options: ['Wildberries', 'Ozon', 'Яндекс Маркет', 'Мегамаркет', 'Лемана ПРО', 'Авито', 'Lamoda', 'М.Видео'] },
-  { question: 'Какое количество единиц нужно обработать?', options: ['500–1 000', '1 001–3 000', '3 001–5 000', 'Более 5 000'] },
-  { question: 'Какие услуги вам нужны?', options: ['Полный цикл фулфилмента', 'Упаковка и маркировка', 'Хранение', 'Доставка на маркетплейсы'] },
-  { question: 'Когда планируете начать?', options: ['Нужно сейчас', 'В течение 2 недель', 'В течение месяца', 'На будущее'] },
-  { question: 'Как с вами удобнее связаться?', options: ['Позвонить', 'WhatsApp', 'Telegram'] }
+  { question: 'На какие маркетплейсы нужно отгрузить товары?', options: ['Wildberries', 'Ozon', 'Яндекс Маркет', 'Мегамаркет', 'Лемана ПРО', 'Авито', 'Lamoda', 'М.Видео'], multi: true },
+  { question: 'Какое количество единиц нужно обработать?', options: ['500–1 000', '1 001–3 000', '3 001–5 000', 'Более 5 000'], multi: false },
+  { question: 'Какие услуги вам нужны?', options: ['Полный цикл фулфилмента', 'Упаковка и маркировка', 'Хранение', 'Доставка на маркетплейсы'], multi: true },
+  { question: 'Когда планируете начать?', options: ['Нужно сейчас', 'В течение 2 недель', 'В течение месяца', 'На будущее'], multi: false },
+  { question: 'Как с вами удобнее связаться?', options: ['Позвонить', 'WhatsApp', 'Telegram'], multi: false }
 ];
 
 const quizSteps = window.QUIZ_STEPS || defaultQuizSteps;
@@ -75,7 +75,7 @@ function renderQuiz() {
   }
 
   if (quizStage === 'contact') {
-    quizContent.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="tel" placeholder="+7 (___) ___-__-__"></div>';
+    quizContent.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="tel" placeholder="+7 (___) ___-__-__"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>';
     renderQuizProgress(quizSteps.length);
     if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');
@@ -90,6 +90,7 @@ function renderQuiz() {
   if (quizStepNumber) quizStepNumber.textContent = String(quizStep + 1).padStart(2, '0');
   renderQuizProgress(quizStep);
   quizHint?.classList.remove('is-hidden');
+  if (quizHint) quizHint.textContent = step.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
   if (quizBack) quizBack.disabled = quizStep === 0;
   if (quizNext) quizNext.innerHTML = 'Следующий вопрос <span>→</span>';
 }
@@ -97,9 +98,20 @@ function renderQuiz() {
 quizContent?.addEventListener('click', (event) => {
   const option = event.target.closest('.quiz__option');
   if (!option || quizStage !== 'questions') return;
-  option.classList.toggle('selected');
   const answers = quizAnswers[quizStep];
   const position = answers.indexOf(option.textContent);
+  if (!quizSteps[quizStep].multi) {
+    quizContent.querySelectorAll('.quiz__option').forEach((other) => { if (other !== option) other.classList.remove('selected'); });
+    answers.length = 0;
+    if (position === -1) {
+      option.classList.add('selected');
+      answers.push(option.textContent);
+    } else {
+      option.classList.remove('selected');
+    }
+    return;
+  }
+  option.classList.toggle('selected');
   if (position === -1) answers.push(option.textContent);
   else answers.splice(position, 1);
 });

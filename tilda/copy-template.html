@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fulfil.pro → Tilda: перенос блоков</title>
+<style>
+  :root {
+    --bg: #f3f5f8; --card: #fff; --ink: #0a1020; --muted: #667085;
+    --line: #d8dde6; --blue: #315eb5; --green: #17803d; --amber: #b54708;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 28px 24px 60px; background: var(--bg); color: var(--ink);
+         font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+  h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: -.02em; }
+  .lead { margin: 0 0 22px; color: var(--muted); }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .tab { padding: 8px 14px; border: 1px solid var(--line); border-radius: 6px;
+         background: var(--card); cursor: pointer; font: inherit; }
+  .tab.is-active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .tab b { font-weight: 600; }
+  .tab small { color: inherit; opacity: .65; margin-left: 6px; }
+  .bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+         padding: 14px 16px; background: var(--card); border: 1px solid var(--line);
+         border-radius: 8px; margin-bottom: 14px; }
+  .bar .grow { flex: 1; min-width: 180px; color: var(--muted); }
+  button { font: inherit; cursor: pointer; }
+  .primary { padding: 10px 18px; border: 0; border-radius: 6px; background: var(--blue);
+             color: #fff; font-weight: 600; }
+  .primary:disabled { background: #9aa6bd; cursor: default; }
+  .ghost { padding: 8px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); }
+  table { width: 100%; border-collapse: collapse; background: var(--card);
+          border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  tr.is-done { background: #f4fbf6; }
+  tr.is-next td:first-child { box-shadow: inset 3px 0 0 var(--blue); }
+  .num { font-variant-numeric: tabular-nums; color: var(--muted); width: 42px; }
+  .size { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .done-mark { color: var(--green); font-weight: 600; }
+  .pics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pic { display: flex; align-items: center; gap: 7px; padding: 4px 9px 4px 4px;
+         border: 1px solid var(--line); border-radius: 5px; background: var(--bg); }
+  .pic img { width: 34px; height: 26px; object-fit: contain; display: block; }
+  .pic span { font-size: 12px; color: var(--muted); font-family: ui-monospace, Consolas, monospace; }
+  .pic.is-linked { border-color: #a9d9bb; background: #f4fbf6; }
+  .pics-none { color: var(--muted); font-size: 12px; }
+  details { margin: 20px 0 0; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  summary { cursor: pointer; font-weight: 600; }
+  .assets { display: grid; grid-template-columns: 240px 1fr; gap: 8px 14px; margin-top: 14px; align-items: center; }
+  .assets input { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
+  .assets code { color: var(--muted); }
+  .toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 130%);
+           padding: 12px 20px; background: var(--ink); color: #fff; border-radius: 6px;
+           transition: transform .25s ease; z-index: 10; }
+  .toast.is-visible { transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Перенос блоков в Tilda</h1>
+  <p class="lead">Нажимаете «Копировать» — код блока уходит в буфер обмена, дальше вставляете
+    его в Vibe-блок. Под названием блока показаны картинки, которые в нём нужны:
+    файлы лежат в <code>out/_upload/</code>, в коде им соответствуют метки
+    <code>[[UPLOAD:имя]]</code>.</p>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="bar">
+    <button class="primary" id="next" type="button">Копировать следующий</button>
+    <span class="grow" id="progress"></span>
+    <button class="ghost" id="reset" type="button">Сбросить отметки</button>
+  </div>
+
+  <table>
+    <thead><tr><th class="num">№</th><th>Блок</th><th>Размер</th><th></th><th>Статус</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <details id="assets-panel">
+    <summary>Подставлять адреса картинок автоматически <span id="assets-count"></span></summary>
+    <p style="color:var(--muted);margin:10px 0 0">
+      Необязательно. Если картинки загружаются не в сам блок, а в файлы Тильды —
+      вставьте сюда их адреса, и при копировании метки <code>[[UPLOAD:…]]</code>
+      заменятся на них. Заполненные картинки в списке блоков подсветятся зелёным.
+    </p>
+    <div class="assets" id="assets"></div>
+  </details>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const DONE_KEY = 'fx-copy-done';
+const URL_KEY = 'fx-copy-urls';
+
+const store = {
+  read(key) { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } },
+  write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+};
+
+let done = store.read(DONE_KEY);
+let urls = store.read(URL_KEY);
+let page = Object.keys(DATA.pages)[0];
+
+function blockId(pageKey, block) { return pageKey + '/' + block.order; }
+
+function resolve(code) {
+  return code.replace(/\[\[UPLOAD:([^\]]+)\]\]/g, (match, name) => urls[name] || match);
+}
+
+function unresolved(block) {
+  return block.uploads.filter((name) => !urls[name]);
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (error) {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand('copy');
+    area.remove();
+    return ok;
+  }
+}
+
+let toastTimer;
+function toast(message) {
+  const node = document.getElementById('toast');
+  node.textContent = message;
+  node.classList.add('is-visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => node.classList.remove('is-visible'), 2600);
+}
+
+async function copyBlock(block) {
+  const missing = unresolved(block);
+  const ok = await copyText(resolve(block.code));
+  if (!ok) { toast('Не удалось скопировать — выделите код вручную'); return; }
+  done[blockId(page, block)] = true;
+  store.write(DONE_KEY, done);
+  render();
+  toast(missing.length
+    ? `Блок ${block.order} скопирован. Картинок без адреса: ${missing.length} — их метки придётся заменить руками`
+    : `Блок ${block.order} — ${block.title} скопирован`);
+}
+
+function nextBlock() {
+  return DATA.pages[page].blocks.find((block) => !done[blockId(page, block)]);
+}
+
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = Object.entries(DATA.pages).map(([key, value]) => {
+    const total = value.blocks.length;
+    const count = value.blocks.filter((block) => done[key + '/' + block.order]).length;
+    return `<button class="tab${key === page ? ' is-active' : ''}" data-page="${key}" type="button">` +
+      `<b>${value.title}</b><small>${count}/${total}</small></button>`;
+  }).join('');
+}
+
+function renderRows() {
+  const blocks = DATA.pages[page].blocks;
+  const next = nextBlock();
+  document.getElementById('rows').innerHTML = blocks.map((block) => {
+    const isDone = !!done[blockId(page, block)];
+    const pics = block.uploads.length
+      ? `<div class="pics">` + block.uploads.map((name) =>
+          `<span class="pic${urls[name] ? ' is-linked' : ''}" title="${urls[name] ? 'адрес задан, метка подставится сама' : 'лежит в out/_upload/' + name}">` +
+          `<img src="_upload/${name}" alt="" loading="lazy"><span>${name}</span></span>`).join('') + `</div>`
+      : '<div class="pics-none">без картинок</div>';
+    return `<tr class="${isDone ? 'is-done' : ''}${next === block ? ' is-next' : ''}">` +
+      `<td class="num">${block.order}</td>` +
+      `<td>${block.title}${pics}</td>` +
+      `<td class="size">${(block.code.length / 1024).toFixed(1)} КБ</td>` +
+      `<td><button class="ghost" data-order="${block.order}" type="button">Копировать</button></td>` +
+      `<td>${isDone ? '<span class="done-mark">вставлен</span>' : ''}</td></tr>`;
+  }).join('');
+}
+
+function renderProgress() {
+  const blocks = DATA.pages[page].blocks;
+  const count = blocks.filter((block) => done[blockId(page, block)]).length;
+  const next = nextBlock();
+  document.getElementById('progress').textContent = next
+    ? `${count} из ${blocks.length}. Следующий — ${next.order} ${next.title}`
+    : `Готово: все ${blocks.length} блоков перенесены`;
+  document.getElementById('next').disabled = !next;
+}
+
+function renderAssets() {
+  const filled = DATA.uploads.filter((name) => urls[name]).length;
+  document.getElementById('assets-count').textContent = `— заполнено ${filled} из ${DATA.uploads.length}`;
+  const holder = document.getElementById('assets');
+  if (holder.dataset.ready === '1') return;
+  holder.dataset.ready = '1';
+  holder.innerHTML = DATA.uploads.map((name) =>
+    `<code>${name}</code><input type="url" data-asset="${name}" placeholder="https://static.tildacdn.com/…" value="${urls[name] || ''}">`
+  ).join('');
+}
+
+function render() {
+  renderTabs();
+  renderRows();
+  renderProgress();
+  renderAssets();
+}
+
+document.getElementById('tabs').addEventListener('click', (event) => {
+  const tab = event.target.closest('.tab');
+  if (!tab) return;
+  page = tab.dataset.page;
+  render();
+});
+
+document.getElementById('rows').addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-order]');
+  if (!button) return;
+  const block = DATA.pages[page].blocks.find((item) => item.order === button.dataset.order);
+  if (block) copyBlock(block);
+});
+
+document.getElementById('next').addEventListener('click', () => {
+  const block = nextBlock();
+  if (block) copyBlock(block);
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  if (!confirm('Снять отметки о перенесённых блоках на всех страницах?')) return;
+  done = {};
+  store.write(DONE_KEY, done);
+  render();
+});
+
+document.getElementById('assets').addEventListener('input', (event) => {
+  const input = event.target.closest('input[data-asset]');
+  if (!input) return;
+  const value = input.value.trim();
+  if (value) urls[input.dataset.asset] = value;
+  else delete urls[input.dataset.asset];
+  store.write(URL_KEY, urls);
+  renderTabs();
+  renderRows();
+  renderProgress();
+  document.getElementById('assets-count').textContent =
+    `— заполнено ${DATA.uploads.filter((name) => urls[name]).length} из ${DATA.uploads.length}`;
+});
+
+render();
+</script>
+</body>
+</html>

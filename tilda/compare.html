@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Сверка блоков с исходной страницей</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; margin: 24px; }
+  iframe { width: 1440px; height: 20000px; border: 0; position: absolute; left: -30000px; }
+  select, button { font: inherit; }
+  table { border-collapse: collapse; margin-top: 12px; }
+  td, th { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+  .ok { color: #17803d; } .bad { color: #b42318; }
+</style>
+</head>
+<body>
+<h1>Сверка Vibe-блоков с исходной страницей</h1>
+<p><b>Сверить страницу</b> — грузит оригинал и пересобранное превью в одинаковых iframe
+и сравнивает размеры и вычисленные стили всех элементов.</p>
+<p><b>Сверить блоки по одному</b> — открывает каждый блок в пустом документе, в полной
+изоляции, как его рендерит редактор Тильды, и сверяет с той же секцией оригинала.
+Ловит правила, которых блоку не хватает самому по себе. Имеет смысл только для сборки
+<code>--standalone</code>. Открывать через локальный сервер.</p>
+<label>Страница: <select id="page">
+  <option value="index">index</option>
+  <option value="wildberries">wildberries</option>
+  <option value="ozon">ozon</option>
+  <option value="fbs">fbs</option>
+</select></label>
+<label>Ширина: <select id="width">
+  <option value="1440">1440 — десктоп</option>
+  <option value="1100">1100 — ноутбук</option>
+  <option value="820">820 — планшет</option>
+  <option value="375">375 — мобильный</option>
+</select></label>
+<button id="run" type="button">Сверить страницу</button>
+<button id="run-blocks" type="button">Сверить блоки по одному</button>
+<div id="report">—</div>
+<iframe id="left"></iframe>
+<iframe id="right"></iframe>
+
+<script>
+const PROPS = ['display', 'gridTemplateColumns', 'flexDirection', 'backgroundColor', 'color', 'fontSize', 'fontFamily', 'position'];
+const SKIP = new Set(['fx-block']);
+// Тост рантайм создаёт пустым — до отправки формы у него нет текста, и это нормально.
+// Точки слайдера переключаются по таймеру: в момент замера активна разная.
+const IGNORE = new Set(['toast', 'slider-dot', 'is-active.slider-dot']);
+
+function probe(doc, root) {
+  const out = new Map();
+  (root || doc).querySelectorAll('[class]').forEach((el) => {
+    const key = Array.from(el.classList).filter((c) => !SKIP.has(c) && !c.startsWith('fx-')).sort().join('.');
+    if (!key || out.has(key)) return;
+    const rect = el.getBoundingClientRect();
+    const cs = doc.defaultView.getComputedStyle(el);
+    const style = {};
+    PROPS.forEach((p) => { style[p] = cs[p]; });
+    out.set(key, { w: Math.round(rect.width), h: Math.round(rect.height), style });
+  });
+  return out;
+}
+
+function load(frame, url) {
+  return new Promise((resolve) => {
+    frame.onload = async () => {
+      const doc = frame.contentDocument;
+      // Ленивые картинки в высоком iframe грузятся вразнобой — форсируем,
+      // иначе сравнение ловит не расхождения вёрстки, а разный момент загрузки.
+      const images = Array.from(doc.querySelectorAll('img'));
+      images.forEach((img) => { img.loading = 'eager'; });
+      // decode() у картинки, которая так и не начала грузиться, не разрешается
+      // никогда — поэтому ждём её не дольше общего таймаута.
+      const settled = Promise.all(images.map((img) => (img.complete ? null : img.decode().catch(() => null))));
+      await Promise.race([settled, new Promise((done) => setTimeout(done, 2500))]);
+      // Полоса прокрутки должна быть зарезервирована так же, как в одиночном блоке,
+      // иначе разъезжаются все размеры на vw и clamp().
+      doc.documentElement.style.overflowY = 'scroll';
+      setTimeout(() => resolve(doc), 500);
+    };
+    frame.src = url;
+  });
+}
+
+async function loadCatalogue() {
+  const text = await (await fetch('/tilda/out/COPY.html')).text();
+  const start = text.indexOf('id="data">') + 'id="data">'.length;
+  const end = text.indexOf('<\/script>', start);
+  return JSON.parse(text.slice(start, end));
+}
+
+function writeInto(frame, html) {
+  return new Promise((resolve) => {
+    const doc = frame.contentDocument;
+    doc.open();
+    // Полосу прокрутки резервируем принудительно: у длинной страницы она есть,
+    // у одиночного блока может не быть, и все ширины разъезжаются на 15px.
+    doc.write('<!doctype html><html><head><meta charset="utf-8">' +
+      '<style>html{overflow-y:scroll}</style></head><body style="margin:0">' +
+      html.replace(/\[\[UPLOAD:([^\]]+)\]\]/g, '/tilda/out/_upload/$1') + '</body></html>');
+    doc.close();
+    setTimeout(() => resolve(doc), 1100);
+  });
+}
+
+document.getElementById('run-blocks').addEventListener('click', async () => {
+  const page = document.getElementById('page').value;
+  const width = document.getElementById('width').value + 'px';
+  const report = document.getElementById('report');
+  report.textContent = 'Загружаю…';
+  document.getElementById('left').style.width = width;
+  document.getElementById('right').style.width = width;
+
+  const catalogue = await loadCatalogue();
+  const blocks = catalogue.pages[page].blocks;
+  const originalDoc = await load(document.getElementById('left'), `/${page}.html`);
+
+  const rows = [];
+  for (const block of blocks) {
+    report.textContent = `Блок ${block.order} — ${block.title}…`;
+    const doc = await writeInto(document.getElementById('right'), block.code);
+
+    // Сравниваем блок с его же секцией оригинала: классы вроде .container
+    // и .button есть в каждой секции, и по всей странице они не сопоставляются.
+    const node = doc.querySelector('.fx-block').firstElementChild;
+    const selector = node.tagName.toLowerCase() +
+      Array.from(node.classList).map((name) => '.' + CSS.escape(name)).join('');
+    const section = originalDoc.querySelector(selector);
+    if (!section) {
+      rows.push([`${block.order} ${block.title}`, 'секция не найдена в оригинале', selector, '']);
+      continue;
+    }
+
+    const original = probe(originalDoc, section);
+    probe(doc, doc.querySelector('.fx-block')).forEach((right, key) => {
+      if (IGNORE.has(key)) return;
+      const left = original.get(key);
+      if (!left) return; // элемента нет в оригинале — сравнивать не с чем
+      if (Math.abs(left.w - right.w) > 2 || Math.abs(left.h - right.h) > 4) {
+        rows.push([`${block.order} ${block.title}`, key + ' — размер', `${left.w}×${left.h}`, `${right.w}×${right.h}`]);
+      }
+      PROPS.forEach((p) => {
+        if (left.style[p] !== right.style[p]) {
+          rows.push([`${block.order} ${block.title}`, key + ' — ' + p, left.style[p], right.style[p]]);
+        }
+      });
+    });
+  }
+
+  report.innerHTML =
+    `<p>Проверено блоков: ${blocks.length}. Расхождений: ` +
+    `<b class="${rows.length ? 'bad' : 'ok'}">${rows.length}</b></p>` +
+    (rows.length
+      ? '<table><tr><th>Блок</th><th>Что</th><th>Оригинал</th><th>В одиночку</th></tr>' +
+        rows.map((r) => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('') +
+        '</table>'
+      : '<p class="ok">Каждый блок выглядит так же, как на целой странице.</p>');
+});
+
+document.getElementById('run').addEventListener('click', async () => {
+  const page = document.getElementById('page').value;
+  const width = document.getElementById('width').value + 'px';
+  const report = document.getElementById('report');
+  report.textContent = 'Загружаю…';
+  document.getElementById('left').style.width = width;
+  document.getElementById('right').style.width = width;
+
+  const original = probe(await load(document.getElementById('left'), `/${page}.html`));
+  const rebuilt = probe(await load(document.getElementById('right'), `/tilda/out/${page}/_preview.html`));
+
+  const rows = [];
+  original.forEach((left, key) => {
+    if (IGNORE.has(key)) return;
+    const right = rebuilt.get(key);
+    if (!right) { rows.push([key, 'нет в сборке', '', '']); return; }
+    if (Math.abs(left.w - right.w) > 2 || Math.abs(left.h - right.h) > 4) {
+      rows.push([key, 'размер', `${left.w}×${left.h}`, `${right.w}×${right.h}`]);
+    }
+    PROPS.forEach((p) => {
+      if (left.style[p] !== right.style[p]) rows.push([key, p, left.style[p], right.style[p]]);
+    });
+  });
+
+  const missing = [];
+  rebuilt.forEach((value, key) => { if (!original.has(key)) missing.push(key); });
+
+  report.innerHTML =
+    `<p>Элементов в оригинале: ${original.size}, в сборке: ${rebuilt.size}. ` +
+    `Расхождений: <b class="${rows.length ? 'bad' : 'ok'}">${rows.length}</b>. ` +
+    `Лишних в сборке: ${missing.length}</p>` +
+    (rows.length
+      ? '<table><tr><th>Селектор</th><th>Свойство</th><th>Оригинал</th><th>Сборка</th></tr>' +
+        rows.map((r) => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('') +
+        '</table>'
+      : '<p class="ok">Совпадает.</p>');
+});
+</script>
+</body>
+</html>
