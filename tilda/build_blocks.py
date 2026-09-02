@@ -612,13 +612,16 @@ FONT_FACES = [
     ("Onest", 700, "Onest-700.woff"),
 ]
 
-# Заполняется адресами после загрузки файлов в Тильду:
-# {"Manrope-400.woff": "https://static.tildacdn.com/..."}.
-# Пока пусто — в CSS остаются метки [[FONT:имя]], редактор их не тронет.
-# Заполняется адресами после загрузки файлов в Тильду:
-# {"Manrope-400.woff": "https://static.tildacdn.com/..."}.
-# Пока пусто — в CSS остаются метки [[FONT:имя]], редактор их не тронет.
-FONT_URLS: dict[str, str] = {}
+# Адреса, которые Тильда выдала после загрузки 7 файлов из assets/fonts/.
+FONT_URLS: dict[str, str] = {
+    "Manrope-400.woff": "https://static.tildacdn.com/tild3131-6564-4537-a466-393266356432/Manrope-400.woff",
+    "Manrope-500.woff": "https://static.tildacdn.com/tild6633-3034-4562-a537-616136373635/Manrope-500.woff",
+    "Manrope-600.woff": "https://static.tildacdn.com/tild3764-3634-4635-b633-363031643538/Manrope-600.woff",
+    "Manrope-700.woff": "https://static.tildacdn.com/tild6563-3137-4035-b064-636633363262/Manrope-700.woff",
+    "Onest-500.woff": "https://static.tildacdn.com/tild3431-6638-4737-b034-363438656334/Onest-500.woff",
+    "Onest-600.woff": "https://static.tildacdn.com/tild6230-3830-4032-b665-396630333438/Onest-600.woff",
+    "Onest-700.woff": "https://static.tildacdn.com/tild3133-6538-4565-a636-363834616431/Onest-700.woff",
+}
 
 
 def font_faces_css() -> str:
