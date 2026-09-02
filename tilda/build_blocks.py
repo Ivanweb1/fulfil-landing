@@ -20,6 +20,7 @@ import sys
 from html import unescape as html_unescape
 import re
 import shutil
+import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import quote
@@ -705,7 +706,28 @@ def rules_for_block(nodes: list, block: Block, matched: set[int]) -> list:
 
 
 def runtime_js() -> str:
-    return (TILDA / "fx-runtime.js").read_text(encoding="utf-8")
+    """Сжатая версия рантайма — вставляется в HEAD.
+
+    Источник (fx-runtime.js) остаётся читаемым с комментариями — правится он,
+    а не результат. Сжатие вдвое снижает объём одного куска кода, который
+    приходится копировать в поле настроек сайта целиком за один раз: чем он
+    больше, тем выше шанс потерять хвост при вставке в текстовое поле Тильды.
+    Если terser недоступен (нет npm/сети) — используем исходник как есть,
+    сборка не должна падать из-за отсутствия инструмента.
+    """
+    source = TILDA / "fx-runtime.js"
+    try:
+        result = subprocess.run(
+            ["npx", "--yes", "terser", str(source), "-c", "-m"],
+            capture_output=True, text=True, timeout=60, shell=(sys.platform == "win32"),
+            encoding="utf-8", errors="replace",
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout
+    except (OSError, subprocess.SubprocessError):
+        pass
+    print("  [runtime_js] terser недоступен — используется несжатый fx-runtime.js")
+    return source.read_text(encoding="utf-8")
 
 
 def write_head(head_nodes: list) -> str:
