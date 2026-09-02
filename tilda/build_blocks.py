@@ -597,61 +597,37 @@ def assign_rules(nodes: list, pages: dict[str, list[Block]]) -> tuple[list, dict
 # Начертания, которые реально встречаются на сайте — проверено обходом всех
 # четырёх страниц по вычисленным стилям (getComputedStyle), а не по CSS-правилам:
 # Manrope 400/500/600/700 — текст, Onest 500/600/700 — заголовки и цифры.
-# Оба подмножества, cyrillic и latin: латинское несёт цифры, тире, валюту и прочую
-# пунктуацию — без него они не отрисуются даже в русском тексте.
+# Один файл на насыщенность, с полным набором символов (не разбито на cyrillic/
+# latin через unicode-range) — так совпадает со слотами загрузчика шрифтов
+# Тильды: там ровно один файл на Light/Normal/Medium/Semibold/Bold, без подмножеств.
+# Собраны инструментом варьируемых начертаний (varLib.instancer) из официальных
+# исходников Google Fonts — тот же контур букв, что был бы через Google Fonts.
 FONT_FACES = [
-    ("Manrope", 400, "cyrillic", "Manrope-400-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Manrope", 400, "latin", "Manrope-400-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
-    ("Manrope", 500, "cyrillic", "Manrope-500-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Manrope", 500, "latin", "Manrope-500-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
-    ("Manrope", 600, "cyrillic", "Manrope-600-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Manrope", 600, "latin", "Manrope-600-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
-    ("Manrope", 700, "cyrillic", "Manrope-700-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Manrope", 700, "latin", "Manrope-700-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
-    ("Onest", 500, "cyrillic", "Onest-500-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Onest", 500, "latin", "Onest-500-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
-    ("Onest", 600, "cyrillic", "Onest-600-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Onest", 600, "latin", "Onest-600-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
-    ("Onest", 700, "cyrillic", "Onest-700-cyrillic.woff",
-     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
-    ("Onest", 700, "latin", "Onest-700-latin.woff",
-     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
-     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Manrope", 400, "Manrope-400.woff"),
+    ("Manrope", 500, "Manrope-500.woff"),
+    ("Manrope", 600, "Manrope-600.woff"),
+    ("Manrope", 700, "Manrope-700.woff"),
+    ("Onest", 500, "Onest-500.woff"),
+    ("Onest", 600, "Onest-600.woff"),
+    ("Onest", 700, "Onest-700.woff"),
 ]
 
-# Заполняется адресами после загрузки файлов в Тильду: {"Manrope-400-cyrillic.woff": "https://…"}.
+# Заполняется адресами после загрузки файлов в Тильду:
+# {"Manrope-400.woff": "https://static.tildacdn.com/..."}.
 # Пока пусто — в CSS остаются метки [[FONT:имя]], редактор их не тронет.
 # Заполняется адресами после загрузки файлов в Тильду:
-# {"Manrope-400-cyrillic.woff": "https://static.tildacdn.com/..."}.
+# {"Manrope-400.woff": "https://static.tildacdn.com/..."}.
 # Пока пусто — в CSS остаются метки [[FONT:имя]], редактор их не тронет.
 FONT_URLS: dict[str, str] = {}
 
 
 def font_faces_css() -> str:
     parts = []
-    for family, weight, _subset, file, unicode_range in FONT_FACES:
+    for family, weight, file in FONT_FACES:
         url = FONT_URLS.get(file) or f"[[FONT:{file}]]"
         parts.append(
             f"@font-face{{font-family:'{family}';font-style:normal;font-weight:{weight};"
-            f"font-display:swap;src:url({url}) format('woff');unicode-range:{unicode_range};}}"
+            f"font-display:swap;src:url({url}) format('woff');}}"
         )
     return "".join(parts)
 
@@ -760,7 +736,7 @@ def write_external_base(head_nodes: list) -> None:
     document = (
         "<!-- Fulfil.pro · общий код для всех страниц, вариант с внешними файлами.\n"
         "\n"
-        "     1. Загрузите в Тильду 14 файлов шрифтов из assets/fonts/*.woff,\n"
+        "     1. Загрузите в Тильду 7 файлов шрифтов из assets/fonts/*.woff,\n"
         "        затем out/_assets/fulfil.css и out/_assets/fulfil.js\n"
         "        (Настройки сайта → Ещё → Файлы, либо любой блок → «Загрузить файл»).\n"
         "     2. Пришлите адреса шрифтов — я подставлю их в fulfil.css и пересоберу.\n"
@@ -890,7 +866,7 @@ def write_manifest(pages: dict[str, list[Block]]) -> None:
         lines.append("1. Блоки самодостаточны, отдельной базы нет — переходите сразу к шагу 2.")
     else:
         lines += [
-            "1. Один раз на весь сайт: загрузите 14 файлов шрифтов из `assets/fonts/*.woff`,",
+            "1. Один раз на весь сайт: загрузите 7 файлов шрифтов из `assets/fonts/*.woff`,",
             "   `out/_assets/fulfil.css` и `out/_assets/fulfil.js` в Тильду, затем вставьте",
             "   `out/_head-external.html` (с адресами вместо меток) в «Настройки сайта → Ещё →",
             "   HTML-код внутрь HEAD». Блок `00-base.html` — запасной вариант на случай, если этот",
