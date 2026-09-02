@@ -750,14 +750,16 @@ def write_head(head_nodes: list) -> str:
 # а сразу за обрывом шли остальные скрипты, что лежат в том же поле (аналитика,
 # пиксели). Общий бюджет один на всё, что там есть, значит сжимать наш кусок
 # бесполезно — рано или поздно вместе с остальным всё равно упрёмся в потолок.
-# Обычная загрузка файла тоже не помогла: в интерфейсе Тильды нашёлся только
-# загрузчик шрифтов (жёстко под /Light..Bold) и загрузка файла внутри Vibe-блока
-# (это НЕ общий хостинг: файл привязан к конкретному блоку конкретной страницы).
-# Поэтому файлы раздаёт jsDelivr прямо из GitHub-репозитория — если он публичный,
-# правильный Content-Type (text/css, application/javascript) прилагается сам,
-# ничего заливать в Тильду не нужно вообще.
-GITHUB_REPO = "Ivanweb1/fulfil-landing"
-GITHUB_BRANCH = "main"
+# Выход — вынести стили и скрипт в два файла и оставить в HEAD только ссылки
+# на них. Файл, загруженный через «Загрузить файл» в любом Vibe-блоке, получает
+# обычный публичный адрес static.tildacdn.com — привязан к странице только
+# интерфейс, где его потом менять, а не сам адрес: он открывается и работает
+# с любой страницы сайта, как и адреса картинок из out/_upload/.
+#
+# Заполняется адресами после загрузки файлов в Тильду:
+# {"fulfil.css": "https://static.tildacdn.com/...", "fulfil.js": "https://…"}.
+# Пока пусто — в коде остаются метки [[ASSET:имя]].
+ASSET_URLS: dict[str, str] = {}
 
 
 def write_external_base(head_nodes: list) -> None:
@@ -775,20 +777,18 @@ def write_external_base(head_nodes: list) -> None:
     (assets / "fulfil.css").write_text(css, encoding="utf-8")
     (assets / "fulfil.js").write_text(js, encoding="utf-8")
 
-    # Копия в отслеживаемую git папку — из неё файлы раздаёт jsDelivr.
-    # tilda/out/ в .gitignore целиком, а эти два файла должны попадать в репозиторий.
-    dist = TILDA / "dist"
-    dist.mkdir(parents=True, exist_ok=True)
-    (dist / "fulfil.css").write_text(css, encoding="utf-8")
-    (dist / "fulfil.js").write_text(js, encoding="utf-8")
-
-    css_url = f"https://cdn.jsdelivr.net/gh/{GITHUB_REPO}@{GITHUB_BRANCH}/tilda/dist/fulfil.css"
-    js_url = f"https://cdn.jsdelivr.net/gh/{GITHUB_REPO}@{GITHUB_BRANCH}/tilda/dist/fulfil.js"
+    css_url = ASSET_URLS.get("fulfil.css") or "[[ASSET:fulfil.css]]"
+    js_url = ASSET_URLS.get("fulfil.js") or "[[ASSET:fulfil.js]]"
     document = (
-        "<!-- Fulfil.pro · общий код для всех страниц.\n"
-        "     Файлы раздаёт jsDelivr прямо из GitHub — в Тильду грузить не нужно.\n"
-        "     Вставить целиком в «Настройки сайта → Ещё → HTML-код внутрь HEAD».\n"
-        "     Обновляется через tilda/build_blocks.py — руками не править. -->\n"
+        "<!-- Fulfil.pro · общий код для всех страниц, вариант с внешними файлами.\n"
+        "\n"
+        "     1. Загрузите out/_assets/fulfil.css и out/_assets/fulfil.js в любой\n"
+        "        Vibe-блок через «Загрузить файл» — так же, как грузили шрифты.\n"
+        "     2. Пришлите оба адреса — впишу их в build_blocks.py и пересоберу.\n"
+        "     3. Вставьте готовый код в «Настройки сайта → Ещё → HTML-код внутрь HEAD».\n"
+        "\n"
+        "     Отличие от _head.html: там стили и скрипт лежат прямо в коде страницы\n"
+        "     и качаются заново на каждой. Здесь браузер берёт их из кеша. -->\n"
         f'<link rel="stylesheet" href="{css_url}">\n'
         f'<script src="{js_url}" defer></script>\n'
     )
