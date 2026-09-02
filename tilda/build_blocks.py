@@ -594,12 +594,66 @@ def assign_rules(nodes: list, pages: dict[str, list[Block]]) -> tuple[list, dict
 
 # ------------------------------------------------------------------- вывод
 
-FONTS = (
-    '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-    '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700'
-    '&amp;family=Onest:wght@500;600;700&amp;display=swap" rel="stylesheet">'
-)
+# Начертания, которые реально встречаются на сайте — проверено обходом всех
+# четырёх страниц по вычисленным стилям (getComputedStyle), а не по CSS-правилам:
+# Manrope 400/500/600/700 — текст, Onest 500/600/700 — заголовки и цифры.
+# Оба подмножества, cyrillic и latin: латинское несёт цифры, тире, валюту и прочую
+# пунктуацию — без него они не отрисуются даже в русском тексте.
+FONT_FACES = [
+    ("Manrope", 400, "cyrillic", "Manrope-400-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Manrope", 400, "latin", "Manrope-400-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Manrope", 500, "cyrillic", "Manrope-500-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Manrope", 500, "latin", "Manrope-500-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Manrope", 600, "cyrillic", "Manrope-600-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Manrope", 600, "latin", "Manrope-600-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Manrope", 700, "cyrillic", "Manrope-700-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Manrope", 700, "latin", "Manrope-700-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Onest", 500, "cyrillic", "Onest-500-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Onest", 500, "latin", "Onest-500-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Onest", 600, "cyrillic", "Onest-600-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Onest", 600, "latin", "Onest-600-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+    ("Onest", 700, "cyrillic", "Onest-700-cyrillic.woff",
+     "U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116"),
+    ("Onest", 700, "latin", "Onest-700-latin.woff",
+     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, "
+     "U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"),
+]
+
+# Заполняется адресами после загрузки файлов в Тильду: {"Manrope-400-cyrillic.woff": "https://…"}.
+# Пока пусто — в CSS остаются метки [[FONT:имя]], редактор их не тронет.
+# Заполняется адресами после загрузки файлов в Тильду:
+# {"Manrope-400-cyrillic.woff": "https://static.tildacdn.com/..."}.
+# Пока пусто — в CSS остаются метки [[FONT:имя]], редактор их не тронет.
+FONT_URLS: dict[str, str] = {}
+
+
+def font_faces_css() -> str:
+    parts = []
+    for family, weight, _subset, file, unicode_range in FONT_FACES:
+        url = FONT_URLS.get(file) or f"[[FONT:{file}]]"
+        parts.append(
+            f"@font-face{{font-family:'{family}';font-style:normal;font-weight:{weight};"
+            f"font-display:swap;src:url({url}) format('woff');unicode-range:{unicode_range};}}"
+        )
+    return "".join(parts)
 
 
 def chrome_css(head_nodes: list) -> str:
@@ -680,8 +734,8 @@ def write_head(head_nodes: list) -> str:
         "<!-- Fulfil.pro · общий код для всех страниц.\n"
         "     Вставить в «Настройки сайта → Ещё → HTML-код для вставки внутрь HEAD».\n"
         "     Обновляется только через tilda/build_blocks.py — руками не править. -->\n"
-        f"{FONTS}\n"
-        # Когда стили лежат в блоках, база в HEAD несёт только рантайм —
+        f"<style>{font_faces_css()}</style>\n"
+        # Когда стили лежат в блоках, база в HEAD несёт только шрифты и рантайм —
         # иначе каждое правило оказалось бы на странице дважды.
         + ("" if STYLES_IN_BLOCKS else f"<style>{base_css(head_nodes)}</style>\n")
         + f"<script>{runtime_js()}</script>\n"
@@ -698,20 +752,23 @@ def write_external_base(head_nodes: list) -> None:
     """
     assets = OUT / "_assets"
     assets.mkdir(parents=True, exist_ok=True)
-    (assets / "fulfil.css").write_text(base_css(head_nodes), encoding="utf-8")
+    # Шрифты лежат прямо в fulfil.css — файл сам по себе полный, ссылок
+    # на Google Fonts в коде для HEAD после этого не остаётся.
+    (assets / "fulfil.css").write_text(font_faces_css() + base_css(head_nodes), encoding="utf-8")
     (assets / "fulfil.js").write_text(runtime_js(), encoding="utf-8")
 
     document = (
         "<!-- Fulfil.pro · общий код для всех страниц, вариант с внешними файлами.\n"
         "\n"
-        "     1. Загрузите в Тильду out/_assets/fulfil.css и out/_assets/fulfil.js\n"
+        "     1. Загрузите в Тильду 14 файлов шрифтов из assets/fonts/*.woff,\n"
+        "        затем out/_assets/fulfil.css и out/_assets/fulfil.js\n"
         "        (Настройки сайта → Ещё → Файлы, либо любой блок → «Загрузить файл»).\n"
-        "     2. Подставьте полученные адреса вместо меток ниже.\n"
-        "     3. Вставьте всё в «Настройки сайта → Ещё → HTML-код внутрь HEAD».\n"
+        "     2. Пришлите адреса шрифтов — я подставлю их в fulfil.css и пересоберу.\n"
+        "     3. Подставьте адреса fulfil.css и fulfil.js вместо меток ниже.\n"
+        "     4. Вставьте всё в «Настройки сайта → Ещё → HTML-код внутрь HEAD».\n"
         "\n"
         "     Отличие от _head.html: там стили и скрипт лежат прямо в коде страницы\n"
         "     и качаются заново на каждой. Здесь браузер берёт их из кеша. -->\n"
-        f"{FONTS}\n"
         '<link rel="stylesheet" href="[[ASSET:fulfil.css]]">\n'
         '<script src="[[ASSET:fulfil.js]]" defer></script>\n'
     )
@@ -725,7 +782,7 @@ def write_base_block(page: str, head_nodes: list) -> str:
         "     Вариант для случая, когда код из настроек сайта не применяется:\n"
         "     вставьте этот блок ПЕРВЫМ на странице, тогда HEAD трогать не нужно.\n"
         "     Если база уже стоит в HEAD — этот блок не нужен. -->\n"
-        f"{FONTS}\n"
+        f"<style>{font_faces_css()}</style>\n"
         f"<style>{base_css(head_nodes)}</style>\n"
         f"<script>{runtime_js()}</script>\n"
     )
@@ -745,7 +802,7 @@ def write_block(page: str, order: int, block: Block, nodes: list, matched: set[i
         )
     document = f"<!-- Fulfil.pro · {PAGES[page]} · блок {order:02d} — {block.title}{notes} -->\n"
     if STANDALONE:
-        document += f"{FONTS}\n"
+        document += f"<style>{font_faces_css()}</style>\n"
 
     # Разметка идёт перед стилями: на отрисовку это не влияет, зато если редактор
     # обрежет длинный код, потеряется оформление, а не половина контента.
@@ -828,7 +885,18 @@ def write_manifest(pages: dict[str, list[Block]]) -> None:
         "",
         "0. Удобнее всего переносить через пульт: откройте `out/COPY.html` — он копирует код блоков",
         "   по кнопке, помнит уже перенесённые и подставляет адреса картинок.",
-        "1. `out/<страница>/00-base.html` → первым блоком страницы. Без него блоки выглядят как голый HTML.",
+    ]
+    if STANDALONE:
+        lines.append("1. Блоки самодостаточны, отдельной базы нет — переходите сразу к шагу 2.")
+    else:
+        lines += [
+            "1. Один раз на весь сайт: загрузите 14 файлов шрифтов из `assets/fonts/*.woff`,",
+            "   `out/_assets/fulfil.css` и `out/_assets/fulfil.js` в Тильду, затем вставьте",
+            "   `out/_head-external.html` (с адресами вместо меток) в «Настройки сайта → Ещё →",
+            "   HTML-код внутрь HEAD». Блок `00-base.html` — запасной вариант на случай, если этот",
+            "   код почему-то не применяется: тогда вставьте его первым блоком страницы вместо HEAD.",
+        ]
+    lines += [
         "2. Загрузите картинки из `out/_upload/` в Тильду (любой блок с картинкой → «Загрузить» → скопировать адрес).",
         "3. На каждой странице добавляйте Vibe-блоки в порядке таблицы и вставляйте содержимое файла.",
         "4. Замените метки `[[UPLOAD:имя.webp]]` на адреса загруженных файлов.",
@@ -841,7 +909,7 @@ def write_manifest(pages: dict[str, list[Block]]) -> None:
         lines.append("| № | Блок | Файл | Картинки |")
         lines.append("|---|------|------|----------|")
         if not STANDALONE:
-            lines.append(f"| 00 | База: стили и скрипты | `out/{page}/00-base.html` | — |")
+            lines.append(f"| 00 | База (запасной вариант, см. шаг 1) | `out/{page}/00-base.html` | — |")
         for order, block in enumerate(blocks, start=1):
             uploads = ", ".join(block.uploads) if block.uploads else "—"
             lines.append(
@@ -891,11 +959,18 @@ def main() -> None:
     stylesheet = stylesheet.replace("[src*=", "[data-asset*=")
     stylesheet = drop_subgrid(stylesheet)
     nodes = parse_css(stylesheet)
-    head_nodes, per_block = assign_rules(nodes, pages)
-    for (page, slug), rules in per_block.items():
-        for block in pages[page]:
-            if block.slug == slug:
-                block.css = rules
+    # По умолчанию все стили едут в HEAD одним файлом — так браузер качает их
+    # один раз и берёт из кеша на всех четырёх страницах. Раскладка по блокам
+    # остаётся включаемой опцией: --standalone или --styles-in-blocks. Пустой
+    # `pages` в assign_rules — не оптимизация, а гарантия: без него правила,
+    # у которых в проекте ровно один хозяин, уезжают в per_block и там же
+    # остаются молча отброшенными, если per_block никто не читает.
+    head_nodes, per_block = assign_rules(nodes, pages if (STANDALONE or STYLES_IN_BLOCKS) else {})
+    if STANDALONE or STYLES_IN_BLOCKS:
+        for (page, slug), rules in per_block.items():
+            for block in pages[page]:
+                if block.slug == slug:
+                    block.css = rules
 
     head = write_head(head_nodes)
     write_external_base(head_nodes)
