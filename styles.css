@@ -48,6 +48,8 @@ button, input, select { font: inherit; }
 .button--dark { width: 100%; background: var(--navy); margin-top: 16px; }
 .button--light { background: var(--white); color: var(--navy); }
 .button--light:hover { background: #eaf0fa; }
+.button--outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+.button--outline:hover { background: var(--blue); color: #fff; }
 
 .hero { min-height: max(740px, calc(100vh - 86px)); display: grid; grid-template-columns: minmax(500px, .92fr) 1.08fr; grid-template-rows: 1fr; background: var(--white); position: relative; overflow: hidden; }
 .hero-copy { padding: clamp(42px, 4.2vw, 66px) clamp(32px, 5vw, 82px) 24px; display: flex; flex-direction: column; align-items: flex-start; animation: reveal .7s cubic-bezier(.2,.8,.2,1) both; }
