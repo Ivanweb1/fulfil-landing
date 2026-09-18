@@ -38,6 +38,7 @@ PAGES = {
     "index": "Главная",
     "wildberries": "Фулфилмент для Wildberries",
     "ozon": "Фулфилмент для Ozon",
+    "yandex-market": "Фулфилмент для Яндекс Маркета",
     "fbs": "Фулфилмент по модели FBS",
 }
 
@@ -46,6 +47,7 @@ PAGE_URLS = {
     "index.html": "/",
     "wildberries.html": "/fulfilment-dlya-wildberries/",
     "ozon.html": "/fulfilment-dlya-ozon/",
+    "yandex-market.html": "/fulfilment-dlya-yandeks-marketa/",
     "fbs.html": "/fulfilment-po-modeli-fbs/",
 }
 
@@ -54,6 +56,7 @@ BACK_TO_TOP = {
     "index": 600,
     "wildberries": 400,
     "ozon": 600,
+    "yandex-market": 600,
     "fbs": 600,
 }
 
