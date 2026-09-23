@@ -60,6 +60,13 @@ BACK_TO_TOP = {
     "fbs": 600,
 }
 
+# Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
+# согласован. Пометка уходит в шапку блока и в манифест, чтобы при переносе
+# было видно, что блок нужно скрыть, а не пропустить.
+HIDDEN_BLOCKS = {
+    ("yandex-market", "trust"): "отзывы не согласованы с заказчиком",
+}
+
 # 3.3 — адрес прайса. Если очистить, в блоках останется метка [[PRICE_PDF]].
 # Ссылка на Google Drive работает только при открытом доступе «всем, у кого есть
 # ссылка»: иначе посетитель попадает на страницу входа Google вместо загрузки.
@@ -817,9 +824,12 @@ def write_base_block(page: str, head_nodes: list) -> str:
 
 def write_block(page: str, order: int, block: Block, nodes: list, matched: set[int] | None = None) -> str:
     notes = ""
+    hidden = HIDDEN_BLOCKS.get((page, block.slug))
+    if hidden:
+        notes += f"\n     Блок вставить и скрыть в Тильде: {hidden}."
     if block.uploads:
         listing = "\n".join(f"       [[UPLOAD:{name}]] → загрузите out/_upload/{name}" for name in block.uploads)
-        notes = (
+        notes += (
             "\n     Перед вставкой замените метки на адреса файлов, загруженных в Тильду:\n"
             f"{listing}"
         )
@@ -934,8 +944,10 @@ def write_manifest(pages: dict[str, list[Block]]) -> None:
             lines.append(f"| 00 | База — шрифты, стили, скрипт (см. шаг 1) | `out/{page}/00-base.html` | — |")
         for order, block in enumerate(blocks, start=1):
             uploads = ", ".join(block.uploads) if block.uploads else "—"
+            hidden = HIDDEN_BLOCKS.get((page, block.slug))
+            title = f"{block.title} — вставить и скрыть ({hidden})" if hidden else block.title
             lines.append(
-                f"| {order:02d} | {block.title} | `out/{page}/{order:02d}-{block.slug}.html` | {uploads} |"
+                f"| {order:02d} | {title} | `out/{page}/{order:02d}-{block.slug}.html` | {uploads} |"
             )
         lines.append("")
     (OUT / "MANIFEST.md").write_text("\n".join(lines), encoding="utf-8")
