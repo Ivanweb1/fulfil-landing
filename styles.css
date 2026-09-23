@@ -1004,4 +1004,3 @@ img.team__photo { display: block; border: 0; }
 .final-form input[aria-invalid="true"] { border-bottom-color: #ff9c9c; }
 .hp-field { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; }
 .pricerow__price--plain b { font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; color: #9bb7ed; }
-.page-hero__lead a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
