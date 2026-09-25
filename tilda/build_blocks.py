@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import functools
 import hashlib
 import io
 import json
@@ -541,16 +542,36 @@ def build_blocks(page: str) -> list[Block]:
     if footer:
         blocks.append(Block("footer", SLUG_TITLES["footer"], footer.group(1)))
 
-    # Конфиг квиза из inline-скрипта уезжает внутрь блока с квизом.
+    # Конфиг квиза из inline-скрипта уезжает внутрь блока с квизом. У страницы
+    # Яндекс Маркета логика вынесена в отдельный файл, поэтому читаем массив
+    # шагов и оттуда: так статическая страница и Tilda остаются одним источником
+    # правды, без второй вручную поддерживаемой копии вопросов.
     steps_match = re.search(r"window\.QUIZ_STEPS\s*=\s*(\[.*?\]);", source, flags=re.S)
+    if not steps_match:
+        sidecar = ROOT / f"{page}.js"
+        if sidecar.exists():
+            sidecar_source = sidecar.read_text(encoding="utf-8")
+            steps_match = re.search(
+                r"(?:const|let|var)\s+\w*QuizSteps\s*=\s*(\[.*?\]);",
+                sidecar_source,
+                flags=re.S,
+            )
     counts_contact = "window.QUIZ_COUNT_CONTACT = true" in source
     market_match = re.search(r"window\.QUIZ_MARKETPLACE\s*=\s*'([^']*)'", source)
     if steps_match:
         config = {
             "steps": js_array_to_json(steps_match.group(1)),
             "countContact": counts_contact,
-            "marketplace": market_match.group(1) if market_match else "",
+            "marketplace": market_match.group(1) if market_match else (
+                "Яндекс Маркет" if page == "yandex-market" else ""
+            ),
         }
+        if page == "yandex-market":
+            config["formName"] = "Квиз — Яндекс Маркет"
+            config["successMessage"] = (
+                "Спасибо! Заявка отправлена. Менеджер свяжется с вами и подготовит "
+                "предварительный расчёт в течение 30 минут в рабочее время."
+            )
         for block in blocks:
             if "quizContent" in block.html:
                 payload = json.dumps(config, ensure_ascii=False).replace("</", "<\\/")
@@ -736,6 +757,7 @@ def rules_for_block(nodes: list, block: Block, matched: set[int]) -> list:
     return selected
 
 
+@functools.lru_cache(maxsize=1)
 def runtime_js() -> str:
     """Сжатая версия рантайма — вставляется в HEAD.
 
@@ -748,9 +770,10 @@ def runtime_js() -> str:
     """
     source = TILDA / "fx-runtime.js"
     try:
+        npx = "npx.cmd" if sys.platform == "win32" else "npx"
         result = subprocess.run(
-            ["npx", "--yes", "terser", str(source), "-c", "-m"],
-            capture_output=True, text=True, timeout=60, shell=(sys.platform == "win32"),
+            [npx, "--yes", "terser", str(source), "-c", "-m"],
+            capture_output=True, text=True, timeout=60,
             encoding="utf-8", errors="replace",
         )
         if result.returncode == 0 and result.stdout.strip():

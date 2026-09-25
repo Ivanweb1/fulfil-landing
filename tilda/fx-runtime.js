@@ -9,7 +9,7 @@
 
   // Меняется при каждой правке рантайма. По ней видно, что на странице
   // остались блоки от прошлой сборки.
-  var VERSION = '2026-09-07.2';
+  var VERSION = '2026-09-25.1';
 
   // В автономной сборке рантайм лежит в каждом блоке. Первая копия берёт
   // управление, остальные только досматривают новые блоки, не заводя ещё один
@@ -269,17 +269,19 @@
 
   function readQuizConfig(root) {
     var holder = root.querySelector('script.fx-quiz-config');
-    if (!holder) return { steps: DEFAULT_QUIZ, countContact: false, marketplace: '' };
+    if (!holder) return { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '' };
     try {
       var parsed = JSON.parse(holder.textContent);
       return {
         steps: Array.isArray(parsed.steps) && parsed.steps.length ? parsed.steps : DEFAULT_QUIZ,
         countContact: parsed.countContact === true,
-        marketplace: parsed.marketplace || ''
+        marketplace: parsed.marketplace || '',
+        formName: parsed.formName || 'Квиз-расчёт',
+        successMessage: parsed.successMessage || ''
       };
     } catch (error) {
       console.error('[fx] Не разобран конфиг квиза', error);
-      return { steps: DEFAULT_QUIZ, countContact: false, marketplace: '' };
+      return { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '' };
     }
   }
 
@@ -301,6 +303,57 @@
     var answers = steps.map(function () { return []; });
     var step = 0;
     var stage = 'questions';
+    var contactName = '';
+    var contactValue = '';
+
+    function attr(value) {
+      return String(value || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    function quizError(message) {
+      var holder = content.querySelector('.quiz__error');
+      if (holder) holder.textContent = message || '';
+    }
+
+    function contactError(channel) {
+      var value = contactValue.trim();
+      if (!channel) return 'Выберите способ связи.';
+      if (!value) return 'Укажите контакт для связи.';
+      if (channel === 'Telegram') {
+        var username = /^@[A-Za-z0-9_]{5,32}$/.test(value);
+        if (!username && phoneDigits(value).length !== 10) {
+          return 'Укажите номер телефона или Telegram username в формате @username.';
+        }
+      } else if (phoneDigits(value).length !== 10) {
+        return 'Введите номер телефона полностью.';
+      }
+      return '';
+    }
+
+    function sendQuiz(channel) {
+      var details = steps.map(function (item, index) {
+        return item.question + ' — ' + (answers[index].length ? answers[index].join(', ') : 'нет ответа');
+      });
+      if (channel) details.push('Контакт — ' + contactValue.trim());
+      if (config.marketplace) details.unshift('Маркетплейс — ' + config.marketplace);
+      next.disabled = true;
+      next.textContent = 'Отправляем…';
+      return send({
+        name: contactName.trim(),
+        phone: contactValue.trim(),
+        formName: config.formName,
+        details: details.join('\n')
+      }).then(function () {
+        stage = 'done';
+        render();
+        showToast(CFG.successText);
+      }).catch(function () {
+        next.disabled = false;
+        next.innerHTML = 'Повторить отправку <span>↗</span>';
+        quizError('Не удалось отправить заявку. Проверьте соединение и попробуйте ещё раз. Введённые данные сохранены.');
+        showToast(CFG.errorText);
+      });
+    }
 
     if (total) total.textContent = String(totalSteps).padStart(2, '0');
 
@@ -313,7 +366,8 @@
 
     function render() {
       if (stage === 'done') {
-        content.innerHTML = '<div class="quiz__question">Спасибо! Свяжемся в течение 30 минут.</div>';
+        content.innerHTML = '<div class="quiz__success"><div class="quiz__question">Спасибо! Заявка отправлена.</div><p>' +
+          (config.successMessage || 'Менеджер свяжется с вами в течение 30 минут.') + '</p></div>';
         renderProgress(steps.length);
         if (hint) hint.classList.add('is-hidden');
         if (back) back.hidden = true;
@@ -345,26 +399,48 @@
 
       var current = steps[step];
       if (!current) return;
+      var contact = '';
+      if (current.contact) {
+        var channel = answers[step][0] || '';
+        var telegram = channel === 'Telegram';
+        var disabled = !channel;
+        var placeholder = telegram ? 'Телефон или @username' : (disabled ? 'Сначала выберите способ связи' : '+7 (___) ___-__-__');
+        contact = '<div class="quiz__contact">' +
+          '<label><span class="sr-only">Ваше имя</span><input name="quiz-name" autocomplete="name" placeholder="Ваше имя — необязательно" value="' + attr(contactName) + '"></label>' +
+          '<label><span class="sr-only">Контакт</span><input name="quiz-contact" ' +
+          (telegram ? 'type="text" data-fx-raw="1" autocomplete="off"' : 'type="tel" inputmode="tel" autocomplete="tel"') +
+          ' placeholder="' + placeholder + '" value="' + attr(contactValue) + '" ' + (disabled ? 'disabled' : '') + ' required></label>' +
+          '</div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с ' +
+          '<a href="' + CFG.policyUrl + '" target="_blank" rel="noopener">политикой конфиденциальности</a></p>';
+      }
       content.innerHTML = '<div class="quiz__question">' + current.question + '</div><div class="quiz__options">' +
         current.options.map(function (option) {
           var selected = answers[step].indexOf(option) !== -1 ? ' selected' : '';
-          return '<button class="quiz__option' + selected + '" type="button">' + option + '</button>';
-        }).join('') + '</div>';
+          return '<button class="quiz__option' + selected + '" type="button" data-option="' + attr(option) + '">' + option + '</button>';
+        }).join('') + '</div>' + contact + '<p class="quiz__error" role="alert"></p>';
       if (stepNumber) stepNumber.textContent = String(step + 1).padStart(2, '0');
       renderProgress(step);
       if (hint) {
         hint.classList.remove('is-hidden');
-        hint.textContent = current.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
+        hint.textContent = current.hint || (current.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант');
       }
       if (back) back.disabled = step === 0;
-      if (next) next.innerHTML = step === steps.length - 1 ? 'Перейти к контактам <span>→</span>' : 'Следующий вопрос <span>→</span>';
+      if (next) next.innerHTML = current.contact ? 'Получить предварительный расчёт <span>↗</span>' :
+        (step === steps.length - 1 ? 'Перейти к контактам <span>→</span>' : 'Следующий вопрос <span>→</span>');
     }
+
+    content.addEventListener('input', function (event) {
+      if (event.target.name === 'quiz-name') contactName = event.target.value;
+      if (event.target.name === 'quiz-contact') contactValue = event.target.value;
+      quizError('');
+    });
 
     content.addEventListener('click', function (event) {
       var option = event.target.closest('.quiz__option');
       if (!option || stage !== 'questions') return;
       var current = answers[step];
-      var position = current.indexOf(option.textContent);
+      var value = option.getAttribute('data-option') || option.textContent;
+      var position = current.indexOf(value);
       // Мультивыбор работает только там, где он задан в конфиге шага.
       if (!steps[step].multi) {
         list(content, '.quiz__option').forEach(function (other) {
@@ -373,15 +449,23 @@
         current.length = 0;
         if (position === -1) {
           option.classList.add('selected');
-          current.push(option.textContent);
+          current.push(value);
         } else {
           option.classList.remove('selected');
         }
+        if (steps[step].contact) render();
         return;
       }
-      option.classList.toggle('selected');
-      if (position === -1) current.push(option.textContent);
-      else current.splice(position, 1);
+      if (value === steps[step].exclusive) {
+        current.length = 0;
+        current.push(value);
+      } else {
+        var exclusive = current.indexOf(steps[step].exclusive);
+        if (exclusive !== -1) current.splice(exclusive, 1);
+        if (position === -1) current.push(value);
+        else current.splice(current.indexOf(value), 1);
+      }
+      render();
     });
 
     if (next) next.addEventListener('click', function () {
@@ -407,7 +491,7 @@
         send({
           name: nameInput.value.trim(),
           phone: phoneInput.value.trim(),
-          formName: 'Квиз-расчёт',
+          formName: config.formName,
           details: details
         }).then(function () {
           stage = 'done';
@@ -417,6 +501,22 @@
           next.disabled = false;
           showToast(CFG.errorText);
         });
+        return;
+      }
+      if (!answers[step].length) {
+        quizError(step === steps.length - 1 && steps[step].contact ? 'Выберите способ связи.' : 'Выберите хотя бы один вариант.');
+        return;
+      }
+      if (steps[step].contact) {
+        var inlineChannel = answers[step][0];
+        var validation = contactError(inlineChannel);
+        if (validation) {
+          quizError(validation);
+          var contactInput = content.querySelector('[name="quiz-contact"]');
+          if (contactInput) contactInput.focus();
+          return;
+        }
+        sendQuiz(inlineChannel);
         return;
       }
       if (step < steps.length - 1) step += 1;
