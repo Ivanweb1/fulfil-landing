@@ -9,7 +9,7 @@
 
   // Меняется при каждой правке рантайма. По ней видно, что на странице
   // остались блоки от прошлой сборки.
-  var VERSION = '2026-09-02.1';
+  var VERSION = '2026-09-07.2';
 
   // В автономной сборке рантайм лежит в каждом блоке. Первая копия берёт
   // управление, остальные только досматривают новые блоки, не заводя ещё один
@@ -48,7 +48,7 @@
     // поэтому без адреса она просто уводит на форму.
     priceUrl: '',
     // Страница политики обработки персональных данных.
-    policyUrl: '/politika-konfidencialnosti/',
+    policyUrl: '/privacy-policy/',
     // Порог появления кнопки «Наверх», px. Страница задаёт свой через
     // data-fx-back-to-top на любом блоке.
     backToTop: 600
@@ -127,36 +127,21 @@
     return button;
   }
 
-  /* ------------------------------------------------------------- слайдер */
+  /* --------------------------------------------------- ссылка на политику */
 
-  function initSlider(root) {
-    var slides = list(root, '.hero-slide');
-    var dots = list(root, '.slider-dot');
-    if (slides.length < 2) return;
-    if (!once(slides[0].parentElement, 'fxSlider')) return;
-
-    var current = 0;
-    var timer;
-
-    function show(index) {
-      current = (index + slides.length) % slides.length;
-      slides.forEach(function (slide, i) { slide.classList.toggle('is-active', i === current); });
-      dots.forEach(function (dot, i) { dot.classList.toggle('is-active', i === current); });
-    }
-
-    function start() {
-      window.clearInterval(timer);
-      timer = window.setInterval(function () { show(current + 1); }, 5200);
-    }
-
-    dots.forEach(function (dot) {
-      dot.addEventListener('click', function () {
-        show(Number(dot.dataset.slide));
-        start();
-      });
-    });
-
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) start();
+  // Политика — отдельная страница (CFG.policyUrl), никакого попапа: ссылки
+  // в формах и квизе уже ведут туда обычным переходом, ничего перехватывать
+  // не нужно. Единственное, чего не хватает, — сама ссылка в футере (её там
+  // нет ни на одной странице). Добавляем рантаймом, а не правкой блока
+  // footer на каждой из 4 страниц.
+  function ensureFooterPolicyLink() {
+    var footer = document.querySelector('.footer');
+    if (!footer || footer.querySelector('.fx-policy-link')) return;
+    var link = document.createElement('a');
+    link.className = 'fx-policy-link';
+    link.href = CFG.policyUrl;
+    link.textContent = 'Политика конфиденциальности';
+    footer.insertBefore(link, footer.lastElementChild);
   }
 
   /* ---------------------------------------------------------------- меню */
@@ -328,7 +313,7 @@
 
     function render() {
       if (stage === 'done') {
-        content.innerHTML = '<div class="quiz__question">Спасибо! Свяжемся в течение 1 часа.</div>';
+        content.innerHTML = '<div class="quiz__question">Спасибо! Свяжемся в течение 30 минут.</div>';
         renderProgress(steps.length);
         if (hint) hint.classList.add('is-hidden');
         if (back) back.hidden = true;
@@ -337,18 +322,24 @@
       }
 
       if (stage === 'contact') {
+        // Последний вопрос — способ связи; если выбрали Telegram, поле контакта
+        // принимает и телефон, и @username, поэтому снимаем с него маску телефона.
+        var isTelegram = (answers[steps.length - 1] || []).indexOf('Telegram') !== -1;
+        var contactType = isTelegram ? 'text' : 'tel';
+        var contactPlaceholder = isTelegram ? 'Телефон или @username' : '+7 (___) ___-__-__';
+        var rawAttr = isTelegram ? ' data-fx-raw="1"' : '';
         content.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div>' +
           '<div class="quiz__contact">' +
           '<input type="text" name="name" autocomplete="name" placeholder="Ваше имя" required>' +
-          '<input type="tel" name="phone" autocomplete="tel" placeholder="+7 (___) ___-__-__" required>' +
+          '<input type="' + contactType + '" name="phone" autocomplete="tel" placeholder="' + contactPlaceholder + '"' + rawAttr + ' required>' +
           '</div>' +
           '<p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с ' +
-          '<a href="' + CFG.policyUrl + '">политикой конфиденциальности</a></p>';
+          '<a href="' + CFG.policyUrl + '" target="_blank" rel="noopener">политикой конфиденциальности</a></p>';
         renderProgress(steps.length);
         if (stepNumber) stepNumber.textContent = String(totalSteps).padStart(2, '0');
         if (hint) hint.classList.add('is-hidden');
         if (back) back.disabled = false;
-        if (next) next.innerHTML = 'Получить расчет <span>↗</span>';
+        if (next) next.innerHTML = 'Получить предварительный расчёт <span>↗</span>';
         return;
       }
 
@@ -366,7 +357,7 @@
         hint.textContent = current.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
       }
       if (back) back.disabled = step === 0;
-      if (next) next.innerHTML = 'Следующий вопрос <span>→</span>';
+      if (next) next.innerHTML = step === steps.length - 1 ? 'Перейти к контактам <span>→</span>' : 'Следующий вопрос <span>→</span>';
     }
 
     content.addEventListener('click', function (event) {
@@ -406,6 +397,11 @@
           return item.question + ' — ' + (answers[index].length ? answers[index].join(', ') : 'нет ответа');
         });
         if (config.marketplace) details.unshift('Маркетплейс — ' + config.marketplace);
+        // Поле контакта у Telegram принимает и телефон, и @username, а хранит его
+        // Тильда в системном поле «Phone» со встроенной проверкой формата номера,
+        // которую нельзя снять скриптом (проверено). Дублируем значение как есть
+        // в «Детали», чтобы ник не потерялся, даже если Тильда отклонит форму.
+        if (phoneDigits(phoneInput.value).length < 10) details.unshift('Контакт для связи — ' + phoneInput.value.trim());
         details = details.join('\n');
         next.disabled = true;
         send({
@@ -622,6 +618,23 @@
     forcePhoneCountry(donor, visible);
 
     var digits = phoneDigits(value);
+    var result = donor.querySelector('.js-phonemask-result, input[type="hidden"][name="Phone"]');
+
+    // Меньше 10 цифр — это не телефон, а, например, ник в Telegram (квиз пускает
+    // туда «телефон или @username»). Поле «Phone» у Тильды — системный тип
+    // с проверкой формата номера, встроенной в саму платформу: снять её нельзя
+    // ни атрибутами, ни подменой поля (проверено на живой форме — не помогает
+    // ни то, ни другое). Значит с текущим приёмником такая заявка гарантированно
+    // не пройдёт валидацию Тильды. Всё равно проставляем значение как есть —
+    // сработает, если приёмнику сменят тип поля «Телефон» на «Текст» — а ник
+    // на всякий случай дублируется в «Детали» до отправки (см. вызывающий код).
+    if (digits.length < 10) {
+      var raw = String(value || '').trim();
+      visible.value = raw;
+      if (result) result.value = raw;
+      return true;
+    }
+
     var template = visible.getAttribute('data-phonemask-without-code') || '(000) 000-00-00';
     var code = visible.getAttribute('data-phonemask-code');
     if (!code) {
@@ -637,7 +650,6 @@
     // Маска могла переписать поле по-своему — возвращаем своё значение.
     visible.value = formatted;
 
-    var result = donor.querySelector('.js-phonemask-result, input[type="hidden"][name="Phone"]');
     if (result) {
       result.value = code + ' ' + formatted;
       result.dispatchEvent(new Event('change', { bubbles: true }));
@@ -815,7 +827,7 @@
   }
 
   function isOurPhoneField(field) {
-    return field && field.matches && field.matches(PHONE_FIELDS) && field.closest('.fx-block');
+    return field && field.matches && field.matches(PHONE_FIELDS) && field.closest('.fx-block') && !field.hasAttribute('data-fx-raw');
   }
 
   // Через делегирование: поля квиза рисуются скриптом уже после запуска.
@@ -893,7 +905,6 @@
   // Каждый инициализатор сам следит, чтобы не сработать дважды на одном элементе.
   function initBlock(root) {
     root.dataset.fxReady = '1';
-    initSlider(root);
     initMenu(root);
     initSticky(root);
     initPrice(root);
@@ -925,6 +936,7 @@
     blocks.forEach(initBlock);
     toastEl();
     ensureBackToTop();
+    ensureFooterPolicyLink();
     var donor = findDonor();
     if (donor) hideDonor(donor);
   }

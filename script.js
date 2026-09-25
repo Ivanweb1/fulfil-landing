@@ -1,27 +1,5 @@
 const form = document.querySelector('.lead-card');
 const toast = document.querySelector('.toast');
-const slides = [...document.querySelectorAll('.hero-slide')];
-const sliderDots = [...document.querySelectorAll('.slider-dot')];
-let currentSlide = 0;
-let sliderTimer;
-
-function showSlide(index) {
-  currentSlide = (index + slides.length) % slides.length;
-  slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === currentSlide));
-  sliderDots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === currentSlide));
-}
-
-function startSlider() {
-  window.clearInterval(sliderTimer);
-  sliderTimer = window.setInterval(() => showSlide(currentSlide + 1), 5200);
-}
-
-sliderDots.forEach((dot) => dot.addEventListener('click', () => {
-  showSlide(Number(dot.dataset.slide));
-  startSlider();
-}));
-
-if (slides.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) startSlider();
 
 form?.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -66,7 +44,7 @@ function renderQuiz() {
   if (!quizContent) return;
 
   if (quizStage === 'done') {
-    quizContent.innerHTML = '<div class="quiz__question">Спасибо! Свяжемся в течение 1 часа.</div>';
+    quizContent.innerHTML = '<div class="quiz__question">Спасибо! Свяжемся в течение 30 минут.</div>';
     renderQuizProgress(quizSteps.length);
     quizHint?.classList.add('is-hidden');
     if (quizBack) quizBack.hidden = true;
@@ -75,12 +53,15 @@ function renderQuiz() {
   }
 
   if (quizStage === 'contact') {
-    quizContent.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="tel" placeholder="+7 (___) ___-__-__"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>';
+    const isTelegram = (quizAnswers[quizSteps.length - 1] || []).includes('Telegram');
+    const contactType = isTelegram ? 'text' : 'tel';
+    const contactPlaceholder = isTelegram ? 'Телефон или @username' : '+7 (___) ___-__-__';
+    quizContent.innerHTML = `<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="${contactType}" placeholder="${contactPlaceholder}"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>`;
     renderQuizProgress(quizSteps.length);
     if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');
     if (quizBack) quizBack.disabled = false;
-    if (quizNext) quizNext.innerHTML = 'Получить расчет <span>↗</span>';
+    if (quizNext) quizNext.innerHTML = 'Получить предварительный расчёт <span>↗</span>';
     return;
   }
 
@@ -92,7 +73,7 @@ function renderQuiz() {
   quizHint?.classList.remove('is-hidden');
   if (quizHint) quizHint.textContent = step.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
   if (quizBack) quizBack.disabled = quizStep === 0;
-  if (quizNext) quizNext.innerHTML = 'Следующий вопрос <span>→</span>';
+  if (quizNext) quizNext.innerHTML = quizStep === quizSteps.length - 1 ? 'Перейти к контактам <span>→</span>' : 'Следующий вопрос <span>→</span>';
 }
 
 quizContent?.addEventListener('click', (event) => {
