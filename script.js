@@ -1,7 +1,7 @@
 const form = document.querySelector('.lead-card');
 const toast = document.querySelector('.toast');
 
-form?.addEventListener('submit', (event) => {
+if (!window.CUSTOM_FORM_HANDLER) form?.addEventListener('submit', (event) => {
   event.preventDefault();
   if (!form.reportValidity()) return;
   toast.textContent = 'Спасибо! Заявка принята — менеджер свяжется с вами.';
@@ -10,6 +10,7 @@ form?.addEventListener('submit', (event) => {
   window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
 });
 
+if (!window.CUSTOM_QUIZ_HANDLER) {
 const defaultQuizSteps = [
   { question: 'На какие маркетплейсы нужно отгрузить товары?', options: ['Wildberries', 'Ozon', 'Яндекс Маркет', 'Мегамаркет', 'Лемана ПРО', 'Авито', 'Lamoda', 'М.Видео'], multi: true },
   { question: 'Какое количество единиц нужно обработать?', options: ['500–1 000', '1 001–3 000', '3 001–5 000', 'Более 5 000'], multi: false },
@@ -112,6 +113,7 @@ quizBack?.addEventListener('click', () => {
 });
 
 renderQuiz();
+}
 
 document.querySelectorAll('.faq__list article > button').forEach((button) => {
   button.addEventListener('click', () => {
@@ -123,7 +125,7 @@ document.querySelectorAll('.faq__list article > button').forEach((button) => {
 });
 
 const finalForm = document.querySelector('.final-form');
-finalForm?.addEventListener('submit', (event) => {
+if (!window.CUSTOM_FORM_HANDLER) finalForm?.addEventListener('submit', (event) => {
   event.preventDefault();
   if (!finalForm.reportValidity()) return;
   toast.textContent = 'Спасибо! Предложение будет готово в течение 1 часа.';

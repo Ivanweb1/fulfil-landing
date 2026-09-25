@@ -207,6 +207,15 @@ h1 span { color: var(--blue); }
 .quiz__contact { max-width: 660px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; animation: quizIn .5s cubic-bezier(.2,.8,.2,1) .07s both; }
 .quiz__contact input { height: 56px; padding: 0 18px; border: 1px solid var(--line); background: #fff; outline: none; }
 .quiz__contact input:focus { border-color: var(--blue); }
+.quiz__contact-wrap { max-width: 760px; padding-top: 26px; border-top: 1px solid var(--line); animation: quizIn .5s cubic-bezier(.2,.8,.2,1) .07s both; }
+.quiz__contact-wrap .quiz__options { padding-top: 0; border-top: 0; }
+.quiz__contact-wrap .quiz__contact { margin-top: 18px; }
+.quiz__contact label { display: block; }
+.quiz__contact input:disabled { color: #8d96a6; background: #f2f4f7; cursor: not-allowed; }
+.quiz__error { min-height: 20px; margin: 14px 0 0; color: #c0392b; font-size: 12px; line-height: 1.45; }
+.quiz__success { max-width: 760px; padding: 28px 0; border-top: 1px solid var(--line); }
+.quiz__success .quiz__question { margin-bottom: 14px; }
+.quiz__success p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
 @keyframes quizIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 .steps__flow { --step-col: 132px; --step-gap: 48px; margin-top: clamp(38px, 4.4vw, 60px); border-top: 1px solid #aeb7c5; }
@@ -450,6 +459,7 @@ img.team__photo { display: block; border: 0; }
 
 .toast { position: fixed; right: 24px; bottom: 24px; padding: 16px 20px; background: var(--navy); color: #fff; border-radius: 4px; font-size: 12px; z-index: 40; box-shadow: 0 18px 44px rgba(5,14,31,.25); transform: translateY(120px); opacity: 0; transition: .3s ease; }
 .toast.is-visible { transform: translateY(0); opacity: 1; }
+.toast.toast--error { background: #8f2f26; }
 
 @keyframes reveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -656,6 +666,7 @@ img.team__photo { display: block; border: 0; }
 .page-hero__metrics li:first-child { padding-left: 0; border-left: 0; }
 .page-hero__metrics li:last-child { padding-right: 0; }
 .page-hero__metrics strong { display: block; font-family: "Onest", sans-serif; font-size: clamp(24px, 2.5vw, 36px); font-weight: 600; line-height: 1; letter-spacing: -.05em; white-space: nowrap; }
+.page-hero__metrics .metric-long strong { font-size: clamp(20px, 2.1vw, 31px); white-space: normal; }
 .page-hero__metrics span { display: block; margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.4; }
 
 @media (max-width: 1100px) {
@@ -767,6 +778,9 @@ img.team__photo { display: block; border: 0; }
 .price .tariff-actions { display: flex; align-items: center; gap: 28px; }
 .price .text-link { color: #fff; border-color: rgba(255,255,255,.45); }
 .price .tariffs-footer > strong { font-family: "Onest", sans-serif; font-size: clamp(16px, 1.4vw, 20px); font-weight: 500; letter-spacing: -.03em; color: #9bb7ed; }
+.tariffs-notes { margin-top: 28px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.2); display: grid; gap: 9px; }
+.tariffs-notes p { max-width: 980px; margin: 0; color: #c3ccdc; font-size: 13px; line-height: 1.65; }
+.tariffs-notes p:last-child { color: #fff; font-weight: 700; }
 
 @media (max-width: 1100px) {
   .pricelist__caption, .pricerow { grid-template-columns: minmax(0, 1fr) minmax(0, .7fr) 180px; gap: 26px; }
@@ -1004,7 +1018,7 @@ img.team__photo { display: block; border: 0; }
 
 @media (max-width: 780px) {
   .compare__table--3 .compare__row p:nth-of-type(1)::before { content: "FBS — "; color: var(--blue); font-weight: 700; }
-  .compare__table--3 .compare__row p:nth-of-type(2)::before { content: "FBY / FBO — "; color: var(--muted); font-weight: 700; }
+  .compare__table--3 .compare__row p:nth-of-type(2)::before { content: "FBY — "; color: var(--muted); font-weight: 700; }
   .compare__table--3 .compare__row p:nth-of-type(3)::before { content: "Экспресс — "; color: var(--muted); font-weight: 700; }
 }
 
