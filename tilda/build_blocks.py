@@ -40,6 +40,7 @@ PAGES = {
     "wildberries": "Фулфилмент для Wildberries",
     "ozon": "Фулфилмент для Ozon",
     "yandex-market": "Фулфилмент для Яндекс Маркета",
+    "avito": "Фулфилмент для Авито",
     "fbs": "Фулфилмент по модели FBS",
     "privacy-policy": "Политика конфиденциальности",
 }
@@ -50,6 +51,7 @@ PAGE_URLS = {
     "wildberries.html": "/fulfilment-dlya-wildberries/",
     "ozon.html": "/fulfilment-dlya-ozon/",
     "yandex-market.html": "/fulfilment-dlya-yandeks-marketa/",
+    "avito.html": "/fulfilment-dlya-avito/",
     "fbs.html": "/fulfilment-po-modeli-fbs/",
     "privacy-policy.html": "/privacy-policy/",
 }
@@ -60,6 +62,7 @@ BACK_TO_TOP = {
     "wildberries": 400,
     "ozon": 600,
     "yandex-market": 600,
+    "avito": 600,
     "fbs": 600,
     "privacy-policy": 600,
 }
