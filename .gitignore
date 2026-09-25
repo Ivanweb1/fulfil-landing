@@ -1,5 +1,13 @@
 # Сборка блоков под Tilda — генерируется из исходников, см. tilda/README.md
-tilda/out/
+tilda/out/*
+# Исключения: пульт переноса и картинки под загрузку в Тильду. Пульт самодостаточен
+# (код всех блоков внутри), поэтому открывается с GitHub Pages без сборки.
+# Это снимок сборки — после правок исходников пересоберите и закоммитьте заново.
+!tilda/out/COPY.html
+!tilda/out/_upload/
+
+# Кеш хэшей блоков для пульта переноса (out/COPY.html) — локальный, не для репозитория
+tilda/.block-hash-cache.json
 
 # Артефакты старой сборки под Tilda — не нужны для GitHub Pages
 tilda-*.html
@@ -13,6 +21,7 @@ PHOTOS-FOR-TILDA.txt
 TILDA-README.md
 
 # Прочее
+dbg4_out.txt
 .DS_Store
 Thumbs.db
 

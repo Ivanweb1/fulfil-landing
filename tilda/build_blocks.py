@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import io
 import json
 import sys
@@ -40,6 +41,7 @@ PAGES = {
     "ozon": "Фулфилмент для Ozon",
     "yandex-market": "Фулфилмент для Яндекс Маркета",
     "fbs": "Фулфилмент по модели FBS",
+    "privacy-policy": "Политика конфиденциальности",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -49,6 +51,7 @@ PAGE_URLS = {
     "ozon.html": "/fulfilment-dlya-ozon/",
     "yandex-market.html": "/fulfilment-dlya-yandeks-marketa/",
     "fbs.html": "/fulfilment-po-modeli-fbs/",
+    "privacy-policy.html": "/privacy-policy/",
 }
 
 # 3.4 — порог появления кнопки «Наверх», px. Уезжает в data-атрибут блока шапки.
@@ -58,6 +61,7 @@ BACK_TO_TOP = {
     "ozon": 600,
     "yandex-market": 600,
     "fbs": 600,
+    "privacy-policy": 600,
 }
 
 # 3.3 — адрес прайса. Если очистить, в блоках останется метка [[PRICE_PDF]].
@@ -81,6 +85,16 @@ SVG_INLINE_LIMIT = 20_000
 # Растр в блок не встраиваем: base64 раздувает код блока и мешает кешированию.
 # Исключение — логотип в шапке, чтобы блок шапки был самодостаточным.
 INLINE_RASTER = {"fulfil-logo.png"}
+
+# Точечное качество webp для конкретных фото — по умолчанию 78 (см. encode_webp).
+# Ниже — фото первого экрана главной: заметно тяжелее среднего блока, поэтому
+# сжаты плотнее среднего; на глаз разница при таком отображении не видна.
+PHOTO_QUALITY = {
+    "hero-00-warehouse.webp": 72,
+    "hero-00-warehouse-mobile.webp": 66,
+    "warehouse-scale-c.png": 68,
+}
+DEFAULT_QUALITY = 78
 
 # Если картинки лежат на своём хостинге (Тильда, CDN, GitHub Pages), передайте
 # базовый адрес: `python tilda/build_blocks.py --assets-base https://.../assets/`.
@@ -321,7 +335,8 @@ def export_upload(name: str) -> str:
         upload_dir.mkdir(parents=True, exist_ok=True)
         target = upload_dir / target_name
         if path.exists():
-            target.write_bytes(encode_webp(path, 1600, 78))
+            quality = PHOTO_QUALITY.get(name, DEFAULT_QUALITY)
+            target.write_bytes(encode_webp(path, 1600, quality))
         _uploads[name] = target
     return target_name
 
@@ -369,6 +384,7 @@ SLUG_TITLES = {
     "compare": "Сравнение FBS и FBO",
     "mp": "Маркетплейсы",
     "fc": "Фулфилмент-центр",
+    "policy": "Текст политики",
 }
 
 
@@ -877,14 +893,118 @@ def write_preview(page: str, head: str, documents: list[str]) -> None:
     (OUT / page / "_preview.html").write_text(html, encoding="utf-8")
 
 
+def page_seo(page: str) -> list[dict]:
+    """Что вписать в «Настройки страницы» Тильды: поля из <head> исходной страницы.
+
+    В блоки это не попадает — title, description и Open Graph Тильда держит
+    в настройках страницы, поэтому переносятся они только руками. Пульт
+    показывает их готовым списком, чтобы не открывать исходник.
+    """
+    source = (ROOT / f"{page}.html").read_text(encoding="utf-8")
+    head = source.split("</head>", 1)[0]
+
+    def pick(pattern: str, text: str | None = None) -> str:
+        found = re.search(pattern, head if text is None else text, re.I | re.S)
+        return html_unescape(found.group(1)).strip() if found else ""
+
+    def meta(name: str, attribute: str = "name") -> str:
+        return pick(rf'<meta\s+{attribute}="{name}"\s+content="([^"]*)"')
+
+    # H1 разбит тегами (<br>, <span>) — для сверки с ТЗ нужен текст одной строкой.
+    heading = re.sub(r"<[^>]+>", " ", pick(r"<h1[^>]*>(.*?)</h1>", source))
+    heading = re.sub(r"\s+", " ", heading).strip()
+
+    fields = [
+        {
+            "label": "Заголовок (title)",
+            "where": "Настройки страницы → Основное → Заголовок",
+            "value": pick(r"<title>(.*?)</title>"),
+        },
+        {
+            "label": "Описание (description)",
+            "where": "Настройки страницы → Основное → Описание",
+            "value": meta("description"),
+        },
+        {
+            "label": "Адрес страницы",
+            "where": "Настройки страницы → Основное → Адрес страницы",
+            "value": PAGE_URLS[f"{page}.html"],
+            "note": "должен совпасть с адресом в меню блоков — иначе ссылки между страницами разъедутся",
+        },
+        {
+            "label": "Заголовок для соцсетей (og:title)",
+            "where": "Настройки страницы → Facebook и другие соцсети → Заголовок",
+            "value": meta("og:title", "property"),
+        },
+        {
+            "label": "Описание для соцсетей (og:description)",
+            "where": "Настройки страницы → Facebook и другие соцсети → Описание",
+            "value": meta("og:description", "property"),
+        },
+    ]
+
+    image = meta("og:image", "property")
+    if image:
+        fields.append({
+            "label": "Картинка для соцсетей (og:image)",
+            "where": "Настройки страницы → Facebook и другие соцсети → Изображение",
+            "value": image,
+            "note": "загрузите assets/og-cover.jpg в Тильду и поставьте её адрес, 1200×630",
+        })
+
+    fields.append({
+        "label": "H1",
+        "where": "уже в блоке первого экрана — вписывать никуда не нужно",
+        "value": heading,
+        "note": "справочно: H1 на странице должен остаться ровно один",
+    })
+
+    canonical = pick(r'<link\s+rel="canonical"\s+href="([^"]*)"')
+    if canonical:
+        fields.append({
+            "label": "Canonical",
+            "where": "Тильда ставит сама по адресу страницы — вставлять не нужно",
+            "value": canonical,
+            "note": "сверьте, что совпал с адресом страницы выше",
+        })
+
+    if 'itemtype="https://schema.org/FAQPage"' in source:
+        fields.append({
+            "label": "Разметка FAQ (JSON-LD)",
+            "where": "уже внутри блока с вопросами — отдельно вставлять не нужно",
+            "value": "",
+            "note": f"если разметку попросят именно в HEAD — готовый код в out/{page}/_faq-jsonld.html",
+        })
+
+    if re.search(r'name="robots"[^>]*noindex', head, re.I):
+        fields.append({
+            "label": "robots: noindex",
+            "where": "в Тильду НЕ переносить",
+            "value": "",
+            "note": "noindex в исходнике закрывает от поиска только копию на GitHub Pages; "
+                    "на боевой странице индексацию оставьте открытой",
+            "warn": True,
+        })
+
+    return fields
+
+
 def write_copy_page(pages: dict[str, list[Block]], documents: dict[str, list[tuple]]) -> None:
     """Страница-пульт: копирует код блока в буфер и подставляет адреса картинок."""
     payload = {
         "pages": {
             page: {
                 "title": PAGES[page],
+                "seo": page_seo(page),
                 "blocks": [
-                    {"order": order, "slug": slug, "title": title, "uploads": uploads, "code": code}
+                    {
+                        "order": order,
+                        "slug": slug,
+                        "title": title,
+                        "uploads": uploads,
+                        "code": code,
+                        "hash": hashlib.sha1(code.encode("utf-8")).hexdigest()[:8],
+                    }
                     for order, slug, title, code, uploads in documents[page]
                 ],
             }
@@ -892,6 +1012,42 @@ def write_copy_page(pages: dict[str, list[Block]], documents: dict[str, list[tup
         },
         "uploads": sorted({Path(target).name for target in _uploads.values()}),
     }
+
+    # Пульт хранит отметки «вставлен» в localStorage браузера по ключу page/order,
+    # который не знает о содержимом блока. Чтобы правка в исходниках не терялась
+    # среди уже перенесённых блоков, сверяем хэш каждого блока с хэшем из прошлой
+    # сборки (кеш живёт вне out/, потому что out/ целиком пересоздаётся при каждом
+    # запуске) — и явно перечисляем изменившиеся блоки, чтобы пульт сам снял
+    # отметку только с них, не трогая остальные.
+    cache_path = TILDA / ".block-hash-cache.json"
+    try:
+        cache = json.loads(cache_path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        cache = {}
+    # Старый формат кеша — плоский словарь «блок: хэш», без списка изменившихся.
+    if "hashes" not in cache:
+        cache = {"hashes": cache, "changed": []}
+    previous_hashes = cache["hashes"]
+    current_hashes = {
+        f"{page}/{block['order']}": block["hash"]
+        for page, data in payload["pages"].items()
+        for block in data["blocks"]
+    }
+    changed = [
+        block_id for block_id, current in current_hashes.items()
+        if previous_hashes.get(block_id) != current
+    ]
+    # Повторный запуск сборки без правок не должен стирать список: пульт по нему
+    # снимает отметки у блоков, перенесённых до появления посблочной сверки
+    # хэшей. Список живёт до следующей правки исходников.
+    if not changed:
+        changed = cache.get("changed", [])
+    cache_path.write_text(
+        json.dumps({"hashes": current_hashes, "changed": changed}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    payload["changedThisBuild"] = changed
+
     template = (TILDA / "copy-template.html").read_text(encoding="utf-8")
     data = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
     (OUT / "COPY.html").write_text(template.replace("__DATA__", data), encoding="utf-8")

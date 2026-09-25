@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fulfil.pro → Tilda: перенос блоков</title>
 <style>
@@ -36,10 +37,12 @@
   th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
   tr:last-child td { border-bottom: 0; }
   tr.is-done { background: #f4fbf6; }
+  tr.is-stale { background: #fff8ec; }
   tr.is-next td:first-child { box-shadow: inset 3px 0 0 var(--blue); }
   .num { font-variant-numeric: tabular-nums; color: var(--muted); width: 42px; }
   .size { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .done-mark { color: var(--green); font-weight: 600; }
+  .stale-mark { color: #a8620d; font-weight: 600; }
   .pics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .pic { display: flex; align-items: center; gap: 7px; padding: 4px 9px 4px 4px;
          border: 1px solid var(--line); border-radius: 5px; background: var(--bg); }
@@ -52,6 +55,21 @@
   .assets { display: grid; grid-template-columns: 240px 1fr; gap: 8px 14px; margin-top: 14px; align-items: center; }
   .assets input { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
   .assets code { color: var(--muted); }
+  .seo { margin: 0 0 14px; }
+  .seo summary { display: flex; align-items: baseline; gap: 8px; }
+  .seo summary small { font-weight: 400; color: var(--muted); }
+  .seo-rows { margin-top: 12px; border-top: 1px solid var(--line); }
+  .seo-row { display: grid; grid-template-columns: 230px 1fr auto; gap: 14px;
+             padding: 11px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .seo-row:last-child { border-bottom: 0; }
+  .seo-row.is-warn { background: #fff8ec; }
+  .seo-label { font-weight: 600; }
+  .seo-label small { display: block; margin-top: 3px; font-weight: 400; color: var(--muted); }
+  .seo-value { min-width: 0; }
+  .seo-value code { display: block; white-space: pre-wrap; word-break: break-word;
+                    font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+  .seo-len { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+  .seo-note { margin: 5px 0 0; color: var(--amber); font-size: 12px; }
   .toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 130%);
            padding: 12px 20px; background: var(--ink); color: #fff; border-radius: 6px;
            transition: transform .25s ease; z-index: 10; }
@@ -73,6 +91,11 @@
     <span class="grow" id="progress"></span>
     <button class="ghost" id="reset" type="button">Сбросить отметки</button>
   </div>
+
+  <details class="seo" id="seo-panel" open>
+    <summary>SEO страницы <small>— в блоки не уезжает, вписывается руками в настройках Тильды</small></summary>
+    <div class="seo-rows" id="seo-rows"></div>
+  </details>
 
   <table>
     <thead><tr><th class="num">№</th><th>Блок</th><th>Размер</th><th></th><th>Статус</th></tr></thead>
@@ -97,6 +120,7 @@
 const DATA = JSON.parse(document.getElementById('data').textContent);
 const DONE_KEY = 'fx-copy-done';
 const URL_KEY = 'fx-copy-urls';
+const SEEN_HASH_KEY = 'fx-copy-seen-hash';
 
 const store = {
   read(key) { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } },
@@ -105,7 +129,40 @@ const store = {
 
 let done = store.read(DONE_KEY);
 let urls = store.read(URL_KEY);
+let seenHash = store.read(SEEN_HASH_KEY);
+
+// Отметка «вставлен» живёт по ключу page/order и сама по себе не знает, что
+// с тех пор блок переписали. Поэтому при копировании запоминаем хэш кода
+// (seenHash) и на каждой загрузке сверяем его с текущим: если код разошёлся,
+// блок теряет отметку и получает статус «изменился». Остальные блоки проверка
+// не трогает, прогресс переноса целиком не сбрасывается.
+const stale = new Set();
+
+// Блоки, перенесённые до появления seenHash, сверять не с чем. Для них разово
+// берём список изменившихся из сборки (changedThisBuild в build_blocks.py) и
+// ставим метку-заглушку: она никогда не совпадёт с настоящим хэшем, поэтому
+// блок остаётся помеченным даже после повторного запуска сборки.
+(DATA.changedThisBuild || []).forEach((id) => {
+  if (done[id] && !seenHash[id]) seenHash[id] = 'до правки';
+});
+
+Object.entries(DATA.pages).forEach(([pageKey, data]) => {
+  data.blocks.forEach((block) => {
+    const id = pageKey + '/' + block.order;
+    if (!seenHash[id] || seenHash[id] === block.hash) return;
+    delete done[id];
+    stale.add(id);
+  });
+});
+store.write(DONE_KEY, done);
+store.write(SEEN_HASH_KEY, seenHash);
+
 let page = Object.keys(DATA.pages)[0];
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, (ch) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+}
 
 function blockId(pageKey, block) { return pageKey + '/' + block.order; }
 
@@ -146,8 +203,12 @@ async function copyBlock(block) {
   const missing = unresolved(block);
   const ok = await copyText(resolve(block.code));
   if (!ok) { toast('Не удалось скопировать — выделите код вручную'); return; }
-  done[blockId(page, block)] = true;
+  const id = blockId(page, block);
+  done[id] = true;
+  seenHash[id] = block.hash;
+  stale.delete(id);
   store.write(DONE_KEY, done);
+  store.write(SEEN_HASH_KEY, seenHash);
   render();
   toast(missing.length
     ? `Блок ${block.order} скопирован. Картинок без адреса: ${missing.length} — их метки придётся заменить руками`
@@ -161,7 +222,7 @@ function nextBlock() {
 function renderTabs() {
   document.getElementById('tabs').innerHTML = Object.entries(DATA.pages).map(([key, value]) => {
     const total = value.blocks.length;
-    const count = value.blocks.filter((block) => done[key + '/' + block.order]).length;
+    const count = value.blocks.filter((block) => done[blockId(key, block)]).length;
     return `<button class="tab${key === page ? ' is-active' : ''}" data-page="${key}" type="button">` +
       `<b>${value.title}</b><small>${count}/${total}</small></button>`;
   }).join('');
@@ -172,17 +233,34 @@ function renderRows() {
   const next = nextBlock();
   document.getElementById('rows').innerHTML = blocks.map((block) => {
     const isDone = !!done[blockId(page, block)];
+    const isStale = stale.has(blockId(page, block));
     const pics = block.uploads.length
       ? `<div class="pics">` + block.uploads.map((name) =>
           `<span class="pic${urls[name] ? ' is-linked' : ''}" title="${urls[name] ? 'адрес задан, метка подставится сама' : 'лежит в out/_upload/' + name}">` +
           `<img src="_upload/${name}" alt="" loading="lazy"><span>${name}</span></span>`).join('') + `</div>`
       : '<div class="pics-none">без картинок</div>';
-    return `<tr class="${isDone ? 'is-done' : ''}${next === block ? ' is-next' : ''}">` +
+    return `<tr class="${isDone ? 'is-done' : ''}${isStale ? ' is-stale' : ''}${next === block ? ' is-next' : ''}">` +
       `<td class="num">${block.order}</td>` +
       `<td>${block.title}${pics}</td>` +
       `<td class="size">${(block.code.length / 1024).toFixed(1)} КБ</td>` +
       `<td><button class="ghost" data-order="${block.order}" type="button">Копировать</button></td>` +
-      `<td>${isDone ? '<span class="done-mark">вставлен</span>' : ''}</td></tr>`;
+      `<td>${isDone ? '<span class="done-mark">вставлен</span>'
+        : isStale ? '<span class="stale-mark">изменился</span>' : ''}</td></tr>`;
+  }).join('');
+}
+
+function renderSeo() {
+  const fields = DATA.pages[page].seo || [];
+  document.getElementById('seo-rows').innerHTML = fields.map((field, index) => {
+    const value = field.value
+      ? `<code>${escapeHtml(field.value)}</code><span class="seo-len">${field.value.length} символов</span>`
+      : '';
+    const note = field.note ? `<p class="seo-note">${escapeHtml(field.note)}</p>` : '';
+    const button = field.value
+      ? `<button class="ghost" data-seo="${index}" type="button">Копировать</button>` : '';
+    return `<div class="seo-row${field.warn ? ' is-warn' : ''}">` +
+      `<div class="seo-label">${escapeHtml(field.label)}<small>${escapeHtml(field.where)}</small></div>` +
+      `<div class="seo-value">${value}${note}</div><div>${button}</div></div>`;
   }).join('');
 }
 
@@ -209,6 +287,7 @@ function renderAssets() {
 
 function render() {
   renderTabs();
+  renderSeo();
   renderRows();
   renderProgress();
   renderAssets();
@@ -228,6 +307,14 @@ document.getElementById('rows').addEventListener('click', (event) => {
   if (block) copyBlock(block);
 });
 
+document.getElementById('seo-rows').addEventListener('click', async (event) => {
+  const button = event.target.closest('button[data-seo]');
+  if (!button) return;
+  const field = DATA.pages[page].seo[Number(button.dataset.seo)];
+  const ok = await copyText(field.value);
+  toast(ok ? `${field.label} скопирован` : 'Не удалось скопировать — выделите текст вручную');
+});
+
 document.getElementById('next').addEventListener('click', () => {
   const block = nextBlock();
   if (block) copyBlock(block);
@@ -236,7 +323,10 @@ document.getElementById('next').addEventListener('click', () => {
 document.getElementById('reset').addEventListener('click', () => {
   if (!confirm('Снять отметки о перенесённых блоках на всех страницах?')) return;
   done = {};
+  seenHash = {};
+  stale.clear();
   store.write(DONE_KEY, done);
+  store.write(SEEN_HASH_KEY, seenHash);
   render();
 });
 
