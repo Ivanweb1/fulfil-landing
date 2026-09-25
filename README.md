@@ -12,8 +12,10 @@ Ozon, Яндекс Маркета, модели FBS и политика конф
 ## Структура
 
 - `index.html` — разметка страницы
+- `wildberries.html`, `ozon.html`, `yandex-market.html`, `avito.html`, `fbs.html` — страницы направлений
 - `styles.css` — стили
 - `script.js` — слайдер первого экрана, квиз, аккордеон FAQ, формы
+- `forms.js` — маска телефона и валидация с подсказками у полей (страница Авито; подключается до `script.js`)
 - `assets/` — логотипы маркетплейсов и клиентов, фотографии склада
 - `wildberries.html`, `ozon.html`, `yandex-market.html`, `fbs.html` — страницы направлений
 - `privacy-policy.html` — политика обработки персональных данных
