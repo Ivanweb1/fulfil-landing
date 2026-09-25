@@ -75,7 +75,7 @@ function renderQuiz() {
   }
 
   if (quizStage === 'contact') {
-    quizContent.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="tel" placeholder="+7 (___) ___-__-__"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>';
+    quizContent.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="tel" placeholder="+7 (___) ___-__-__"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a></p>';
     renderQuizProgress(quizSteps.length);
     if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');

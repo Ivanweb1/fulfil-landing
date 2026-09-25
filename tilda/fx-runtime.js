@@ -48,7 +48,7 @@
     // поэтому без адреса она просто уводит на форму.
     priceUrl: '',
     // Страница политики обработки персональных данных.
-    policyUrl: '/politika-konfidencialnosti/',
+    policyUrl: '/privacy-policy/',
     // Порог появления кнопки «Наверх», px. Страница задаёт свой через
     // data-fx-back-to-top на любом блоке.
     backToTop: 600
