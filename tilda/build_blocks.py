@@ -490,32 +490,15 @@ def prepare_html(html: str, block: Block) -> str:
     return html
 
 
-def faq_schema(html: str) -> str | None:
-    """FAQPage из микроразметки блока вопросов."""
-    questions = re.findall(r'<span itemprop="name">(.*?)</span>', html, flags=re.S)
-    answers = re.findall(r'<div itemprop="text">(.*?)</div></div>', html, flags=re.S)
-    if not questions or len(questions) != len(answers):
-        return None
-
-    def plain(text: str) -> str:
-        text = re.sub(r"</p>\s*<p>", " ", text)
-        text = re.sub(r"<[^>]+>", "", text)
-        return html_unescape(re.sub(r"\s+", " ", text)).strip()
-
-    data = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": plain(question),
-                "acceptedAnswer": {"@type": "Answer", "text": plain(answer)},
-            }
-            for question, answer in zip(questions, answers)
-        ],
-    }
-    payload = json.dumps(data, ensure_ascii=False, indent=2).replace("</", "<\\/")
-    return f'<script type="application/ld+json">{payload}</script>'
+def jsonld_scripts(source: str) -> list[tuple[str, str]]:
+    """JSON-LD исходной страницы: [(тип, готовый <script>)]. Единственный источник разметки —
+    микроданных в вёрстке нет, дублей не будет. Порядок — как в исходнике."""
+    result = []
+    for raw in re.findall(r'<script type="application/ld\+json">\s*(.*?)\s*</script>', source, flags=re.S):
+        data = json.loads(raw)
+        payload = json.dumps(data, ensure_ascii=False, indent=2).replace("</", "<\\/")
+        result.append((data.get("@type", ""), f'<script type="application/ld+json">{payload}</script>'))
+    return result
 
 
 def build_blocks(page: str) -> list[Block]:
@@ -580,21 +563,26 @@ def build_blocks(page: str) -> list[Block]:
                 )
                 break
 
-    # Разметка FAQ уже размечена микроданными; JSON-LD добавляем тем же блоком,
-    # чтобы Google получил оба формата и они не разъезжались между собой.
-    for block in blocks:
-        if 'itemtype="https://schema.org/FAQPage"' not in block.html:
+    # Структурированные данные (FAQPage, BreadcrumbList, Service) лежат в исходной
+    # странице отдельными <script type="application/ld+json"> вне <main>, поэтому при
+    # нарезке на блоки они терялись. Возвращаем каждый в тот блок, к которому он
+    # относится: FAQPage — к вопросам, остальные — к первому экрану с хлебными крошками.
+    def block_for(schema_type: str) -> Block | None:
+        marker = 'class="faq__list"' if schema_type == "FAQPage" else 'class="breadcrumbs"'
+        return next((item for item in blocks if marker in item.html), None)
+
+    for schema_type, schema in jsonld_scripts(source):
+        target_block = block_for(schema_type)
+        if target_block is None:
             continue
-        schema = faq_schema(block.html)
-        if schema:
-            block.html += "\n" + schema
+        target_block.html += "\n" + schema
+        if schema_type == "FAQPage":
             target = OUT / page
             target.mkdir(parents=True, exist_ok=True)
             (target / "_faq-jsonld.html").write_text(
                 "<!-- Fulfil.pro · FAQPage для «Настройки страницы → Ещё → HTML-код внутрь HEAD».\n"
                 "     Уже есть внутри блока FAQ — сюда вставлять только если требуется в HEAD. -->\n"
                 + schema + "\n", encoding="utf-8")
-        break
 
     for block in blocks:
         block.html = prepare_html(block.html, block)
@@ -1006,7 +994,7 @@ def page_seo(page: str) -> list[dict]:
             "note": "сверьте, что совпал с адресом страницы выше",
         })
 
-    if 'itemtype="https://schema.org/FAQPage"' in source:
+    if '"@type": "FAQPage"' in source:
         fields.append({
             "label": "Разметка FAQ (JSON-LD)",
             "where": "уже внутри блока с вопросами — отдельно вставлять не нужно",
