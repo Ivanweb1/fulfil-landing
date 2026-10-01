@@ -44,6 +44,7 @@ PAGES = {
     "avito": "Фулфилмент для Авито",
     "fbs": "Фулфилмент по модели FBS",
     "fbo": "Фулфилмент по модели FBO",
+    "upakovka": "Упаковка товаров для маркетплейсов",
     "tarify": "Тарифы",
     "privacy-policy": "Политика конфиденциальности",
 }
@@ -57,6 +58,7 @@ PAGE_URLS = {
     "avito.html": "/fulfilment-dlya-avito/",
     "fbs.html": "/fulfilment-po-modeli-fbs/",
     "fbo.html": "/fulfilment-po-modeli-fbo/",
+    "upakovka.html": "/upakovka-tovarov-dlya-marketplejsov/",
     "tarify.html": "/tarify/",
     "privacy-policy.html": "/privacy-policy/",
 }
@@ -70,6 +72,7 @@ BACK_TO_TOP = {
     "avito": 600,
     "fbs": 600,
     "fbo": 400,
+    "upakovka": 600,
     "tarify": 600,
     "privacy-policy": 600,
 }
@@ -84,6 +87,7 @@ HIDDEN_BLOCKS = {
     ("fbo", "cases"): "кейсы не про FBO — выводятся по решению заказчика (ТЗ, блок 10)",
     ("fbo", "trust"): "отзывы не согласованы с заказчиком",
     ("fbo", "team"): "вместо фотографий сотрудников заглушки",
+    ("upakovka", "works"): "вместо фотографий работ заглушки — фото предоставляет клиент",
 }
 
 # 3.3 — адрес прайса. Если очистить, в блоках останется метка [[PRICE_PDF]].
@@ -407,6 +411,10 @@ SLUG_TITLES = {
     "mp": "Маркетплейсы",
     "fc": "Фулфилмент-центр",
     "policy": "Текст политики",
+    "types": "Виды упаковки",
+    "marketplaces-std": "Стандарты маркетплейсов",
+    "works": "Примеры работ",
+    "extras": "Дополнительные услуги",
 }
 
 

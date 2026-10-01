@@ -1140,9 +1140,9 @@ img.team__photo { display: block; border: 0; }
 .datatable tbody td.is-own { color: var(--ink); font-weight: 500; }
 .datatable__note { max-width: 920px; margin: 24px 0 0; color: #4d586b; font-size: 14px; line-height: 1.65; }
 
-/* Вывод под сравнением схем */
-.compare__verdict { margin: clamp(28px, 3vw, 40px) 0 0; padding: clamp(20px, 2.2vw, 28px) clamp(22px, 2.6vw, 34px); border-left: 2px solid var(--blue); background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.7; }
-.compare__verdict a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+/* Вывод под сравнением схем; на странице упаковки — врезка про Честный Знак */
+.compare__verdict, .callout { margin: clamp(28px, 3vw, 40px) 0 0; padding: clamp(20px, 2.2vw, 28px) clamp(22px, 2.6vw, 34px); border-left: 2px solid var(--blue); background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.7; }
+.compare__verdict a, .callout a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Команда: зона ответственности одной строкой вместо списка */
 .team__role { margin: 0; color: #4d586b; font-size: 12px; line-height: 1.45; }
@@ -1162,3 +1162,61 @@ img.team__photo { display: block; border: 0; }
   .datatable tbody td.is-own { margin: 4px 0; padding: 9px 10px; }
   .datatable tbody td.is-own::before { color: var(--blue); }
 }
+
+/* ─── Страница упаковки ──────────────────────────────────── */
+.page-hero__visual img[src*="gallery-02-packaging"] { object-position: 30% 50%; }
+
+/* Виды упаковки: термоусадка выделена акцентной линией и бейджем */
+.svc__grid article.is-featured { position: relative; }
+.svc__grid article.is-featured::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 2px; background: var(--blue); }
+.svc__grid article.is-featured .h3 { color: var(--blue); }
+.svc__grid .step__tag { margin-top: 14px; }
+
+/* Стандарты маркетплейсов: логотип и ключевое требование */
+.mpcards { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: clamp(34px, 3.8vw, 52px); border-top: 1px solid #aeb7c5; }
+.mpcards article { display: flex; flex-direction: column; gap: 18px; padding: 28px clamp(14px, 1.6vw, 24px) 30px; border-left: 1px solid var(--line); }
+.mpcards article:first-child { padding-left: 0; border-left: 0; }
+.mpcards img { display: block; width: auto; height: 24px; max-width: 100%; object-fit: contain; object-position: left center; }
+.mpcards img[src*="wildberries"], .mpcards img[src*="megamarket"] { height: 20px; margin: 2px 0; }
+.mpcards img[src*="lemanapro"] { height: 40px; margin: -8px 0; }
+.mpcards p { margin: 0; color: #4d586b; font-size: 13px; line-height: 1.5; }
+.marketplaces-std .callout { margin-top: clamp(28px, 3vw, 40px); background: #fff; }
+
+/* Примеры работ: слоты под фото клиента, подпись под кадром */
+.works__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 1.4vw, 20px); margin-top: clamp(34px, 3.8vw, 52px); }
+.works__grid figure { margin: 0; }
+.works__slot, .works__photo { width: 100%; aspect-ratio: 4 / 3; display: block; object-fit: cover; }
+.works__slot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border: 1px dashed #b9c2d0; background: #eef2f7; color: #97a2b5; }
+.works__slot svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.works__slot span { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.works__grid figcaption { padding-top: 12px; color: #4d586b; font-size: 13px; line-height: 1.45; }
+
+/* Дополнительные услуги: карточки-ссылки */
+.links__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(12px, 1.4vw, 20px); margin-top: clamp(34px, 3.8vw, 52px); }
+.links__grid a { display: flex; flex-direction: column; padding: clamp(22px, 2.2vw, 30px); border: 1px solid var(--line); background: #fff; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+.links__grid a:hover { border-color: var(--blue); box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.links__grid .h3 { font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.links__grid p { flex: 1; margin: 12px 0 22px; color: #4d586b; font-size: 14px; line-height: 1.55; }
+.links__more { display: inline-flex; align-items: center; gap: 10px; color: var(--blue); font-size: 13px; font-weight: 700; }
+.links__more i { font-style: normal; transition: transform .2s ease; }
+.links__grid a:hover .links__more i { transform: translateX(4px); }
+
+/* Прайс без вкладок: сразу таблица под заголовком */
+.pricetable__wrap--single { border-top: 1px solid rgba(255,255,255,.18); }
+
+@media (max-width: 1100px) {
+  .mpcards { grid-template-columns: repeat(3, 1fr); }
+  .mpcards article:nth-child(4) { padding-left: 0; border-left: 0; }
+  .mpcards article:nth-child(-n + 3) { border-bottom: 1px solid var(--line); }
+  .links__grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 780px) {
+  .mpcards { grid-template-columns: 1fr 1fr; }
+  .mpcards article, .mpcards article:nth-child(4) { padding: 22px 14px 24px; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .mpcards article:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .mpcards article:nth-last-child(-n + 2) { border-bottom: 0; }
+  .works__grid { grid-template-columns: 1fr 1fr; }
+  .links__grid { grid-template-columns: 1fr; }
+}
+.step__link { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
