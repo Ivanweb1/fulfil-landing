@@ -43,6 +43,7 @@ PAGES = {
     "yandex-market": "Фулфилмент для Яндекс Маркета",
     "avito": "Фулфилмент для Авито",
     "fbs": "Фулфилмент по модели FBS",
+    "tarify": "Тарифы",
     "privacy-policy": "Политика конфиденциальности",
 }
 
@@ -54,6 +55,7 @@ PAGE_URLS = {
     "yandex-market.html": "/fulfilment-dlya-yandeks-marketa/",
     "avito.html": "/fulfilment-dlya-avito/",
     "fbs.html": "/fulfilment-po-modeli-fbs/",
+    "tarify.html": "/tarify/",
     "privacy-policy.html": "/privacy-policy/",
 }
 
@@ -65,6 +67,7 @@ BACK_TO_TOP = {
     "yandex-market": 600,
     "avito": 600,
     "fbs": 600,
+    "tarify": 600,
     "privacy-policy": 600,
 }
 
@@ -549,6 +552,14 @@ def build_blocks(page: str) -> list[Block]:
                 "Яндекс Маркет" if page == "yandex-market" else ""
             ),
         }
+        # Подписи кнопок и текст успеха — из той же inline-настройки, что и для
+        # статической страницы (script.js), чтобы не держать вторую копию.
+        for key, name in (("toContactLabel", "QUIZ_TO_CONTACT_LABEL"),
+                          ("submitLabel", "QUIZ_SUBMIT_LABEL"),
+                          ("successMessage", "QUIZ_SUCCESS")):
+            found = re.search(rf"window\.{name}\s*=\s*'([^']*)'", source)
+            if found:
+                config[key] = found.group(1)
         if page == "yandex-market":
             config["formName"] = "Квиз — Яндекс Маркет"
             config["successMessage"] = (

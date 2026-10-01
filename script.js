@@ -22,6 +22,9 @@ const defaultQuizSteps = [
 const quizSteps = window.QUIZ_STEPS || defaultQuizSteps;
 const quizCountsContact = window.QUIZ_COUNT_CONTACT === true;
 const quizTotalSteps = quizSteps.length + (quizCountsContact ? 1 : 0);
+const quizToContactLabel = window.QUIZ_TO_CONTACT_LABEL || 'Перейти к контактам';
+const quizSubmitLabel = window.QUIZ_SUBMIT_LABEL || 'Получить предварительный расчёт';
+const quizSuccess = window.QUIZ_SUCCESS || 'Свяжемся в течение 30 минут.';
 
 const quizContent = document.querySelector('#quizContent');
 const quizStepNumber = document.querySelector('#quizStepNum');
@@ -45,7 +48,7 @@ function renderQuiz() {
   if (!quizContent) return;
 
   if (quizStage === 'done') {
-    quizContent.innerHTML = '<div class="quiz__question">Спасибо! Свяжемся в течение 30 минут.</div>';
+    quizContent.innerHTML = `<div class="quiz__question">Спасибо! ${quizSuccess}</div>`;
     renderQuizProgress(quizSteps.length);
     quizHint?.classList.add('is-hidden');
     if (quizBack) quizBack.hidden = true;
@@ -62,7 +65,7 @@ function renderQuiz() {
     if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');
     if (quizBack) quizBack.disabled = false;
-    if (quizNext) quizNext.innerHTML = 'Получить предварительный расчёт <span>↗</span>';
+    if (quizNext) quizNext.innerHTML = `${quizSubmitLabel} <span>↗</span>`;
     return;
   }
 
@@ -74,7 +77,7 @@ function renderQuiz() {
   quizHint?.classList.remove('is-hidden');
   if (quizHint) quizHint.textContent = step.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
   if (quizBack) quizBack.disabled = quizStep === 0;
-  if (quizNext) quizNext.innerHTML = quizStep === quizSteps.length - 1 ? 'Перейти к контактам <span>→</span>' : 'Следующий вопрос <span>→</span>';
+  if (quizNext) quizNext.innerHTML = quizStep === quizSteps.length - 1 ? `${quizToContactLabel} <span>→</span>` : 'Следующий вопрос <span>→</span>';
 }
 
 quizContent?.addEventListener('click', (event) => {

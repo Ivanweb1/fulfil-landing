@@ -1040,3 +1040,76 @@ img.team__photo { display: block; border: 0; }
 .final-form input[aria-invalid="true"] { border-bottom-color: #ff9c9c; }
 .hp-field { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; }
 .pricerow__price--plain b { font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; color: #9bb7ed; }
+
+/* ─── Страница тарифов ───────────────────────────────────── */
+/* Первый экран: форма справа вместо фотографии */
+.page-hero__top--form { grid-template-columns: minmax(0, 1.1fr) minmax(380px, .9fr); align-items: center; }
+.legal--shield { display: inline-flex; align-items: center; gap: 7px; }
+.legal--shield svg { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--green); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Прайс-таблица во вкладках: на узких экранах прокручивается по горизонтали */
+.pricetable__wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.pricetable { width: 100%; min-width: 620px; border-collapse: collapse; }
+.pricetable th { padding: 22px 24px 14px; border-bottom: 1px solid rgba(255,255,255,.18); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; text-align: left; color: rgba(255,255,255,.38); }
+.pricetable td { padding: 22px 24px; border-bottom: 1px solid rgba(255,255,255,.13); color: #8f9bb2; font-size: 13px; line-height: 1.45; vertical-align: middle; }
+.pricetable td:first-child { width: 56%; color: #fff; font-family: "Onest", sans-serif; font-size: clamp(16px, 1.35vw, 20px); font-weight: 500; line-height: 1.25; letter-spacing: -.03em; }
+.pricetable td:first-child span { display: block; margin-top: 5px; color: #8f9bb2; font-family: "Manrope", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0; }
+.pricetable tbody tr { transition: background .25s ease; }
+.pricetable tbody tr:hover { background: rgba(255,255,255,.045); }
+.pricetable .pricetable__price { color: #fff; font-family: "Onest", sans-serif; font-size: clamp(20px, 2vw, 28px); font-weight: 600; letter-spacing: -.04em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pricetable .pricetable__price--plain { color: #9bb7ed; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; }
+.pricetable tr.pricetable__free { background: rgba(61,220,151,.1); }
+.pricetable tr.pricetable__free:hover { background: rgba(61,220,151,.14); }
+.pricetable tr.pricetable__free td:first-child, .pricetable tr.pricetable__free .pricetable__price { color: var(--green); }
+.pricetable tr.pricetable__free .pricetable__price { font-size: clamp(17px, 1.5vw, 21px); }
+
+/* Квиз: значок щита в колонке шага, на телефоне варианты в один столбец */
+.quiz__badge--shield { gap: 8px; }
+.quiz__badge--shield svg { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--green); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Этапы работы: номер в круге и соединительная линия между шагами */
+.start__row--line { border-top: 0; }
+.start__row--line article { position: relative; padding-top: 0; border-left: 0; }
+.start__row--line article:not(:last-child)::after { content: ""; position: absolute; top: 22px; left: calc(clamp(16px, 1.9vw, 30px) + 56px); right: calc(12px - clamp(16px, 1.9vw, 30px)); height: 1px; background: #b9c2d0; }
+.start__row--line article:first-child:not(:last-child)::after { left: 56px; }
+.start__row--line .start__num { width: 44px; height: 44px; margin-bottom: 20px; padding: 0; display: grid; place-items: center; border: 1px solid var(--blue); border-radius: 50%; background: #fff; color: var(--blue); font-size: 17px; line-height: 1; letter-spacing: 0; }
+.start__row--line article:hover .start__num { background: var(--blue); color: #fff; }
+.start__text .step__tag { gap: 8px; margin-top: 14px; height: 28px; padding: 0 12px; }
+.step__tag svg { width: 10px; height: 10px; fill: currentColor; }
+
+@media (max-width: 1100px) {
+  .page-hero__top--form { grid-template-columns: 1fr; }
+  /* row-gap наследуется подсеткой и раздвигает номер, заголовок и текст —
+     отступ между рядами шагов задаём паддингом */
+  .start__row--line { row-gap: 0; }
+  .start__row--line article:first-child { padding-left: 0; border-left: 0; }
+  .start__row--line article:nth-child(n + 4) { padding-top: 40px; }
+  .start__row--line article:nth-child(n + 4)::after { top: 62px; }
+  .start__row--line article:nth-child(3n)::after { display: none; }
+  .start__row--line article:nth-child(3n + 1):not(:last-child)::after { left: 56px; }
+}
+
+@media (max-width: 780px) {
+  /* Вкладки в одну строку с прокруткой */
+  .pricetabs--scroll { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .pricetabs--scroll::-webkit-scrollbar { display: none; }
+  .pricetabs--scroll .pricetab { flex: none; white-space: nowrap; }
+  /* Строка таблицы раскладывается в две колонки: услуга и единица слева, цена справа —
+     так цена видна без прокрутки */
+  .pricetable { min-width: 0; }
+  .pricetable thead { display: none; }
+  .pricetable tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.13); }
+  .pricetable tr.pricetable__free { padding-left: 14px; padding-right: 14px; }
+  .pricetable td { padding: 0; border-bottom: 0; }
+  .pricetable td:first-child { width: auto; grid-column: 1; }
+  .pricetable td:last-child { grid-column: 1; margin-top: 6px; font-size: 12px; }
+  .pricetable .pricetable__price { grid-column: 2; grid-row: 1 / span 2; text-align: right; font-size: 22px; }
+  .pricetable .pricetable__price--plain, .pricetable tr.pricetable__free .pricetable__price { font-size: 15px; }
+  .quiz--stacked .quiz__options { flex-direction: column; align-items: stretch; }
+  .start__row--line article, .start__row--line article:first-child, .start__row--line article:nth-child(3n + 1), .start__row--line article:nth-child(n + 4) { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 18px; padding: 0 0 26px; border-bottom: 0; }
+  .start__row--line article:not(:last-child)::after, .start__row--line article:first-child:not(:last-child)::after, .start__row--line article:nth-child(3n)::after, .start__row--line article:nth-child(3n + 1):not(:last-child)::after { display: block; top: 52px; bottom: 6px; left: 22px; right: auto; width: 1px; height: auto; }
+  .start__row--line .start__num { grid-row: 1 / span 2; margin: 0; }
+  .start__row--line .h3, .start__row--line .start__text { grid-column: 2; }
+  .start__row--line .h3 { padding-top: 11px; }
+  .start__row--line article:last-child { padding-bottom: 0; }
+}

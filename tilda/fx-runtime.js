@@ -269,7 +269,8 @@
 
   function readQuizConfig(root) {
     var holder = root.querySelector('script.fx-quiz-config');
-    if (!holder) return { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '' };
+    var fallback = { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '', toContactLabel: '', submitLabel: '' };
+    if (!holder) return fallback;
     try {
       var parsed = JSON.parse(holder.textContent);
       return {
@@ -277,11 +278,13 @@
         countContact: parsed.countContact === true,
         marketplace: parsed.marketplace || '',
         formName: parsed.formName || 'Квиз-расчёт',
-        successMessage: parsed.successMessage || ''
+        successMessage: parsed.successMessage || '',
+        toContactLabel: parsed.toContactLabel || '',
+        submitLabel: parsed.submitLabel || ''
       };
     } catch (error) {
       console.error('[fx] Не разобран конфиг квиза', error);
-      return { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '' };
+      return fallback;
     }
   }
 
@@ -293,6 +296,8 @@
     var config = readQuizConfig(root);
     var steps = config.steps;
     var totalSteps = steps.length + (config.countContact ? 1 : 0);
+    var toContactLabel = config.toContactLabel || 'Перейти к контактам';
+    var submitLabel = config.submitLabel || 'Получить предварительный расчёт';
 
     var stepNumber = root.querySelector('#quizStepNum, .fx-quiz-step');
     var progress = root.querySelector('#quizProgress, .fx-quiz-progress');
@@ -393,7 +398,7 @@
         if (stepNumber) stepNumber.textContent = String(totalSteps).padStart(2, '0');
         if (hint) hint.classList.add('is-hidden');
         if (back) back.disabled = false;
-        if (next) next.innerHTML = 'Получить предварительный расчёт <span>↗</span>';
+        if (next) next.innerHTML = submitLabel + ' <span>↗</span>';
         return;
       }
 
@@ -425,8 +430,8 @@
         hint.textContent = current.hint || (current.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант');
       }
       if (back) back.disabled = step === 0;
-      if (next) next.innerHTML = current.contact ? 'Получить предварительный расчёт <span>↗</span>' :
-        (step === steps.length - 1 ? 'Перейти к контактам <span>→</span>' : 'Следующий вопрос <span>→</span>');
+      if (next) next.innerHTML = current.contact ? submitLabel + ' <span>↗</span>' :
+        (step === steps.length - 1 ? toContactLabel + ' <span>→</span>' : 'Следующий вопрос <span>→</span>');
     }
 
     content.addEventListener('input', function (event) {
