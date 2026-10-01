@@ -844,7 +844,7 @@ img.team__photo { display: block; border: 0; }
 
 /* Страница Wildberries: плашки под финальной формой */
 .final-badges { list-style: none; margin: clamp(28px, 3vw, 40px) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
-.final-badges li { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border: 1px solid rgba(255,255,255,.22); color: #c3ccdc; font-size: 13px; }
+.final-badges li { display: inline-flex; align-items: center; min-height: 38px; padding: 8px 16px; line-height: 1.4; border: 1px solid rgba(255,255,255,.22); color: #c3ccdc; font-size: 13px; }
 
 @media (max-width: 1100px) {
   .start__row { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(6, auto); row-gap: 30px; }
@@ -1129,6 +1129,11 @@ img.team__photo { display: block; border: 0; }
 .datatable tbody tr { transition: background .25s ease; }
 .datatable tbody tr:hover { background: rgba(49,94,181,.03); }
 .datatable th:first-child, .datatable td:first-child { padding-left: 0; }
+/* Логотипы площадок вместо названий: высота подобрана под оптический вес знака */
+.datatable__logo { display: block; width: auto; height: 22px; max-width: 150px; object-fit: contain; object-position: left center; }
+.datatable__logo[src*="wildberries"], .datatable__logo[src*="megamarket"] { height: 19px; }
+.datatable__logo[src*="lemanapro"] { height: 38px; margin: -8px 0; }
+.datatable tbody th:has(.datatable__logo) { vertical-align: middle; }
 .datatable .datatable__accent { color: var(--blue); font-weight: 600; }
 .datatable .is-own { background: rgba(49,94,181,.06); }
 .datatable thead .is-own { color: var(--blue); border-bottom: 2px solid var(--blue); }
@@ -1143,6 +1148,17 @@ img.team__photo { display: block; border: 0; }
 .team__role { margin: 0; color: #4d586b; font-size: 12px; line-height: 1.45; }
 
 @media (max-width: 780px) {
-  .datatable thead th { padding: 16px 14px 12px; }
-  .datatable tbody th, .datatable tbody td { padding: 16px 14px; }
+  /* На телефоне строка таблицы становится карточкой: подписи колонок
+     выводятся перед значениями, ничего не прячется за краем экрана */
+  .datatable, .datatable--compare { min-width: 0; }
+  .datatable thead { display: none; }
+  .datatable tbody tr { display: block; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .datatable tbody tr:hover { background: none; }
+  .datatable tbody th, .datatable tbody td { display: block; padding: 0; border-bottom: 0; }
+  .datatable tbody th { margin-bottom: 12px; }
+  .datatable tbody td { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; padding: 7px 0; }
+  .datatable tbody td::before { content: attr(data-label); color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; line-height: 1.9; }
+  .datatable--compare tbody td { padding: 7px 10px; }
+  .datatable tbody td.is-own { margin: 4px 0; padding: 9px 10px; }
+  .datatable tbody td.is-own::before { color: var(--blue); }
 }

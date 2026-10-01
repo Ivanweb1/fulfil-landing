@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=12" />
   </head>
   <body>
     <header class="site-header">
@@ -243,12 +243,12 @@
             <table class="datatable">
               <thead><tr><th scope="col">Маркетплейс</th><th scope="col">Куда отгружаем</th><th scope="col">Частота</th></tr></thead>
               <tbody>
-                <tr><th scope="row">Wildberries</th><td>Склады в Москве и МО, региональные склады</td><td class="datatable__accent">ежедневно</td></tr>
-                <tr><th scope="row">Ozon</th><td>Склады в Москве и МО, региональные склады</td><td class="datatable__accent">ежедневно</td></tr>
-                <tr><th scope="row">Яндекс Маркет</th><td>Склады в Москве и МО</td><td class="datatable__accent">ежедневно</td></tr>
-                <tr><th scope="row">Мегамаркет</th><td>Склады в Москве и МО</td><td>по графику площадки</td></tr>
-                <tr><th scope="row">Лемана ПРО</th><td>Склады в Москве и МО</td><td>по графику площадки</td></tr>
-                <tr><th scope="row">Авито</th><td>Отгрузка через Авито Доставку</td><td class="datatable__accent">ежедневно</td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/wildberries-full.svg" alt="Wildberries" width="1001" height="155" loading="lazy"></th><td data-label="Куда отгружаем">Склады в Москве и МО, региональные склады</td><td class="datatable__accent" data-label="Частота">ежедневно</td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/ozon-full.svg" alt="Ozon" width="751" height="164" loading="lazy"></th><td data-label="Куда отгружаем">Склады в Москве и МО, региональные склады</td><td class="datatable__accent" data-label="Частота">ежедневно</td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/yandex-market-full.svg" alt="Яндекс Маркет" width="190" height="32" loading="lazy"></th><td data-label="Куда отгружаем">Склады в Москве и МО</td><td class="datatable__accent" data-label="Частота">ежедневно</td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/megamarket-full.svg" alt="Мегамаркет" width="500" height="64" loading="lazy"></th><td data-label="Куда отгружаем">Склады в Москве и МО</td><td data-label="Частота">по графику площадки</td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/lemanapro-full.svg" alt="Лемана ПРО" width="1000" height="804" loading="lazy"></th><td data-label="Куда отгружаем">Склады в Москве и МО</td><td data-label="Частота">по графику площадки</td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/avito-full.svg" alt="Авито" width="1494" height="379" loading="lazy"></th><td data-label="Куда отгружаем">Отгрузка через Авито Доставку</td><td class="datatable__accent" data-label="Частота">ежедневно</td></tr>
               </tbody>
             </table>
           </div>
@@ -277,13 +277,13 @@
             <table class="datatable datatable--compare">
               <thead><tr><th scope="col">Параметр</th><th scope="col" class="is-own">FBO</th><th scope="col"><a href="fbs.html">FBS</a></th><th scope="col">DBS</th></tr></thead>
               <tbody>
-                <tr><th scope="row">Где лежит товар</th><td class="is-own">На складе маркетплейса, партия завозится заранее</td><td>На складе оператора</td><td>На складе оператора</td></tr>
-                <tr><th scope="row">Кто собирает заказ</th><td class="is-own">Маркетплейс, из своего стока</td><td>Оператор, по каждому заказу</td><td>Оператор, по каждому заказу</td></tr>
-                <tr><th scope="row">Кто везет покупателю</th><td class="is-own">Маркетплейс</td><td>Маркетплейс</td><td>Продавец через курьерскую службу</td></tr>
-                <tr><th scope="row">За срок доставки отвечает</th><td class="is-own">Маркетплейс</td><td>Маркетплейс</td><td>Продавец</td></tr>
-                <tr><th scope="row">Комиссия площадки</th><td class="is-own">Выше: включает хранение и доставку</td><td>Средняя</td><td>Ниже всех</td></tr>
-                <tr><th scope="row">Скорость доставки покупателю</th><td class="is-own">Самая быстрая: товар уже в регионе</td><td>Зависит от срока сборки</td><td>Зависит от курьерской службы</td></tr>
-                <tr><th scope="row">Кому подходит</th><td class="is-own">Ходовые позиции со стабильным спросом и большим объемом</td><td>Широкий ассортимент, спрос трудно предсказать</td><td>Свои каналы доставки и контроль над логистикой</td></tr>
+                <tr><th scope="row">Где лежит товар</th><td class="is-own" data-label="FBO">На складе маркетплейса, партия завозится заранее</td><td data-label="FBS">На складе оператора</td><td data-label="DBS">На складе оператора</td></tr>
+                <tr><th scope="row">Кто собирает заказ</th><td class="is-own" data-label="FBO">Маркетплейс, из своего стока</td><td data-label="FBS">Оператор, по каждому заказу</td><td data-label="DBS">Оператор, по каждому заказу</td></tr>
+                <tr><th scope="row">Кто везет покупателю</th><td class="is-own" data-label="FBO">Маркетплейс</td><td data-label="FBS">Маркетплейс</td><td data-label="DBS">Продавец через курьерскую службу</td></tr>
+                <tr><th scope="row">За срок доставки отвечает</th><td class="is-own" data-label="FBO">Маркетплейс</td><td data-label="FBS">Маркетплейс</td><td data-label="DBS">Продавец</td></tr>
+                <tr><th scope="row">Комиссия площадки</th><td class="is-own" data-label="FBO">Выше: включает хранение и доставку</td><td data-label="FBS">Средняя</td><td data-label="DBS">Ниже всех</td></tr>
+                <tr><th scope="row">Скорость доставки покупателю</th><td class="is-own" data-label="FBO">Самая быстрая: товар уже в регионе</td><td data-label="FBS">Зависит от срока сборки</td><td data-label="DBS">Зависит от курьерской службы</td></tr>
+                <tr><th scope="row">Кому подходит</th><td class="is-own" data-label="FBO">Ходовые позиции со стабильным спросом и большим объемом</td><td data-label="FBS">Широкий ассортимент, спрос трудно предсказать</td><td data-label="DBS">Свои каналы доставки и контроль над логистикой</td></tr>
               </tbody>
             </table>
           </div>
