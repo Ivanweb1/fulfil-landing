@@ -269,7 +269,7 @@
 
   function readQuizConfig(root) {
     var holder = root.querySelector('script.fx-quiz-config');
-    var fallback = { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '', toContactLabel: '', submitLabel: '' };
+    var fallback = { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '', toContactLabel: '', submitLabel: '', nextLabel: '', contactTitle: '', scheme: '' };
     if (!holder) return fallback;
     try {
       var parsed = JSON.parse(holder.textContent);
@@ -280,7 +280,10 @@
         formName: parsed.formName || 'Квиз-расчёт',
         successMessage: parsed.successMessage || '',
         toContactLabel: parsed.toContactLabel || '',
-        submitLabel: parsed.submitLabel || ''
+        submitLabel: parsed.submitLabel || '',
+        nextLabel: parsed.nextLabel || '',
+        contactTitle: parsed.contactTitle || '',
+        scheme: parsed.scheme || ''
       };
     } catch (error) {
       console.error('[fx] Не разобран конфиг квиза', error);
@@ -298,6 +301,8 @@
     var totalSteps = steps.length + (config.countContact ? 1 : 0);
     var toContactLabel = config.toContactLabel || 'Перейти к контактам';
     var submitLabel = config.submitLabel || 'Получить предварительный расчёт';
+    var nextLabel = config.nextLabel || 'Следующий вопрос';
+    var contactTitle = config.contactTitle || 'Оставьте контакты для получения расчета';
 
     var stepNumber = root.querySelector('#quizStepNum, .fx-quiz-step');
     var progress = root.querySelector('#quizProgress, .fx-quiz-progress');
@@ -341,6 +346,7 @@
       });
       if (channel) details.push('Контакт — ' + contactValue.trim());
       if (config.marketplace) details.unshift('Маркетплейс — ' + config.marketplace);
+      if (config.scheme) details.unshift('Схема — ' + config.scheme);
       next.disabled = true;
       next.textContent = 'Отправляем…';
       return send({
@@ -387,7 +393,7 @@
         var contactType = isTelegram ? 'text' : 'tel';
         var contactPlaceholder = isTelegram ? 'Телефон или @username' : '+7 (___) ___-__-__';
         var rawAttr = isTelegram ? ' data-fx-raw="1"' : '';
-        content.innerHTML = '<div class="quiz__question">Оставьте контакты для получения расчета</div>' +
+        content.innerHTML = '<div class="quiz__question">' + contactTitle + '</div>' +
           '<div class="quiz__contact">' +
           '<input type="text" name="name" autocomplete="name" placeholder="Ваше имя" required>' +
           '<input type="' + contactType + '" name="phone" autocomplete="tel" placeholder="' + contactPlaceholder + '"' + rawAttr + ' required>' +
@@ -431,7 +437,7 @@
       }
       if (back) back.disabled = step === 0;
       if (next) next.innerHTML = current.contact ? submitLabel + ' <span>↗</span>' :
-        (step === steps.length - 1 ? toContactLabel + ' <span>→</span>' : 'Следующий вопрос <span>→</span>');
+        (step === steps.length - 1 ? toContactLabel + ' <span>→</span>' : nextLabel + ' <span>→</span>');
     }
 
     content.addEventListener('input', function (event) {
@@ -486,6 +492,7 @@
           return item.question + ' — ' + (answers[index].length ? answers[index].join(', ') : 'нет ответа');
         });
         if (config.marketplace) details.unshift('Маркетплейс — ' + config.marketplace);
+        if (config.scheme) details.unshift('Схема — ' + config.scheme);
         // Поле контакта у Telegram принимает и телефон, и @username, а хранит его
         // Тильда в системном поле «Phone» со встроенной проверкой формата номера,
         // которую нельзя снять скриптом (проверено). Дублируем значение как есть
@@ -602,6 +609,7 @@
   // Подписи для полей, которые уезжают в «Детали» письма.
   var FIELD_LABELS = {
     marketplace: 'Маркетплейсы',
+    scheme: 'Схема',
     comment: 'Комментарий',
     sku: 'Количество SKU',
     volume: 'Объём отгрузок',

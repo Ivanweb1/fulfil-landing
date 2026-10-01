@@ -22,7 +22,9 @@ const defaultQuizSteps = [
 const quizSteps = window.QUIZ_STEPS || defaultQuizSteps;
 const quizCountsContact = window.QUIZ_COUNT_CONTACT === true;
 const quizTotalSteps = quizSteps.length + (quizCountsContact ? 1 : 0);
+const quizNextLabel = window.QUIZ_NEXT_LABEL || 'Следующий вопрос';
 const quizToContactLabel = window.QUIZ_TO_CONTACT_LABEL || 'Перейти к контактам';
+const quizContactTitle = window.QUIZ_CONTACT_TITLE || 'Оставьте контакты для получения расчета';
 const quizSubmitLabel = window.QUIZ_SUBMIT_LABEL || 'Получить предварительный расчёт';
 const quizSuccess = window.QUIZ_SUCCESS || 'Свяжемся в течение 30 минут.';
 
@@ -60,7 +62,7 @@ function renderQuiz() {
     const isTelegram = (quizAnswers[quizSteps.length - 1] || []).includes('Telegram');
     const contactType = isTelegram ? 'text' : 'tel';
     const contactPlaceholder = isTelegram ? 'Телефон или @username' : '+7 (___) ___-__-__';
-    quizContent.innerHTML = `<div class="quiz__question">Оставьте контакты для получения расчета</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="${contactType}" placeholder="${contactPlaceholder}"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>`;
+    quizContent.innerHTML = `<div class="quiz__question">${quizContactTitle}</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="${contactType}" placeholder="${contactPlaceholder}"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>`;
     renderQuizProgress(quizSteps.length);
     if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');
@@ -77,7 +79,7 @@ function renderQuiz() {
   quizHint?.classList.remove('is-hidden');
   if (quizHint) quizHint.textContent = step.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
   if (quizBack) quizBack.disabled = quizStep === 0;
-  if (quizNext) quizNext.innerHTML = quizStep === quizSteps.length - 1 ? `${quizToContactLabel} <span>→</span>` : 'Следующий вопрос <span>→</span>';
+  if (quizNext) quizNext.innerHTML = quizStep === quizSteps.length - 1 ? `${quizToContactLabel} <span>→</span>` : `${quizNextLabel} <span>→</span>`;
 }
 
 quizContent?.addEventListener('click', (event) => {

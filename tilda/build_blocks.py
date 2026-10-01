@@ -43,6 +43,7 @@ PAGES = {
     "yandex-market": "Фулфилмент для Яндекс Маркета",
     "avito": "Фулфилмент для Авито",
     "fbs": "Фулфилмент по модели FBS",
+    "fbo": "Фулфилмент по модели FBO",
     "tarify": "Тарифы",
     "privacy-policy": "Политика конфиденциальности",
 }
@@ -55,6 +56,7 @@ PAGE_URLS = {
     "yandex-market.html": "/fulfilment-dlya-yandeks-marketa/",
     "avito.html": "/fulfilment-dlya-avito/",
     "fbs.html": "/fulfilment-po-modeli-fbs/",
+    "fbo.html": "/fulfilment-po-modeli-fbo/",
     "tarify.html": "/tarify/",
     "privacy-policy.html": "/privacy-policy/",
 }
@@ -67,6 +69,7 @@ BACK_TO_TOP = {
     "yandex-market": 600,
     "avito": 600,
     "fbs": 600,
+    "fbo": 400,
     "tarify": 600,
     "privacy-policy": 600,
 }
@@ -78,6 +81,9 @@ HIDDEN_BLOCKS = {
     ("yandex-market", "trust"): "отзывы не согласованы с заказчиком",
     ("avito", "trust"): "отзывы не согласованы с заказчиком",
     ("avito", "team"): "вместо фотографий сотрудников заглушки",
+    ("fbo", "cases"): "кейсы не про FBO — выводятся по решению заказчика (ТЗ, блок 10)",
+    ("fbo", "trust"): "отзывы не согласованы с заказчиком",
+    ("fbo", "team"): "вместо фотографий сотрудников заглушки",
 }
 
 # 3.3 — адрес прайса. Если очистить, в блоках останется метка [[PRICE_PDF]].
@@ -556,7 +562,10 @@ def build_blocks(page: str) -> list[Block]:
         # статической страницы (script.js), чтобы не держать вторую копию.
         for key, name in (("toContactLabel", "QUIZ_TO_CONTACT_LABEL"),
                           ("submitLabel", "QUIZ_SUBMIT_LABEL"),
-                          ("successMessage", "QUIZ_SUCCESS")):
+                          ("successMessage", "QUIZ_SUCCESS"),
+                          ("nextLabel", "QUIZ_NEXT_LABEL"),
+                          ("contactTitle", "QUIZ_CONTACT_TITLE"),
+                          ("scheme", "QUIZ_SCHEME")):
             found = re.search(rf"window\.{name}\s*=\s*'([^']*)'", source)
             if found:
                 config[key] = found.group(1)

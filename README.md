@@ -14,6 +14,7 @@ Ozon, Яндекс Маркета, модели FBS и политика конф
 - `index.html` — разметка страницы
 - `wildberries.html`, `ozon.html`, `yandex-market.html`, `avito.html`, `fbs.html` — страницы направлений
 - `tarify.html` — страница тарифов (`/tarify/`): прайс по вкладкам, квиз, этапы работы, FAQ
+- `fbo.html` — фулфилмент по модели FBO (`/fulfilment-po-modeli-fbo/`): тарифы, квиз, таблицы маркетплейсов и сравнения FBO/FBS/DBS
 - `styles.css` — стили
 - `script.js` — слайдер первого экрана, квиз, аккордеон FAQ, формы
 - `forms.js` — маска телефона и валидация с подсказками у полей (страница Авито; подключается до `script.js`)
