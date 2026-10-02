@@ -1055,7 +1055,10 @@ img.team__photo { display: block; border: 0; }
 .pricetable tbody tr { transition: background .25s ease; }
 .pricetable tbody tr:hover { background: rgba(255,255,255,.045); }
 .pricetable .pricetable__price { color: #fff; font-family: "Onest", sans-serif; font-size: clamp(20px, 2vw, 28px); font-weight: 600; letter-spacing: -.04em; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.pricetable .pricetable__price--plain { color: #9bb7ed; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; }
+.pricetable .pricetable__price--plain { color: #9bb7ed; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; white-space: normal; }
+/* Цена словами («по прайсу выбранного вида упаковки») переносится, иначе nowrap
+   растягивает колонку и подпись единицы ломается на две строки. */
+.pricetable td:last-child { white-space: nowrap; }
 .pricetable tr.pricetable__free { background: rgba(61,220,151,.1); }
 .pricetable tr.pricetable__free:hover { background: rgba(61,220,151,.14); }
 .pricetable tr.pricetable__free td:first-child, .pricetable tr.pricetable__free .pricetable__price { color: var(--green); }
@@ -1102,6 +1105,8 @@ img.team__photo { display: block; border: 0; }
   .pricetable td:last-child { grid-column: 1; margin-top: 6px; font-size: 12px; }
   .pricetable .pricetable__price { grid-column: 2; grid-row: 1 / span 2; text-align: right; font-size: 22px; }
   .pricetable .pricetable__price--plain, .pricetable tr.pricetable__free .pricetable__price { font-size: 15px; }
+  /* На телефоне колонка цены — auto: длинная цена словами съедает название, поэтому ограничиваем её. */
+  .pricetable .pricetable__price--plain { max-width: 140px; }
   .quiz--stacked .quiz__options { flex-direction: column; align-items: stretch; }
   .start__row--line article, .start__row--line article:first-child, .start__row--line article:nth-child(3n + 1), .start__row--line article:nth-child(n + 4) { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 18px; padding: 0 0 26px; border-bottom: 0; }
   .start__row--line article:not(:last-child)::after, .start__row--line article:first-child:not(:last-child)::after, .start__row--line article:nth-child(3n)::after, .start__row--line article:nth-child(3n + 1):not(:last-child)::after { display: block; top: 52px; bottom: 6px; left: 22px; right: auto; width: 1px; height: auto; }
