@@ -1059,6 +1059,9 @@ def write_copy_page(pages: dict[str, list[Block]], documents: dict[str, list[tup
                         "uploads": uploads,
                         "code": code,
                         "hash": hashlib.sha1(code.encode("utf-8")).hexdigest()[:8],
+                        # Пометка о скрытии есть в шапке самого кода, но там её видно
+                        # только после вставки — в пульте она нужна до копирования.
+                        "hidden": HIDDEN_BLOCKS.get((page, slug), ""),
                     }
                     for order, slug, title, code, uploads in documents[page]
                 ],
