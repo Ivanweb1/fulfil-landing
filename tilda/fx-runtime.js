@@ -9,7 +9,7 @@
 
   // Меняется при каждой правке рантайма. По ней видно, что на странице
   // остались блоки от прошлой сборки.
-  var VERSION = '2026-09-25.1';
+  var VERSION = '2026-10-08.1';
 
   // В автономной сборке рантайм лежит в каждом блоке. Первая копия берёт
   // управление, остальные только досматривают новые блоки, не заводя ещё один
@@ -39,16 +39,21 @@
     phoneCountry: 'ru',
     // Язык страницы для <html lang>. В настройках Тильды такого поля нет.
     lang: 'ru',
+    siteName: 'Fulfil.pro',
+    locale: 'ru_RU',
     successText: 'Спасибо! Заявка принята — менеджер свяжется с вами.',
     errorText: 'Не удалось отправить заявку. Позвоните нам: +7 (926) 535-24-47',
     phoneText: 'Проверьте номер телефона — нужно 10 цифр после +7',
-    // Сколько ждать ответа Тильды, прежде чем показать тост.
-    submitTimeout: 8000,
+    // Сколько ждать подтверждения Тильды. Само истечение времени никогда не
+    // считается успехом: капча или медленный приёмник могут отвечать дольше.
+    submitTimeout: 60000,
     // Прайс-лист. Кнопка «Скачать прайс» открывает файл после отправки заявки,
     // поэтому без адреса она просто уводит на форму.
     priceUrl: '',
     // Страница политики обработки персональных данных.
     policyUrl: '/privacy-policy/',
+    // Страница FBO — ссылка должна быть в общем футере.
+    fboUrl: '/fulfilment-po-modeli-fbo/',
     // Порог появления кнопки «Наверх», px. Страница задаёт свой через
     // data-fx-back-to-top на любом блоке.
     backToTop: 600
@@ -127,21 +132,46 @@
     return button;
   }
 
-  /* --------------------------------------------------- ссылка на политику */
+  /* ------------------------------------------------------ Open Graph meta */
+
+  function ensurePropertyMeta(property, content) {
+    if (!content || document.head.querySelector('meta[property="' + property + '"]')) return;
+    var meta = document.createElement('meta');
+    meta.setAttribute('property', property);
+    meta.setAttribute('content', content);
+    document.head.appendChild(meta);
+  }
+
+  function ensureOpenGraphMeta() {
+    ensurePropertyMeta('og:site_name', CFG.siteName);
+    ensurePropertyMeta('og:locale', CFG.locale);
+  }
+
+  /* -------------------------------------------------------- ссылки футера */
 
   // Политика — отдельная страница (CFG.policyUrl), никакого попапа: ссылки
   // в формах и квизе уже ведут туда обычным переходом, ничего перехватывать
   // не нужно. Единственное, чего не хватает, — сама ссылка в футере (её там
   // нет ни на одной странице). Добавляем рантаймом, а не правкой блока
   // footer на каждой из 4 страниц.
-  function ensureFooterPolicyLink() {
+  function ensureFooterLinks() {
     var footer = document.querySelector('.footer');
-    if (!footer || footer.querySelector('.fx-policy-link')) return;
-    var link = document.createElement('a');
-    link.className = 'fx-policy-link';
-    link.href = CFG.policyUrl;
-    link.textContent = 'Политика конфиденциальности';
-    footer.insertBefore(link, footer.lastElementChild);
+    if (!footer) return;
+    var before = footer.lastElementChild;
+    if (!footer.querySelector('.fx-fbo-link')) {
+      var fboLink = document.createElement('a');
+      fboLink.className = 'fx-fbo-link';
+      fboLink.href = CFG.fboUrl;
+      fboLink.textContent = 'Фулфилмент по модели FBO';
+      footer.insertBefore(fboLink, before);
+    }
+    if (!footer.querySelector('.fx-policy-link')) {
+      var policyLink = document.createElement('a');
+      policyLink.className = 'fx-policy-link';
+      policyLink.href = CFG.policyUrl;
+      policyLink.textContent = 'Политика конфиденциальности';
+      footer.insertBefore(policyLink, before);
+    }
   }
 
   /* ---------------------------------------------------------------- меню */
@@ -568,21 +598,36 @@
     var tabs = list(root, '.pricetab');
     var panels = list(root, '.pricelist');
     if (!tabs.length || !panels.length) return;
+    function activate(index) {
+      tabs.forEach(function (item, i) {
+        var active = i === index;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+      panels.forEach(function (panel, i) {
+        var active = i === index;
+        panel.classList.toggle('is-active', active);
+        panel.hidden = !active;
+      });
+    }
+
+    function activateHash(scroll) {
+      if (!location.hash) return;
+      var target = document.getElementById(location.hash.slice(1));
+      if (!target || !root.contains(target)) return;
+      var panel = target.closest('.pricelist');
+      var index = panels.indexOf(panel);
+      if (index < 0) return;
+      activate(index);
+      if (scroll) window.requestAnimationFrame(function () { target.scrollIntoView({ block: 'center' }); });
+    }
+
     tabs.forEach(function (tab, index) {
       if (!once(tab, 'fxTab')) return;
-      tab.addEventListener('click', function () {
-        tabs.forEach(function (item, i) {
-          var active = i === index;
-          item.classList.toggle('is-active', active);
-          item.setAttribute('aria-selected', String(active));
-        });
-        panels.forEach(function (panel, i) {
-          var active = i === index;
-          panel.classList.toggle('is-active', active);
-          panel.hidden = !active;
-        });
-      });
+      tab.addEventListener('click', function () { activate(index); });
     });
+    if (once(root, 'fxTabHash')) window.addEventListener('hashchange', function () { activateHash(true); });
+    activateHash(false);
   }
 
   /* ----------------------------------------------------- подсветка шагов */
@@ -631,6 +676,11 @@
   }
 
   function hideDonor(donor) {
+    // Снимаем настройку как можно раньше: Тильда может запомнить её до клика и
+    // показать своё стандартное окно поверх нашего текста data-fx-success.
+    donor.removeAttribute('data-success-popup');
+    var popupNodes = list(donor, '[data-success-popup]');
+    popupNodes.forEach(function (node) { node.removeAttribute('data-success-popup'); });
     if (!CFG.hideDonor) return;
     var record = donor.closest('.r') || donor.closest('[id^="rec"]') || donor;
     if (record.dataset.fxHidden === '1') return;
@@ -847,8 +897,7 @@
       donor.addEventListener('tildaform:aftersuccess', onSuccess);
       donor.addEventListener('tildaform:aftererror', onTildaError);
 
-      // Форма-приёмник спрятана, но её окно об успешной отправке всплыло бы
-      // поверх страницы — посетителю мы показываем своё уведомление.
+      // Повторяем перед кликом на случай, если Тильда дорисовала атрибут позже.
       donor.removeAttribute('data-success-popup');
 
       // Статус мог застрять от прошлой попытки — тогда клик молча игнорируется.
@@ -871,8 +920,8 @@
       }, 60);
 
       timer = window.setTimeout(function () {
-        // Приёмник ответил молча — так бывает, дальше посетителя не держим.
-        onSuccess();
+        fail('tilda-timeout', 'Тильда не подтвердила отправку за ' +
+          Math.round(CFG.submitTimeout / 1000) + ' секунд. Данные формы сохранены для повторной отправки.');
       }, CFG.submitTimeout);
     });
   }
@@ -1038,6 +1087,7 @@
       if (!document.documentElement.getAttribute('lang')) {
         document.documentElement.setAttribute('lang', CFG.lang);
       }
+      ensureOpenGraphMeta();
       initFormDelegation();
       initPhoneMask();
       // Маска телефона Тильды берёт страну отсюда и только потом лезет
@@ -1049,7 +1099,7 @@
     blocks.forEach(initBlock);
     toastEl();
     ensureBackToTop();
-    ensureFooterPolicyLink();
+    ensureFooterLinks();
     var donor = findDonor();
     if (donor) hideDonor(donor);
   }

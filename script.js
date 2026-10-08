@@ -159,20 +159,35 @@ if (flowSteps.length) {
 const priceTabs = [...document.querySelectorAll('.pricetab')];
 const pricePanels = [...document.querySelectorAll('.pricelist')];
 
-priceTabs.forEach((tab, index) => {
-  tab.addEventListener('click', () => {
-    priceTabs.forEach((item, itemIndex) => {
-      const active = itemIndex === index;
-      item.classList.toggle('is-active', active);
-      item.setAttribute('aria-selected', String(active));
-    });
-    pricePanels.forEach((panel, panelIndex) => {
-      const active = panelIndex === index;
-      panel.classList.toggle('is-active', active);
-      panel.hidden = !active;
-    });
+function activatePriceTab(index) {
+  priceTabs.forEach((item, itemIndex) => {
+    const active = itemIndex === index;
+    item.classList.toggle('is-active', active);
+    item.setAttribute('aria-selected', String(active));
   });
+  pricePanels.forEach((panel, panelIndex) => {
+    const active = panelIndex === index;
+    panel.classList.toggle('is-active', active);
+    panel.hidden = !active;
+  });
+}
+
+function activatePriceHash(scroll = false) {
+  if (!window.location.hash) return;
+  const target = document.getElementById(window.location.hash.slice(1));
+  const panel = target?.closest('.pricelist');
+  const index = pricePanels.indexOf(panel);
+  if (index < 0) return;
+  activatePriceTab(index);
+  if (scroll) window.requestAnimationFrame(() => target.scrollIntoView({ block: 'center' }));
+}
+
+priceTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => activatePriceTab(index));
 });
+
+window.addEventListener('hashchange', () => activatePriceHash(true));
+activatePriceHash();
 
 const siteHeader = document.querySelector('.site-header');
 const menuButton = document.querySelector('.menu-button');

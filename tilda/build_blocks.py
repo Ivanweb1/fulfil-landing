@@ -91,6 +91,10 @@ HIDDEN_BLOCKS = {
     ("tarify", "trust"): "отзывы не согласованы с заказчиком",
 }
 
+# Для этой страницы ТЗ требует FAQPage именно в HEAD. Сборщик не дублирует
+# разметку в блоке FAQ, а кладёт готовый код в _faq-jsonld.html для настроек страницы.
+FAQ_JSONLD_HEAD_PAGES = {"upakovka"}
+
 # 3.3 — адрес прайса. Если очистить, в блоках останется метка [[PRICE_PDF]].
 # Ссылка на Google Drive работает только при открытом доступе «всем, у кого есть
 # ссылка»: иначе посетитель попадает на страницу входа Google вместо загрузки.
@@ -112,6 +116,10 @@ SVG_INLINE_LIMIT = 20_000
 # Растр в блок не встраиваем: base64 раздувает код блока и мешает кешированию.
 # Исключение — логотип в шапке, чтобы блок шапки был самодостаточным.
 INLINE_RASTER = {"fulfil-logo.png"}
+
+# Эти файлы нужны именно как fallback для браузеров без WebP, поэтому их нельзя
+# автоматически перекодировать обратно в WebP при подготовке загрузок.
+PRESERVE_UPLOAD_FORMAT = {"gallery-02-packaging.jpg"}
 
 # Точечное качество webp для конкретных фото — по умолчанию 78 (см. encode_webp).
 # Ниже — фото первого экрана главной: заметно тяжелее среднего блока, поэтому
@@ -356,14 +364,17 @@ def inline_asset(name: str) -> str | None:
 def export_upload(name: str) -> str:
     """Готовит webp для загрузки в Тильду и возвращает имя файла."""
     path = ASSETS / name
-    target_name = Path(name).stem + ".webp"
+    target_name = name if name in PRESERVE_UPLOAD_FORMAT else Path(name).stem + ".webp"
     if name not in _uploads:
         upload_dir = OUT / "_upload"
         upload_dir.mkdir(parents=True, exist_ok=True)
         target = upload_dir / target_name
         if path.exists():
-            quality = PHOTO_QUALITY.get(name, DEFAULT_QUALITY)
-            target.write_bytes(encode_webp(path, 1600, quality))
+            if name in PRESERVE_UPLOAD_FORMAT:
+                shutil.copyfile(path, target)
+            else:
+                quality = PHOTO_QUALITY.get(name, DEFAULT_QUALITY)
+                target.write_bytes(encode_webp(path, 1600, quality))
         _uploads[name] = target
     return target_name
 
@@ -594,24 +605,32 @@ def build_blocks(page: str) -> list[Block]:
 
     # Структурированные данные (FAQPage, BreadcrumbList, Service) лежат в исходной
     # странице отдельными <script type="application/ld+json"> вне <main>, поэтому при
-    # нарезке на блоки они терялись. Возвращаем каждый в тот блок, к которому он
-    # относится: FAQPage — к вопросам, остальные — к первому экрану с хлебными крошками.
+    # нарезке на блоки они терялись. Обычно возвращаем FAQPage в блок вопросов, а
+    # остальные типы — в первый экран. Для страниц из FAQ_JSONLD_HEAD_PAGES FAQ
+    # выдаётся отдельным файлом для HEAD и в body не дублируется.
     def block_for(schema_type: str) -> Block | None:
         marker = 'class="faq__list"' if schema_type == "FAQPage" else 'class="breadcrumbs"'
         return next((item for item in blocks if marker in item.html), None)
 
     for schema_type, schema in jsonld_scripts(source):
+        if schema_type == "FAQPage":
+            target = OUT / page
+            target.mkdir(parents=True, exist_ok=True)
+            in_head = page in FAQ_JSONLD_HEAD_PAGES
+            note = (
+                "     Вставить в HEAD страницы; в блок FAQ эта разметка намеренно не добавлена. -->\n"
+                if in_head else
+                "     Уже есть внутри блока FAQ — сюда вставлять только если требуется в HEAD. -->\n"
+            )
+            (target / "_faq-jsonld.html").write_text(
+                "<!-- Fulfil.pro · FAQPage для «Настройки страницы → Ещё → HTML-код внутрь HEAD».\n"
+                + note + schema + "\n", encoding="utf-8")
+            if in_head:
+                continue
         target_block = block_for(schema_type)
         if target_block is None:
             continue
         target_block.html += "\n" + schema
-        if schema_type == "FAQPage":
-            target = OUT / page
-            target.mkdir(parents=True, exist_ok=True)
-            (target / "_faq-jsonld.html").write_text(
-                "<!-- Fulfil.pro · FAQPage для «Настройки страницы → Ещё → HTML-код внутрь HEAD».\n"
-                "     Уже есть внутри блока FAQ — сюда вставлять только если требуется в HEAD. -->\n"
-                + schema + "\n", encoding="utf-8")
 
     for block in blocks:
         block.html = prepare_html(block.html, block)
@@ -1024,11 +1043,19 @@ def page_seo(page: str) -> list[dict]:
         })
 
     if '"@type": "FAQPage"' in source:
+        in_head = page in FAQ_JSONLD_HEAD_PAGES
         fields.append({
             "label": "Разметка FAQ (JSON-LD)",
-            "where": "уже внутри блока с вопросами — отдельно вставлять не нужно",
+            "where": (
+                "Настройки страницы → Ещё → HTML-код внутрь HEAD"
+                if in_head else "уже внутри блока с вопросами — отдельно вставлять не нужно"
+            ),
             "value": "",
-            "note": f"если разметку попросят именно в HEAD — готовый код в out/{page}/_faq-jsonld.html",
+            "note": (
+                f"обязательно вставьте готовый код из out/{page}/_faq-jsonld.html"
+                if in_head else
+                f"если разметку попросят именно в HEAD — готовый код в out/{page}/_faq-jsonld.html"
+            ),
         })
 
     if re.search(r'name="robots"[^>]*noindex', head, re.I):
@@ -1228,7 +1255,14 @@ def main() -> None:
         # В автономном режиме база уже лежит внутри каждого блока, иначе отдаём её
         # в <head> превью — блок 00 в тело страницы тогда не дублируем.
         body = [entry[3] for entry in entries if STANDALONE or entry[0] != "00"]
-        write_preview(page, "" if STANDALONE else head, body)
+        preview_head = "" if STANDALONE else head
+        if page in FAQ_JSONLD_HEAD_PAGES:
+            source = (ROOT / f"{page}.html").read_text(encoding="utf-8")
+            preview_head += "\n" + "\n".join(
+                schema for schema_type, schema in jsonld_scripts(source)
+                if schema_type == "FAQPage"
+            )
+        write_preview(page, preview_head, body)
 
     write_copy_page(pages, catalogue)
     write_manifest(pages)
