@@ -1044,18 +1044,41 @@ def page_seo(page: str) -> list[dict]:
 
     if '"@type": "FAQPage"' in source:
         in_head = page in FAQ_JSONLD_HEAD_PAGES
+        faq_head_file = OUT / page / "_faq-jsonld.html"
+        faq_head_code = (
+            faq_head_file.read_text(encoding="utf-8")
+            if in_head and faq_head_file.exists() else ""
+        )
         fields.append({
             "label": "Разметка FAQ (JSON-LD)",
             "where": (
                 "Настройки страницы → Ещё → HTML-код внутрь HEAD"
                 if in_head else "уже внутри блока с вопросами — отдельно вставлять не нужно"
             ),
-            "value": "",
+            "value": faq_head_code,
             "note": (
-                f"обязательно вставьте готовый код из out/{page}/_faq-jsonld.html"
+                "нажмите «Копировать» и вставьте код целиком в HEAD страницы"
                 if in_head else
                 f"если разметку попросят именно в HEAD — готовый код в out/{page}/_faq-jsonld.html"
             ),
+            "warn": in_head,
+        })
+
+    # Эти два OG-тега Тильда не даёт заполнить отдельными полями интерфейса.
+    # Для FBO ТЗ требует их статически в исходном HEAD, поэтому пульт отдаёт
+    # готовый фрагмент с отдельной кнопкой копирования.
+    if page == "fbo":
+        og_site_name = meta("og:site_name", "property") or "Fulfil.pro"
+        og_locale = meta("og:locale", "property") or "ru_RU"
+        fields.append({
+            "label": "Open Graph: site_name и locale",
+            "where": "Настройки страницы → Ещё → HTML-код внутрь HEAD",
+            "value": (
+                f'<meta property="og:site_name" content="{og_site_name}">\n'
+                f'<meta property="og:locale" content="{og_locale}">'
+            ),
+            "note": "добавьте ниже уже существующего кода в HEAD и опубликуйте страницу FBO",
+            "warn": True,
         })
 
     if re.search(r'name="robots"[^>]*noindex', head, re.I):
