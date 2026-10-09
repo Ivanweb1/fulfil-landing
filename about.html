@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=26" />
+    <link rel="stylesheet" href="styles.css?v=27" />
   </head>
   <body>
     <header class="site-header">
@@ -204,10 +204,9 @@
               <span class="requisites__label">Юридическое лицо</span>
               <p class="requisites__name">ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»</p>
               <dl class="requisites__codes">
-                <div><dt>ИНН</dt><dd><span>7736328080</span><button class="requisites__copy" type="button" data-copy="7736328080" aria-label="Скопировать ИНН">Скопировать</button></dd></div>
-                <div><dt>ОГРН</dt><dd><span>1217700422830</span><button class="requisites__copy" type="button" data-copy="1217700422830" aria-label="Скопировать ОГРН">Скопировать</button></dd></div>
+                <div><dt>ИНН</dt><dd>7736328080</dd></div>
+                <div><dt>ОГРН</dt><dd>1217700422830</dd></div>
               </dl>
-              <button class="button button--light requisites__copy-all" type="button" data-copy="ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»&#10;ИНН 7736328080&#10;ОГРН 1217700422830&#10;Юридический адрес: 119296, г. Москва, пр-кт Ломоносовский, д. 14, кв. 384&#10;Фактический адрес склада: Московская обл., г. Щелково, ул. Аэродромная, д. 1к18&#10;Телефон: +7 (926) 535-24-47&#10;Email: info@fulfil.pro">Скопировать реквизиты <span>⧉</span></button>
             </div>
             <div class="requisites__side">
               <div class="requisites__item">
@@ -298,16 +297,6 @@
       }
     </script>
 
-    <script>
-      /* Копирование реквизитов: кнопка на секунду показывает «Скопировано» */
-      document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
-        try { await navigator.clipboard.writeText(button.dataset.copy); } catch (error) { return; }
-        const label = button.innerHTML;
-        button.classList.add('is-copied');
-        button.textContent = 'Скопировано';
-        window.setTimeout(() => { button.classList.remove('is-copied'); button.innerHTML = label; }, 1400);
-      }));
-    </script>
     <script src="forms.js?v=1"></script>
     <script src="script.js?v=11"></script>
   </body>

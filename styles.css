@@ -1349,13 +1349,7 @@ img.team__photo { display: block; border: 0; }
 .requisites__codes { margin: clamp(28px, 3vw, 44px) 0 0; border-top: 1px solid rgba(255,255,255,.18); }
 .requisites__codes div { display: grid; grid-template-columns: 80px minmax(0, 1fr); align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.13); }
 .requisites__codes dt { color: rgba(255,255,255,.42); font-size: 11px; font-weight: 700; letter-spacing: .16em; }
-.requisites__codes dd { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-.requisites__codes dd span { font-family: "Onest", sans-serif; font-size: clamp(22px, 2.2vw, 30px); font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.requisites__copy { padding: 6px 0; border: 0; border-bottom: 1px solid rgba(255,255,255,.3); background: none; color: #9bb7ed; font-size: 12px; font-weight: 600; cursor: pointer; transition: color .2s ease, border-color .2s ease; }
-.requisites__copy:hover { color: #fff; border-color: #fff; }
-.requisites__copy.is-copied, .requisites__copy-all.is-copied { color: var(--green); border-color: var(--green); }
-.requisites__copy-all { margin-top: auto; align-self: flex-start; }
-.requisites__company .requisites__copy-all { margin-top: clamp(28px, 3vw, 44px); }
+.requisites__codes dd { margin: 0; font-family: "Onest", sans-serif; font-size: clamp(22px, 2.2vw, 30px); font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .requisites__side { display: grid; grid-template-rows: auto auto 1fr; gap: 14px; }
 .requisites__item { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 18px; align-items: start; padding: clamp(22px, 2.4vw, 32px); border: 1px solid var(--line); background: #fff; }
 .requisites__icon { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--blue); }
@@ -1383,6 +1377,5 @@ img.team__photo { display: block; border: 0; }
   .requisites__contacts { grid-template-columns: 1fr; }
   .requisites__contacts a { border-left: 0; border-top: 1px solid var(--line); }
   .requisites__contacts a:first-child { border-top: 0; }
-  .requisites__codes dd { flex-wrap: wrap; }
   .about-cta__contacts { flex-direction: column; }
 }
