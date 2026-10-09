@@ -1505,3 +1505,6 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .terms-hero__head { grid-template-columns: 1fr; }
   .terms__toc ol { columns: 1; }
 }
+/* Квадратные логотипы (дерево, мельница, монограмма) выше строчных */
+.clients__tags img[src*="drinksome"], .clients__tags img[src*="zoloto"] { max-height: 62px; }
+.clients__tags img[src*="zhivoy"], .clients__tags img[src*="altayskaya"] { max-height: 52px; }
