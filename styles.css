@@ -1064,6 +1064,10 @@ img.team__photo { display: block; border: 0; }
 .pricetable tr.pricetable__free:hover { background: rgba(61,220,151,.14); }
 .pricetable tr.pricetable__free td:first-child, .pricetable tr.pricetable__free .pricetable__price { color: var(--green); }
 .pricetable tr.pricetable__free .pricetable__price { font-size: clamp(17px, 1.5vw, 21px); }
+/* Примечание под таблицей своей вкладки (страница доставки) */
+.pricelist__note { max-width: 920px; margin: 20px 0 0; color: #9aa6bc; font-size: 13px; line-height: 1.65; }
+.pricelist__note a, .price .tariffs-footer > p a { color: #9bb7ed; text-decoration: underline; text-underline-offset: 3px; }
+.pricelist__note a:hover, .price .tariffs-footer > p a:hover { color: #fff; }
 
 /* Квиз: значок щита в колонке шага, на телефоне варианты в один столбец */
 .quiz__badge--shield { gap: 8px; }
