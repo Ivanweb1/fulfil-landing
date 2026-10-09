@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=25" />
+    <link rel="stylesheet" href="styles.css?v=26" />
   </head>
   <body>
     <header class="site-header">
@@ -231,20 +231,27 @@
       <section class="section section--navy final-cta about-cta" id="cta">
         <div class="container">
           <div class="section-heading"><h2>Готовы начать?</h2><p>Оставьте заявку — менеджер подготовит предложение под ваш объем и ассортимент в течение 1 часа.</p></div>
-          <div class="about-cta__row">
-            <a class="button button--light" href="index.html#quiz">Рассчитать стоимость <span>↗</span></a>
-            <ul class="about-cta__contacts">
-              <li><span>Телефон</span><a href="tel:+79265352447">+7 (926) 535-24-47</a></li>
-              <li><span>Email</span><a href="mailto:info@fulfil.pro">info@fulfil.pro</a></li>
-              <li><span>Telegram</span><a href="https://t.me/fulfilpro" target="_blank" rel="noopener">@fulfilpro</a></li>
-            </ul>
-          </div>
+          <form class="final-form" novalidate>
+            <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
+            <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+            <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
+            <input type="hidden" name="source" value="О компании — финальная форма">
+            <button class="button button--light" type="submit">Рассчитать стоимость <span>↗</span></button>
+          </form>
+          <p class="final-note">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy/">политикой конфиденциальности</a></p>
+          <ul class="about-cta__contacts">
+            <li><span>Телефон</span><a href="tel:+79265352447">+7 (926) 535-24-47</a></li>
+            <li><span>Email</span><a href="mailto:info@fulfil.pro">info@fulfil.pro</a></li>
+            <li><span>Telegram</span><a href="https://t.me/fulfilpro" target="_blank" rel="noopener">@fulfilpro</a></li>
+          </ul>
         </div>
       </section>
     </main>
 
     <footer class="footer"><span>ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ» ОГРН: 1217700422830</span><a class="footer__link" href="about.html" aria-current="page">О компании</a><span>2020–2026. Все права защищены.</span></footer>
     <button class="back-to-top" type="button" aria-label="Наверх">↑</button>
+
+    <div class="toast" role="status" aria-live="polite">Спасибо! Заявка принята — менеджер свяжется с вами.</div>
 
     <script type="application/ld+json">
       {
@@ -301,6 +308,7 @@
         window.setTimeout(() => { button.classList.remove('is-copied'); button.innerHTML = label; }, 1400);
       }));
     </script>
+    <script src="forms.js?v=1"></script>
     <script src="script.js?v=11"></script>
   </body>
 </html>
