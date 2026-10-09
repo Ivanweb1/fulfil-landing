@@ -1177,6 +1177,53 @@ img.team__photo { display: block; border: 0; }
 .page-hero__visual img[src*="gallery-02-packaging"] { object-position: 30% 50%; }
 .page-hero__visual img[src*="gallery-03-delivery"] { object-position: 100% 50%; }
 
+/* ─── Доставка до склада Wildberries ─────────────────────── */
+/* Прайс-матрица: склад и четыре ставки. На телефоне строка — карточка с подписями ставок */
+.pricetable--matrix td:first-child { width: 26%; }
+.pricetable--matrix td:not(:first-child) { color: #fff; font-family: "Onest", sans-serif; font-size: clamp(16px, 1.4vw, 20px); font-weight: 500; letter-spacing: -.03em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pricetable--matrix td.pricetable__price { font-size: clamp(18px, 1.7vw, 24px); font-weight: 600; }
+@media (max-width: 780px) {
+  .pricetable--matrix tbody tr { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 14px; }
+  .pricetable--matrix td:first-child { grid-column: 1 / -1; }
+  .pricetable--matrix td:not(:first-child) { grid-column: auto; grid-row: auto; margin: 0; text-align: left; font-size: 17px; }
+  .pricetable--matrix td.pricetable__price { font-size: 19px; }
+  .pricetable--matrix td:not(:first-child)::before { content: attr(data-label); display: block; margin-bottom: 4px; font-family: "Manrope", sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.38); }
+}
+
+/* Калькулятор: слева параметры рейса, справа итог и заявка */
+.calc { background: #fff; }
+.calc__widget { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4.4vw, 72px); margin-top: clamp(38px, 4.4vw, 62px); padding-top: 34px; border-top: 1px solid var(--line); }
+.calc__field { display: block; margin: 0 0 30px; }
+.calc__field:last-child { margin-bottom: 0; }
+.calc__label { display: block; margin-bottom: 12px; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.calc__select { width: 100%; height: 56px; padding: 0 48px 0 18px; border: 1px solid var(--line); border-radius: 0; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1.5 5 5 5-5' fill='none' stroke='%23315eb5' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 20px center; color: var(--ink); font: inherit; font-size: 15px; outline: none; appearance: none; cursor: pointer; }
+.calc__select:focus, .calc__qty input:focus { border-color: var(--blue); }
+.calc__types { display: flex; flex-wrap: wrap; gap: 10px; }
+.calc__qty { display: grid; grid-template-columns: 56px minmax(0, 1fr) 56px; max-width: 300px; }
+.calc__qty button { height: 56px; border: 1px solid var(--line); background: #fff; color: var(--blue); font-size: 22px; cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+.calc__qty button:hover { border-color: var(--blue); background: rgba(49,94,181,.05); }
+.calc__qty input { width: 100%; height: 56px; border: 1px solid var(--line); border-left: 0; border-right: 0; background: #fff; color: var(--ink); font-family: "Onest", sans-serif; font-size: 20px; font-weight: 600; text-align: center; outline: none; -moz-appearance: textfield; appearance: textfield; }
+.calc__qty input::-webkit-outer-spin-button, .calc__qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.calc__result { display: flex; flex-direction: column; padding: clamp(24px, 3vw, 40px); background: var(--paper); }
+.calc__total { display: block; font-family: "Onest", sans-serif; font-size: clamp(46px, 5.4vw, 78px); font-weight: 600; line-height: .95; letter-spacing: -.055em; color: var(--blue); font-variant-numeric: tabular-nums; }
+.calc__formula { margin: 14px 0 0; color: #4d586b; font-size: 14px; }
+.calc__note { margin: 12px 0 0; padding-left: 12px; border-left: 2px solid var(--blue); color: #4d586b; font-size: 13px; line-height: 1.6; }
+.calc__form { margin-top: auto; padding-top: 28px; }
+.calc__result .calc__form { margin-top: 28px; border-top: 1px solid var(--line); }
+.calc__form input:not([type="hidden"]) { width: 100%; height: 52px; padding: 0 16px; border: 1px solid var(--line); background: #fff; color: var(--ink); outline: none; font-size: 14px; }
+.calc__form input:focus { border-color: var(--blue); }
+.calc__form input[aria-invalid="true"] { border-color: #c0392b; }
+.calc__form .button { width: 100%; margin-top: 12px; justify-content: space-between; }
+.calc__form .privacy { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.calc__form .privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 900px) {
+  .calc__widget { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .calc__form .field-row { grid-template-columns: 1fr; }
+  .calc__types .quiz__option { flex: 1 1 0; justify-content: center; }
+}
+
 /* Виды упаковки: термоусадка выделена акцентной линией и бейджем */
 .svc__grid article.is-featured { position: relative; }
 .svc__grid article.is-featured::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 2px; background: var(--blue); }
