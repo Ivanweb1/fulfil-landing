@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=23" />
+    <link rel="stylesheet" href="styles.css?v=25" />
   </head>
   <body>
     <header class="site-header">
@@ -94,10 +94,19 @@
         <div class="container">
           <div class="section-heading"><h2>Как мы работаем</h2></div>
           <div class="about-story__grid">
-            <p class="about-story__lead">Компания была создана в 2020 году. За это время мы выросли до команды из 40 специалистов: упаковщики, грузчики, менеджеры и водители. Обрабатываем более 200 тысяч товаров в месяц.</p>
-            <div class="about-story__text">
-              <p>На складе используем итальянское оборудование с мощностью упаковки до 4 200 единиц в час на автоматизированной линии и до 7 000 единиц в час суммарно с ручными запайщиками. Все процессы контролируются через собственную WMS-систему с адресным хранением.</p>
-              <p>Мы — партнеры ПЭК, доставляем товары на любой региональный склад маркетплейсов.</p>
+            <div class="about-story__intro">
+              <span class="about-story__year" aria-hidden="true">2020</span>
+              <p class="about-story__lead">Компания была создана в <b>2020 году</b>. За это время мы выросли до команды из <b>40 специалистов</b>: упаковщики, грузчики, менеджеры и водители. Обрабатываем более <b>200 тысяч товаров</b> в месяц.</p>
+            </div>
+            <div class="about-story__facts">
+              <article class="about-fact">
+                <div class="about-fact__head"><span class="about-fact__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 8.4h10.8v9.2H3.6z"/><path d="M14.4 11.4h3.4l2.6 2.6v3.6h-6z"/><path d="M6.4 4.4v4"/><path d="M11.4 4.4v4"/></svg></span><strong>до 7 000</strong><small>ед/час упаковка</small></div>
+                <p>На складе используем итальянское оборудование с мощностью упаковки до 4 200 единиц в час на автоматизированной линии и до 7 000 единиц в час суммарно с ручными запайщиками. Все процессы контролируются через собственную WMS-систему с адресным хранением.</p>
+              </article>
+              <article class="about-fact">
+                <div class="about-fact__head"><span class="about-fact__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 7.2h10.6v8.9H3.2z"/><path d="M13.8 10.3h3.9l3.1 3.1v2.8h-7z"/><circle cx="7.3" cy="17.9" r="1.9"/><circle cx="17.5" cy="17.9" r="1.9"/></svg></span><strong>ПЭК</strong><small>партнер по доставке</small></div>
+                <p>Мы — партнеры ПЭК, доставляем товары на любой региональный склад маркетплейсов.</p>
+              </article>
             </div>
           </div>
         </div>
@@ -124,21 +133,23 @@
       <section class="section section--light clients" id="clients">
         <div class="container">
           <div class="section-heading"><h2>Наши клиенты</h2><p>Работаем с брендами разного масштаба — от стартовых партий до регулярных поставок крупных производителей.</p></div>
+          <!-- Логотипы есть для 8 брендов; остальные пока набраны текстом — при получении файлов
+               заменить li.clients__word на <li><img src="assets/…" alt="Бренд"></li> -->
           <ul class="clients__tags">
-            <li>Natura Siberica</li>
-            <li>Askona</li>
-            <li>Domix</li>
-            <li>UNOde50</li>
-            <li>TimA</li>
-            <li>Hell Energy</li>
-            <li>Alvitek</li>
-            <li>Golden Shark</li>
-            <li>Le'Mar</li>
-            <li>Vitobox</li>
-            <li>Drinksome</li>
-            <li>Алтайская пенка</li>
-            <li>Золото Абхазии</li>
-            <li>Живой продукт</li>
+            <li><img src="assets/natura-siberica-full.png" alt="Natura Siberica" loading="lazy" decoding="async"></li>
+            <li><img src="assets/askona-full.png" alt="Askona" loading="lazy" decoding="async"></li>
+            <li><img src="assets/domix-full.png" alt="Domix" loading="lazy" decoding="async"></li>
+            <li><img src="assets/unode50-full.svg" alt="UNOde50" loading="lazy" decoding="async"></li>
+            <li><img src="assets/tima-full.png" alt="TimA" loading="lazy" decoding="async"></li>
+            <li><img src="assets/hell-energy-full.png" alt="Hell Energy" loading="lazy" decoding="async"></li>
+            <li><img src="assets/alvitek-full.png" alt="Alvitek" loading="lazy" decoding="async"></li>
+            <li><img src="assets/golden-shark-full.png" alt="Golden Shark" loading="lazy" decoding="async"></li>
+            <li class="clients__word">Le'Mar</li>
+            <li class="clients__word">Vitobox</li>
+            <li class="clients__word">Drinksome</li>
+            <li class="clients__word">Алтайская пенка</li>
+            <li class="clients__word">Золото Абхазии</li>
+            <li class="clients__word">Живой продукт</li>
           </ul>
         </div>
       </section>
@@ -188,17 +199,31 @@
       <section class="section requisites" id="requisites">
         <div class="container">
           <div class="section-heading"><h2>Реквизиты</h2></div>
-          <div class="requisites__card">
-            <p class="requisites__name">ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»</p>
-            <dl class="requisites__list">
-              <div><dt>ИНН</dt><dd>7736328080</dd></div>
-              <div><dt>ОГРН</dt><dd>1217700422830</dd></div>
-              <div><dt>Юридический адрес</dt><dd>119296, г. Москва, пр-кт Ломоносовский, д. 14, кв. 384</dd></div>
-              <div><dt>Фактический адрес склада</dt><dd>Московская обл., г. Щелково, ул. Аэродромная, д. 1к18</dd></div>
-              <div><dt>Телефон</dt><dd><a href="tel:+79265352447">+7 (926) 535-24-47</a></dd></div>
-              <div><dt>Email</dt><dd><a href="mailto:info@fulfil.pro">info@fulfil.pro</a></dd></div>
-              <div><dt>Telegram</dt><dd><a href="https://t.me/fulfilpro" target="_blank" rel="noopener">@fulfilpro</a></dd></div>
-            </dl>
+          <div class="requisites__grid">
+            <div class="requisites__company">
+              <span class="requisites__label">Юридическое лицо</span>
+              <p class="requisites__name">ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»</p>
+              <dl class="requisites__codes">
+                <div><dt>ИНН</dt><dd><span>7736328080</span><button class="requisites__copy" type="button" data-copy="7736328080" aria-label="Скопировать ИНН">Скопировать</button></dd></div>
+                <div><dt>ОГРН</dt><dd><span>1217700422830</span><button class="requisites__copy" type="button" data-copy="1217700422830" aria-label="Скопировать ОГРН">Скопировать</button></dd></div>
+              </dl>
+              <button class="button button--light requisites__copy-all" type="button" data-copy="ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»&#10;ИНН 7736328080&#10;ОГРН 1217700422830&#10;Юридический адрес: 119296, г. Москва, пр-кт Ломоносовский, д. 14, кв. 384&#10;Фактический адрес склада: Московская обл., г. Щелково, ул. Аэродромная, д. 1к18&#10;Телефон: +7 (926) 535-24-47&#10;Email: info@fulfil.pro">Скопировать реквизиты <span>⧉</span></button>
+            </div>
+            <div class="requisites__side">
+              <div class="requisites__item">
+                <span class="requisites__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20.4h16"/><path d="M5.6 20.4V9.2L12 4.4l6.4 4.8v11.2"/><path d="M9.6 20.4v-5.6h4.8v5.6"/></svg></span>
+                <div><span class="requisites__label">Юридический адрес</span><p>119296, г. Москва, пр-кт Ломоносовский, д. 14, кв. 384</p></div>
+              </div>
+              <div class="requisites__item">
+                <span class="requisites__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4s6.4-5 6.4-9.6a6.4 6.4 0 1 0-12.8 0c0 4.6 6.4 9.6 6.4 9.6Z"/><circle cx="12" cy="10.6" r="2.4"/></svg></span>
+                <div><span class="requisites__label">Фактический адрес склада</span><p>Московская обл., г. Щелково, ул. Аэродромная, д. 1к18</p></div>
+              </div>
+              <div class="requisites__contacts">
+                <a href="tel:+79265352447"><span class="requisites__label">Телефон</span>+7 (926) 535-24-47</a>
+                <a href="mailto:info@fulfil.pro"><span class="requisites__label">Email</span>info@fulfil.pro</a>
+                <a href="https://t.me/fulfilpro" target="_blank" rel="noopener"><span class="requisites__label">Telegram</span>@fulfilpro</a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -266,6 +291,16 @@
       }
     </script>
 
+    <script>
+      /* Копирование реквизитов: кнопка на секунду показывает «Скопировано» */
+      document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(button.dataset.copy); } catch (error) { return; }
+        const label = button.innerHTML;
+        button.classList.add('is-copied');
+        button.textContent = 'Скопировано';
+        window.setTimeout(() => { button.classList.remove('is-copied'); button.innerHTML = label; }, 1400);
+      }));
+    </script>
     <script src="script.js?v=11"></script>
   </body>
 </html>
