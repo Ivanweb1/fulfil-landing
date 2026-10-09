@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=28" />
+    <link rel="stylesheet" href="styles.css?v=29" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -162,13 +162,13 @@
 
       <section class="section contacts-visit" id="visit">
         <div class="container contacts-visit__grid">
-          <div class="contacts-visit__excursion">
-            <h3>Приезжайте на склад</h3>
-            <p>Посмотрите, где и как мы будем работать с вашим товаром. Покажем оборудование, процессы и ответим на вопросы лично.</p>
-            <a class="button button--light" href="#form">Записаться на экскурсию <span>↓</span></a>
-          </div>
+          <div class="contacts-visit__main">
+            <div class="contacts-visit__intro">
+              <h3>Приезжайте на склад</h3>
+              <p>Посмотрите, где и как мы будем работать с вашим товаром. Покажем оборудование, процессы и ответим на вопросы лично.</p>
+            </div>
           <form class="contacts-form" id="form" novalidate>
-            <h3>Напишите нам</h3>
+            <h3 class="contacts-form__title">Напишите нам</h3>
             <div class="field-row">
               <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
               <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
@@ -179,6 +179,10 @@
             <button class="button" type="submit">Отправить <span>↗</span></button>
             <p class="privacy">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy/">политикой конфиденциальности</a></p>
           </form>
+          </div>
+          <figure class="contacts-visit__photo">
+            <img src="assets/gallery-01-warehouse.webp" width="1672" height="941" alt="Склад Fulfil.pro в Щелково: стеллажи с паллетами и зона приемки" loading="lazy" decoding="async">
+          </figure>
         </div>
       </section>
 
@@ -240,9 +244,6 @@
           toast.classList.add('is-visible');
           form.reset();
           window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
-        });
-        document.querySelector('a[href="#form"]').addEventListener('click', () => {
-          window.setTimeout(() => form.querySelector('input').focus({ preventScroll: true }), 400);
         });
       })();
     </script>
