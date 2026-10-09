@@ -1332,7 +1332,6 @@ img.team__photo { display: block; border: 0; }
 .clients__tags img { max-width: 72%; max-height: 44px; display: block; object-fit: contain; filter: grayscale(1); opacity: .7; transition: filter .3s ease, opacity .3s ease; }
 .clients__tags li:hover img { filter: none; opacity: 1; }
 .clients__tags img[src*="hell-energy"], .clients__tags img[src*="alvitek"] { max-height: 58px; }
-.clients__tags .clients__word { color: #4d586b; font-size: clamp(15px, 1.3vw, 18px); font-weight: 600; letter-spacing: -.03em; }
 
 .warehouse__features--eight { grid-template-columns: repeat(4, 1fr); }
 .warehouse__features--eight article:nth-child(4n + 1) { padding-left: 0; border-left: 0; }
