@@ -18,6 +18,7 @@ Ozon, Яндекс Маркета, модели FBS и политика конф
 - `upakovka.html` — упаковка товаров для маркетплейсов (`/upakovka-tovarov-dlya-marketplejsov/`)
 - `dostavka.html` — доставка товаров на маркетплейсы (`/dostavka-tovarov-na-marketplejsy/`): площадки, схемы FBO/FBS, тарифы по пяти вкладкам, квиз, требования к приемке, FAQ
 - `dostavka-wb.html` — доставка до склада Wildberries (`/dostavka-do-sklada-wildberries/`): склады, прайс по складам, калькулятор рейса (`calc-wb.js`, цены — в `window.WB_CALC` на странице), FAQ
+- `about.html` — о компании (`/about/`): цифры, команда (слоты под фото и имена), клиенты, склад, гарантии, реквизиты
 - `styles.css` — стили
 - `script.js` — слайдер первого экрана, квиз, аккордеон FAQ, формы
 - `forms.js` — маска телефона и валидация с подсказками у полей (страница Авито; подключается до `script.js`)
