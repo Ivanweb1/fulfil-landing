@@ -1193,13 +1193,16 @@ img.team__photo { display: block; border: 0; }
 /* Калькулятор: слева параметры рейса, справа итог и заявка */
 .calc { background: #fff; }
 .calc__widget { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4.4vw, 72px); margin-top: clamp(38px, 4.4vw, 62px); padding-top: 34px; border-top: 1px solid var(--line); }
-.calc__field { display: block; margin: 0 0 30px; }
-.calc__field:last-child { margin-bottom: 0; }
+/* Левая колонка тянется на высоту панели итога: поля распределены по ней равномерно,
+   первая подпись стоит на одной линии с подписью итога */
+.calc__fields { display: flex; flex-direction: column; justify-content: space-between; gap: 30px; padding: clamp(24px, 3vw, 40px) 0; }
+.calc__field { display: block; margin: 0; }
 .calc__label { display: block; margin-bottom: 12px; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
 .calc__select { width: 100%; height: 56px; padding: 0 48px 0 18px; border: 1px solid var(--line); border-radius: 0; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1.5 5 5 5-5' fill='none' stroke='%23315eb5' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 20px center; color: var(--ink); font: inherit; font-size: 15px; outline: none; appearance: none; cursor: pointer; }
 .calc__select:focus, .calc__qty input:focus { border-color: var(--blue); }
-.calc__types { display: flex; flex-wrap: wrap; gap: 10px; }
-.calc__qty { display: grid; grid-template-columns: 56px minmax(0, 1fr) 56px; max-width: 300px; }
+.calc__types { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.calc__types .quiz__option { justify-content: center; }
+.calc__qty { display: grid; grid-template-columns: 56px minmax(0, 1fr) 56px; }
 .calc__qty button { height: 56px; border: 1px solid var(--line); background: #fff; color: var(--blue); font-size: 22px; cursor: pointer; transition: border-color .2s ease, background .2s ease; }
 .calc__qty button:hover { border-color: var(--blue); background: rgba(49,94,181,.05); }
 .calc__qty input { width: 100%; height: 56px; border: 1px solid var(--line); border-left: 0; border-right: 0; background: #fff; color: var(--ink); font-family: "Onest", sans-serif; font-size: 20px; font-weight: 600; text-align: center; outline: none; -moz-appearance: textfield; appearance: textfield; }
@@ -1218,10 +1221,10 @@ img.team__photo { display: block; border: 0; }
 .calc__form .privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 @media (max-width: 900px) {
   .calc__widget { grid-template-columns: 1fr; }
+  .calc__fields { padding: 0; }
 }
 @media (max-width: 560px) {
   .calc__form .field-row { grid-template-columns: 1fr; }
-  .calc__types .quiz__option { flex: 1 1 0; justify-content: center; }
 }
 
 /* Виды упаковки: термоусадка выделена акцентной линией и бейджем */
