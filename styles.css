@@ -1175,6 +1175,7 @@ img.team__photo { display: block; border: 0; }
 
 /* ─── Страница упаковки ──────────────────────────────────── */
 .page-hero__visual img[src*="gallery-02-packaging"] { object-position: 30% 50%; }
+.page-hero__visual img[src*="gallery-03-delivery"] { object-position: 100% 50%; }
 
 /* Виды упаковки: термоусадка выделена акцентной линией и бейджем */
 .svc__grid article.is-featured { position: relative; }
