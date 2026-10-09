@@ -62,7 +62,7 @@ function renderQuiz() {
     const isTelegram = (quizAnswers[quizSteps.length - 1] || []).includes('Telegram');
     const contactType = isTelegram ? 'text' : 'tel';
     const contactPlaceholder = isTelegram ? 'Телефон или @username' : '+7 (___) ___-__-__';
-    quizContent.innerHTML = `<div class="quiz__question">${quizContactTitle}</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="${contactType}" placeholder="${contactPlaceholder}"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a></p>`;
+    quizContent.innerHTML = `<div class="quiz__question">${quizContactTitle}</div><div class="quiz__contact"><input type="text" placeholder="Ваше имя"><input type="${contactType}" placeholder="${contactPlaceholder}"></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/politika-konfidencialnosti/">политикой конфиденциальности</a> и <a href="/terms/">условиями использования</a></p>`;
     renderQuizProgress(quizSteps.length);
     if (quizStepNumber) quizStepNumber.textContent = String(quizTotalSteps).padStart(2, '0');
     quizHint?.classList.add('is-hidden');

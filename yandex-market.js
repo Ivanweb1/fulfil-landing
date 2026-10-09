@@ -252,7 +252,7 @@ function renderYandexQuiz() {
   const step = yandexQuizSteps[quizStep];
   const options = step.options.map((option) => `<button class="quiz__option${quizAnswers[quizStep].includes(option) ? ' selected' : ''}" type="button" data-option="${option.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}">${option}</button>`).join('');
   const body = step.contact
-    ? `<div class="quiz__contact-wrap"><div class="quiz__options">${options}</div>${contactMarkup()}<p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a></p><p class="quiz__error" role="alert"></p></div>`
+    ? `<div class="quiz__contact-wrap"><div class="quiz__options">${options}</div>${contactMarkup()}<p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="/terms/" target="_blank" rel="noopener">условиями использования</a></p><p class="quiz__error" role="alert"></p></div>`
     : `<div class="quiz__options">${options}</div><p class="quiz__error" role="alert"></p>`;
 
   quizContent.innerHTML = `<div class="quiz__question">${step.question}</div>${body}`;
