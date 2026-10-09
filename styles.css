@@ -1219,6 +1219,7 @@ img.team__photo { display: block; border: 0; }
 .calc__form .button { width: 100%; margin-top: 12px; justify-content: space-between; }
 .calc__form .privacy { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .calc__form .privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+@media (min-width: 561px) { .calc__form .privacy { white-space: nowrap; } }
 @media (max-width: 900px) {
   .calc__widget { grid-template-columns: 1fr; }
   .calc__fields { padding: 0; }
