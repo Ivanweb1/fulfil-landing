@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=25" />
+    <link rel="stylesheet" href="styles.css?v=28" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -147,7 +147,13 @@
         </div>
         <a href="index.html#marketplaces">Маркетплейсы</a>
         <a href="tarify.html">Тарифы</a>
-        <a href="about.html">О компании</a>
+        <div class="main-nav__group">
+          <button class="main-nav__toggle" type="button" aria-expanded="false">Компания <i aria-hidden="true">▾</i></button>
+          <div class="main-nav__sub main-nav__sub--narrow">
+            <a href="about.html">О компании</a>
+            <a href="contacts.html">Контакты</a>
+          </div>
+        </div>
         <a href="#faq">Вопросы</a>
         <a class="main-nav__cta" href="#quiz">Рассчитать стоимость</a>
         <a class="main-nav__phone" href="tel:+79265352447">+7 (926) 535-24-47</a>
@@ -420,7 +426,7 @@
       </section>
     </main>
 
-    <footer class="footer"><span>ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ» ОГРН: 1217700422830</span><a class="footer__link" href="about.html">О компании</a><span>2020–2026. Все права защищены.</span></footer>
+    <footer class="footer"><span>ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ» ОГРН: 1217700422830</span><nav class="footer__links" aria-label="Служебные страницы"><a class="footer__link" href="about.html">О компании</a><a class="footer__link" href="contacts.html">Контакты</a></nav><span>2020–2026. Все права защищены.</span></footer>
     <button class="back-to-top" type="button" aria-label="Наверх">↑</button>
 
     <div class="toast" role="status" aria-live="polite">Спасибо! Менеджер свяжется с вами и подготовит предварительный расчёт в течение 30 минут в рабочее время.</div>

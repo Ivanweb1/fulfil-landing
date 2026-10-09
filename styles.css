@@ -1379,3 +1379,79 @@ img.team__photo { display: block; border: 0; }
   .requisites__contacts a:first-child { border-top: 0; }
   .about-cta__contacts { flex-direction: column; }
 }
+.footer__links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+
+/* ─── Контакты ───────────────────────────────────────────── */
+.contacts-hero__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px clamp(40px, 5vw, 90px); align-items: end; margin-top: clamp(30px, 3.4vw, 46px); }
+.contacts-hero__head h1 { margin: 0; }
+.contacts-hero__head .page-hero__lead { margin: 0; }
+.contacts-cards { list-style: none; margin: clamp(40px, 4.6vw, 64px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #aeb7c5; }
+.contacts-cards li { display: flex; flex-direction: column; align-items: flex-start; padding: 28px clamp(18px, 2.2vw, 34px) 0; border-left: 1px solid var(--line); }
+.contacts-cards li:first-child { padding-left: 0; border-left: 0; }
+.contacts-cards__icon { width: 46px; height: 46px; display: grid; place-items: center; margin-bottom: 22px; border: 1px solid var(--line); color: var(--blue); }
+.contacts-cards__icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.contacts-cards__label { margin-bottom: 8px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.contacts-cards__value { font-family: "Onest", sans-serif; font-size: clamp(18px, 1.7vw, 24px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; color: var(--ink); }
+a.contacts-cards__value { transition: color .2s ease; }
+a.contacts-cards__value:hover { color: var(--blue); }
+
+.contacts-map__address { font-family: "Onest", sans-serif; font-size: clamp(18px, 1.7vw, 24px) !important; font-weight: 500; letter-spacing: -.03em; color: var(--ink) !important; }
+.contacts-map__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; margin-top: clamp(34px, 3.8vw, 52px); }
+.contacts-map__left { display: flex; flex-direction: column; }
+.contacts-map__frame { flex: 1; min-height: 420px; border: 1px solid var(--line); background: #e8ecf2; }
+.contacts-map__frame iframe { width: 100%; height: 100%; min-height: 420px; display: block; border: 0; }
+.contacts-map__links { display: flex; flex-wrap: wrap; gap: 14px 32px; padding-top: 20px; }
+.contacts-map__side { display: grid; gap: 14px; align-content: start; }
+.contacts-route, .contacts-logistics { padding: clamp(22px, 2.4vw, 32px); border: 1px solid var(--line); background: #fff; }
+.contacts-route h3, .contacts-logistics h3, .contacts-visit h3 { margin: 0 0 14px; font-family: "Onest", sans-serif; font-size: clamp(20px, 1.9vw, 26px); font-weight: 500; line-height: 1.15; letter-spacing: -.035em; }
+.contacts-route p, .contacts-logistics p { margin: 0; color: #4d586b; font-size: 14px; line-height: 1.65; }
+.contacts-route p + p { margin-top: 10px; }
+.contacts-route img { width: 100%; height: 190px; margin-top: 20px; display: block; object-fit: cover; object-position: 100% 60%; }
+.contacts-logistics__note { display: flex; gap: 14px; align-items: flex-start; margin-top: 18px; padding: 16px 18px; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.55; }
+.contacts-logistics__icon { flex: none; color: var(--blue); }
+.contacts-logistics__icon svg { width: 22px; height: 22px; display: block; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+.contacts-visit__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.contacts-visit__excursion { display: flex; flex-direction: column; align-items: flex-start; padding: clamp(28px, 3.2vw, 46px); color: #fff; background: linear-gradient(rgba(13,29,59,.82), rgba(13,29,59,.92)), url("assets/gallery-01-warehouse.webp") center / cover; }
+.contacts-visit__excursion h3 { font-size: clamp(28px, 3vw, 44px); letter-spacing: -.05em; }
+.contacts-visit__excursion p { max-width: 460px; margin: 0 0 28px; color: #c3ccdc; font-size: 15px; line-height: 1.65; }
+.contacts-visit__excursion .button { margin-top: auto; }
+.contacts-form { padding: clamp(28px, 3.2vw, 46px); border: 1px solid var(--line); background: #fff; scroll-margin-top: 110px; }
+.contacts-form label { display: block; }
+.contacts-form input:not([type="hidden"]), .contacts-form textarea { width: 100%; padding: 0 16px; border: 1px solid var(--line); background: #fff; color: var(--ink); outline: none; font: inherit; font-size: 14px; }
+.contacts-form input:not([type="hidden"]) { height: 52px; }
+.contacts-form textarea { margin-top: 10px; padding-top: 14px; padding-bottom: 14px; min-height: 110px; resize: vertical; }
+.contacts-form input:focus, .contacts-form textarea:focus { border-color: var(--blue); }
+.contacts-form input[aria-invalid="true"] { border-color: #c0392b; }
+.contacts-form .button { width: 100%; margin-top: 12px; justify-content: space-between; }
+.contacts-form .privacy { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.contacts-form .privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.requisites__side--two { grid-template-rows: 1fr 1fr; }
+.requisites__side--two .requisites__item { align-items: center; }
+
+@media (max-width: 1100px) {
+  .contacts-cards { grid-template-columns: 1fr 1fr; }
+  .contacts-cards li:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .contacts-cards li:nth-child(n + 3) { margin-top: 28px; border-top: 1px solid var(--line); }
+  .contacts-map__grid, .contacts-visit__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 780px) {
+  .contacts-hero__head { grid-template-columns: 1fr; }
+  .contacts-cards { grid-template-columns: 1fr; }
+  .contacts-cards li, .contacts-cards li:nth-child(n + 3) { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 16px; margin-top: 0; padding: 18px 0; border-left: 0; border-top: 0; border-bottom: 1px solid var(--line); }
+  .contacts-cards__icon { margin: 0; grid-row: span 2; }
+  .contacts-cards li > :not(.contacts-cards__icon) { flex-basis: calc(100% - 62px); }
+  .contacts-cards__label { margin: 0 0 0 62px; order: -1; flex-basis: 100% !important; }
+  .contacts-map__frame, .contacts-map__frame iframe { min-height: 320px; }
+  .contacts-form .field-row { grid-template-columns: 1fr; }
+  .footer { flex-wrap: wrap; }
+}
+.main-nav__sub--narrow { min-width: 180px; }
+/* Шапка 1181–1366 px: телефон и пункты меню не переносятся */
+.phone span, .phone small, .main-nav > a, .main-nav__toggle { white-space: nowrap; }
+@media (min-width: 1181px) and (max-width: 1366px) {
+  .site-header { gap: 22px; }
+  .main-nav { gap: 18px; font-size: 13px; }
+  .header-actions { gap: 14px; }
+  .header-actions .button--compact { padding-left: 16px; padding-right: 16px; }
+}
