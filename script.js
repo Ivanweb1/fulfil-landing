@@ -140,7 +140,7 @@ if (!window.CUSTOM_FORM_HANDLER) finalForm?.addEventListener('submit', (event) =
 });
 
 const backToTop = document.querySelector('.back-to-top');
-window.addEventListener('scroll', () => backToTop?.classList.toggle('is-visible', window.scrollY > 700), { passive: true });
+window.addEventListener('scroll', () => backToTop?.classList.toggle('is-visible', window.scrollY > 400), { passive: true });
 backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 const flowSteps = [...document.querySelectorAll('.steps__flow .step')];

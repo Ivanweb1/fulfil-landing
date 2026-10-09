@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=32" />
+    <link rel="stylesheet" href="styles.css?v=34" />
   </head>
   <body>
     <header class="site-header">
@@ -251,7 +251,45 @@
       </section>
     </main>
 
-    <footer class="footer"><span>ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ» ОГРН: 1217700422830</span><nav class="footer__links" aria-label="Служебные страницы"><a class="footer__link" href="about.html" aria-current="page">О компании</a><a class="footer__link" href="contacts.html">Контакты</a><a class="footer__link" href="privacy-policy.html">Политика конфиденциальности</a><a class="footer__link" href="terms.html">Условия использования</a></nav><span>2020–2026. Все права защищены.</span></footer>
+    <footer class="footer">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a class="footer__logo" href="index.html" aria-label="Fulfil.pro — на главную"><img src="assets/fulfil-logo.png" alt="Fulfil.pro" width="190" height="60" loading="lazy"></a>
+          <p class="footer__legal">ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»<br>ИНН 7736328080<br>ОГРН 1217700422830</p>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">Контакты</span>
+          <a class="footer__phone" href="tel:+79265352447">+7 (926) 535-24-47</a>
+          <span class="footer__note">09:00–19:00, без выходных</span>
+          <a href="mailto:info@fulfil.pro">info@fulfil.pro</a>
+          <a href="https://t.me/fulfilpro" target="_blank" rel="noopener">Telegram @fulfilpro</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">Склад</span>
+          <p>Московская обл., г. Щелково,<br>ул. Аэродромная, д. 1к18</p>
+          <a href="contacts.html#address">Как добраться</a>
+        </div>
+        <nav class="footer__col footer__services" aria-label="Услуги">
+          <span class="footer__title">Услуги</span>
+          <ul>
+            <li><a href="wildberries.html">Фулфилмент для Wildberries</a></li>
+            <li><a href="ozon.html">Фулфилмент для Ozon</a></li>
+            <li><a href="yandex-market.html">Фулфилмент для Яндекс Маркета</a></li>
+            <li><a href="avito.html">Фулфилмент для Авито</a></li>
+            <li><a href="fbs.html">Фулфилмент по модели FBS</a></li>
+            <li><a class="fx-fbo-link" href="fbo.html">Фулфилмент по модели FBO</a></li>
+            <li><a href="upakovka.html">Упаковка товаров для маркетплейсов</a></li>
+            <li><a href="dostavka.html">Доставка товаров на маркетплейсы</a></li>
+            <li><a href="dostavka-wb.html">Доставка до склада Wildberries</a></li>
+            <li><a href="tarify.html">Тарифы</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer__bottom">
+        <span>2020–2026. Все права защищены.</span>
+        <nav class="footer__links" aria-label="Компания и документы"><a href="about.html" aria-current="page">О компании</a><a href="contacts.html">Контакты</a><a class="fx-policy-link" href="privacy-policy.html">Политика конфиденциальности</a><a href="terms.html">Условия использования</a></nav>
+      </div>
+    </footer>
     <button class="back-to-top" type="button" aria-label="Наверх">↑</button>
 
     <div class="toast" role="status" aria-live="polite">Спасибо! Заявка принята — менеджер свяжется с вами.</div>
@@ -302,6 +340,6 @@
     </script>
 
     <script src="forms.js?v=1"></script>
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=13"></script>
   </body>
 </html>
