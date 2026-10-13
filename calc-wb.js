@@ -60,6 +60,7 @@
     form.elements.warehouse.value = warehouse.name;
     form.elements.cargo.value = type === 'box' ? 'Короба до 20 кг' : 'Паллеты';
     form.elements.quantity.value = String(qty);
+    form.elements.total.value = `${rub(unit * qty)} (${rub(unit)} × ${qty} ${unitName}, без НДС)`;
   }
 
   typeButtons.forEach((button) => button.addEventListener('click', () => {

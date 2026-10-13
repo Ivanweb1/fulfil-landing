@@ -658,7 +658,11 @@
     comment: 'Комментарий',
     sku: 'Количество SKU',
     volume: 'Объём отгрузок',
-    message: 'Сообщение'
+    message: 'Сообщение',
+    warehouse: 'Склад',
+    cargo: 'Тип грузоместа',
+    quantity: 'Количество',
+    total: 'Сумма расчета'
   };
 
   var FIELD_ALIASES = {

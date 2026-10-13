@@ -676,7 +676,7 @@ img.team__photo { display: block; border: 0; }
 }
 
 @media (max-width: 780px) {
-  .page-hero__metrics { grid-template-columns: 1fr 1fr; gap: 26px 0; }
+  .page-hero__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 0; }
   .page-hero__metrics li, .page-hero__metrics li:first-child { padding: 0 18px; border-left: 1px solid var(--line); }
   .page-hero__metrics li:nth-child(odd) { padding-left: 0; border-left: 0; }
   .page-hero__actions { align-items: stretch; flex-direction: column; gap: 16px; }
@@ -1346,7 +1346,7 @@ img.team__photo { display: block; border: 0; }
 /* Левая карточка — юрлицо и коды, которые чаще всего копируют в договор */
 .requisites__company { display: flex; flex-direction: column; padding: clamp(28px, 3.2vw, 46px); background: var(--navy); color: #fff; }
 .requisites__company .requisites__label { color: rgba(255,255,255,.42); }
-.requisites__name { margin: 0; font-family: "Onest", sans-serif; font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.08; letter-spacing: -.045em; }
+.requisites__name { margin: 0; overflow-wrap: anywhere; font-family: "Onest", sans-serif; font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.08; letter-spacing: -.045em; }
 .requisites__codes { margin: clamp(28px, 3vw, 44px) 0 0; border-top: 1px solid rgba(255,255,255,.18); }
 .requisites__codes div { display: grid; grid-template-columns: 80px minmax(0, 1fr); align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.13); }
 .requisites__codes dt { color: rgba(255,255,255,.42); font-size: 11px; font-weight: 700; letter-spacing: .16em; }
@@ -1374,7 +1374,7 @@ img.team__photo { display: block; border: 0; }
   .warehouse__features--eight article:nth-child(odd) { padding-left: 0; border-left: 0; }
   .warehouse__features--eight article:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .warehouse__base--about { grid-template-columns: 1fr; }
-  .requisites__grid { grid-template-columns: 1fr; }
+  .requisites__grid { grid-template-columns: minmax(0, 1fr); }
   .requisites__contacts { grid-template-columns: 1fr; }
   .requisites__contacts a { border-left: 0; border-top: 1px solid var(--line); }
   .requisites__contacts a:first-child { border-top: 0; }
@@ -1512,6 +1512,16 @@ a.contacts-cards__value:hover { color: var(--blue); }
 @media (max-width: 780px) {
   .terms-hero__head { grid-template-columns: 1fr; }
   .terms__toc ol { columns: 1; }
+}
+/* Узкие телефоны: длинные значения (название юрлица, ОГРН, показатели первого
+   экрана) не помещаются рядом с подписью — переносим, а не обрезаем */
+@media (max-width: 480px) {
+  .page-hero__metrics li, .page-hero__metrics li:first-child { padding: 0 12px; }
+  .page-hero__metrics li:nth-child(odd) { padding-left: 0; }
+  .page-hero__metrics strong { font-size: 22px; white-space: normal; overflow-wrap: anywhere; }
+  .requisites__codes div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .terms-hero__meta div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .terms-hero__meta dd { overflow-wrap: anywhere; }
 }
 /* Квадратные логотипы (дерево, мельница, монограмма) выше строчных */
 .clients__tags img[src*="drinksome"], .clients__tags img[src*="zoloto"] { max-height: 62px; }
