@@ -82,19 +82,26 @@
   qtyInput.addEventListener('blur', () => { qtyInput.value = readQty(); });
   select.addEventListener('change', calculate);
 
-  const fields = [...form.querySelectorAll('input:not([type="hidden"])')].filter((field) => !field.closest('.hp-field'));
-  fields.forEach((field) => field.addEventListener('blur', () => validateField(field)));
+  /* После отправки форма очищается вместе со скрытыми полями — пересчитываем. */
+  form.addEventListener('reset', () => window.setTimeout(calculate));
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (!validateFields(fields) || isBot(form)) return;
-    const toast = document.querySelector('.toast');
-    toast.textContent = 'Спасибо! Расчет отправлен менеджеру — свяжемся в течение 1 часа.';
-    toast.classList.add('is-visible');
-    form.reset();
-    calculate();
-    window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
-  });
+  /* На статической странице заявку проверяет forms.js и показывает тост этот скрипт.
+     В Тильде forms.js нет: форму отправляет fx-runtime (по data-fx-form). */
+  if (typeof validateFields === 'function') {
+    const fields = [...form.querySelectorAll('input:not([type="hidden"])')].filter((field) => !field.closest('.hp-field'));
+    fields.forEach((field) => field.addEventListener('blur', () => validateField(field)));
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!validateFields(fields) || isBot(form)) return;
+      const toast = document.querySelector('.toast');
+      toast.textContent = 'Спасибо! Расчет отправлен менеджеру — свяжемся в течение 1 часа.';
+      toast.classList.add('is-visible');
+      form.reset();
+      calculate();
+      window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
+    });
+  }
 
   calculate();
 })();

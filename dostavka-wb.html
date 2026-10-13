@@ -284,7 +284,7 @@
             <output class="calc__total" id="calcTotal" for="calcWh calcQty" aria-live="polite">575 ₽</output>
             <p class="calc__formula" id="calcFormula">575 ₽ × 1 короб · без НДС</p>
             <p class="calc__note" id="calcNote"></p>
-            <form class="calc__form" novalidate>
+            <form class="calc__form" data-fx-form="Калькулятор доставки до склада WB" data-fx-success="Спасибо! Расчет отправлен менеджеру — свяжемся в течение 1 часа." novalidate>
               <div class="field-row">
                 <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required /></label>
                 <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required /></label>
@@ -292,9 +292,9 @@
               <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off" /></label>
               <input type="hidden" name="service" value="delivery-wb" />
               <input type="hidden" name="source" value="Доставка до склада Wildberries — калькулятор" />
-              <input type="hidden" name="warehouse" />
-              <input type="hidden" name="cargo" />
-              <input type="hidden" name="quantity" />
+              <input type="hidden" name="warehouse" data-fx-label="Склад" />
+              <input type="hidden" name="cargo" data-fx-label="Тип грузоместа" />
+              <input type="hidden" name="quantity" data-fx-label="Количество" />
               <input type="hidden" name="total" data-fx-label="Сумма расчета" />
               <button class="button" type="submit">Отправить расчет менеджеру <span>↗</span></button>
               <p class="privacy">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy/">политикой конфиденциальности</a> и <a href="/terms/">условиями использования</a></p>
@@ -642,6 +642,6 @@
     </script>
     <script src="forms.js?v=1"></script>
     <script src="script.js?v=13"></script>
-    <script src="calc-wb.js?v=2"></script>
+    <script src="calc-wb.js?v=3"></script>
   </body>
 </html>

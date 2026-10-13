@@ -48,6 +48,10 @@ PAGES = {
     "tarify": "Тарифы",
     "privacy-policy": "Политика конфиденциальности",
     "contacts": "Контакты",
+    "about": "О компании",
+    "terms": "Условия использования",
+    "dostavka": "Доставка товаров на маркетплейсы",
+    "dostavka-wb": "Доставка до склада Wildberries",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -82,6 +86,10 @@ BACK_TO_TOP = {
     "tarify": 600,
     "privacy-policy": 600,
     "contacts": 600,
+    "about": 600,
+    "terms": 600,
+    "dostavka": 600,
+    "dostavka-wb": 600,
 }
 
 # Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
@@ -96,6 +104,12 @@ HIDDEN_BLOCKS = {
     ("fbo", "team"): "вместо фотографий сотрудников заглушки",
     ("upakovka", "works"): "вместо фотографий работ заглушки — фото предоставляет клиент",
     ("tarify", "trust"): "отзывы не согласованы с заказчиком",
+    ("dostavka", "cases"): "кейсов по доставке пока нет",
+    ("dostavka", "trust"): "отзывы не согласованы с заказчиком",
+    ("dostavka", "team"): "вместо фотографий сотрудников заглушки",
+    ("dostavka-wb", "cases"): "кейсов по доставке пока нет",
+    ("dostavka-wb", "trust"): "отзывы не согласованы с заказчиком",
+    ("dostavka-wb", "team"): "вместо фотографий сотрудников заглушки",
 }
 
 # Для этой страницы ТЗ требует FAQPage именно в HEAD. Сборщик не дублирует
@@ -439,6 +453,12 @@ SLUG_TITLES = {
     "contacts-visit": "Экскурсия на склад",
     "contacts-final": "Форма обратной связи",
     "requisites": "Юридическая информация",
+    "about-story": "История компании",
+    "clients": "Клиенты",
+    "about-cta": "Финальная форма",
+    "terms-hero": "Первый экран",
+    "terms": "Текст условий",
+    "calc": "Калькулятор доставки",
 }
 
 
@@ -542,6 +562,32 @@ def jsonld_scripts(source: str) -> list[tuple[str, str]]:
     return result
 
 
+def top_level_sections(body: str) -> list[str]:
+    """Секции верхнего уровня. Внутри секции бывают вложенные <section>
+    (разделы на странице условий) — они остаются частью своего блока."""
+    result, depth, start = [], 0, 0
+    for tag in re.finditer(r"<(/?)section\b[^>]*>", body):
+        if not tag.group(1):
+            if depth == 0:
+                start = tag.start()
+            depth += 1
+        else:
+            depth -= 1
+            if depth == 0:
+                result.append(body[start:tag.end()])
+    return result
+
+
+def calc_script(source: str) -> str:
+    """Калькулятор доставки WB: прайс со страницы и логика из calc-wb.js
+    уезжают в блок калькулятора — в Тильде отдельных файлов страницы нет."""
+    config = re.search(r"window\.WB_CALC\s*=\s*\{.*?\n\s*\};", source, flags=re.S)
+    if not config:
+        return ""
+    logic = (ROOT / "calc-wb.js").read_text(encoding="utf-8")
+    return f"\n<script>{config.group(0)}</script>\n<script>{logic}</script>"
+
+
 def build_blocks(page: str) -> list[Block]:
     source = (ROOT / f"{page}.html").read_text(encoding="utf-8")
     blocks: list[Block] = []
@@ -553,8 +599,7 @@ def build_blocks(page: str) -> list[Block]:
         taken.add("header")
 
     body = re.search(r"<main[^>]*>(.*?)</main>", source, flags=re.S).group(1)
-    for match in re.finditer(r"(<section\b[^>]*>.*?</section>)", body, flags=re.S):
-        html = match.group(1)
+    for html in top_level_sections(body):
         tag = html[:html.index(">") + 1]
         slug = section_slug(tag, taken)
         taken.add(slug)
@@ -565,6 +610,10 @@ def build_blocks(page: str) -> list[Block]:
     footer = re.search(r'(<footer class="footer">.*?</footer>)', source, flags=re.S)
     if footer:
         blocks.append(Block("footer", SLUG_TITLES["footer"], footer.group(1)))
+
+    calc = calc_script(source)
+    if calc:
+        next(block for block in blocks if 'id="calc"' in block.html).html += calc
 
     # Конфиг квиза из inline-скрипта уезжает внутрь блока с квизом. У страницы
     # Яндекс Маркета логика вынесена в отдельный файл, поэтому читаем массив
