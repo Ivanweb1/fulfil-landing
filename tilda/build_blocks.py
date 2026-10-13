@@ -47,6 +47,7 @@ PAGES = {
     "upakovka": "Упаковка товаров для маркетплейсов",
     "tarify": "Тарифы",
     "privacy-policy": "Политика конфиденциальности",
+    "contacts": "Контакты",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -61,6 +62,11 @@ PAGE_URLS = {
     "upakovka.html": "/upakovka-tovarov-dlya-marketplejsov/",
     "tarify.html": "/tarify/",
     "privacy-policy.html": "/privacy-policy/",
+    "about.html": "/about/",
+    "contacts.html": "/contacts/",
+    "terms.html": "/terms/",
+    "dostavka.html": "/dostavka-tovarov-na-marketplejsy/",
+    "dostavka-wb.html": "/dostavka-do-sklada-wildberries/",
 }
 
 # 3.4 — порог появления кнопки «Наверх», px. Уезжает в data-атрибут блока шапки.
@@ -75,6 +81,7 @@ BACK_TO_TOP = {
     "upakovka": 600,
     "tarify": 600,
     "privacy-policy": 600,
+    "contacts": 600,
 }
 
 # Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
@@ -427,6 +434,11 @@ SLUG_TITLES = {
     "marketplaces-std": "Стандарты маркетплейсов",
     "works": "Примеры работ",
     "extras": "Дополнительные услуги",
+    "contacts-hero": "Первый экран с контактами",
+    "contacts-map": "Адрес и карта",
+    "contacts-visit": "Экскурсия на склад",
+    "contacts-final": "Форма обратной связи",
+    "requisites": "Юридическая информация",
 }
 
 
