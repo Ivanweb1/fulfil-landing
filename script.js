@@ -123,6 +123,11 @@ renderQuiz();
 document.querySelectorAll('.faq__list article > button').forEach((button) => {
   button.addEventListener('click', () => {
     const item = button.parentElement;
+    /* data-multiple — ответы раскрываются независимо, несколько сразу */
+    if (item.closest('.faq__list').hasAttribute('data-multiple')) {
+      item.classList.toggle('is-open');
+      return;
+    }
     const wasOpen = item.classList.contains('is-open');
     document.querySelectorAll('.faq__list article').forEach((faqItem) => faqItem.classList.remove('is-open'));
     if (!wasOpen) item.classList.add('is-open');
@@ -189,7 +194,17 @@ priceTabs.forEach((tab, index) => {
 window.addEventListener('hashchange', () => activatePriceHash(true));
 activatePriceHash();
 
+/* Ссылка на вкладку прайса (href="#id-панели") открывает её и тогда, когда адрес
+   уже совпадает и hashchange не срабатывает. Панель показываем до перехода по якорю. */
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#"]');
+  const panel = link && document.getElementById(link.getAttribute('href').slice(1));
+  const index = pricePanels.indexOf(panel);
+  if (index >= 0) activatePriceTab(index);
+});
+
 const siteHeader = document.querySelector('.site-header');
+window.addEventListener('scroll', () => siteHeader?.classList.toggle('is-stuck', window.scrollY > 10), { passive: true });
 const menuButton = document.querySelector('.menu-button');
 
 function setMenu(open) {

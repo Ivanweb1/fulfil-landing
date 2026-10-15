@@ -1219,7 +1219,8 @@ img.team__photo { display: block; border: 0; }
 .calc__form .button { width: 100%; margin-top: 12px; justify-content: space-between; }
 .calc__form .privacy { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .calc__form .privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-@media (min-width: 561px) { .calc__form .privacy { white-space: nowrap; } }
+/* В одну строку — только когда колонка итога достаточно широкая */
+@media (min-width: 561px) and (max-width: 900px), (min-width: 1281px) { .calc__form .privacy { white-space: nowrap; } }
 @media (max-width: 900px) {
   .calc__widget { grid-template-columns: 1fr; }
   .calc__fields { padding: 0; }
@@ -1526,3 +1527,65 @@ a.contacts-cards__value:hover { color: var(--blue); }
 /* Квадратные логотипы (дерево, мельница, монограмма) выше строчных */
 .clients__tags img[src*="drinksome"], .clients__tags img[src*="zoloto"] { max-height: 62px; }
 .clients__tags img[src*="zhivoy"], .clients__tags img[src*="altayskaya"] { max-height: 52px; }
+
+/* ─── Переупаковка товаров ───────────────────────────────── */
+/* Операции переупаковки: номер вместо иконки */
+.svc__num { display: block; padding-bottom: 20px; font-family: "Onest", sans-serif; font-size: clamp(30px, 3vw, 44px); font-weight: 600; line-height: .85; letter-spacing: -.06em; color: #ccd4e0; font-variant-numeric: tabular-nums; transition: color .3s ease; }
+.svc__grid--num article:hover .svc__num { color: var(--blue); }
+
+/* Преимущества: шесть карточек, 4 колонки → 2 → 1 */
+@media (min-width: 1101px) {
+  .svc__grid--4 { grid-template-columns: repeat(4, 1fr); }
+  .svc__grid--4 article:nth-child(3n + 1) { padding-left: clamp(20px, 2.4vw, 38px); border-left: 1px solid var(--line); }
+  .svc__grid--4 article:nth-child(3n) { padding-right: clamp(20px, 2.4vw, 38px); }
+  .svc__grid--4 article:nth-child(4n + 1) { padding-left: 0; border-left: 0; }
+  .svc__grid--4 article:nth-child(4n) { padding-right: 0; }
+  .svc__grid--4 article:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
+  .svc__grid--4 article:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+}
+
+/* Прайс из двух колонок: на телефоне цена справа от названия */
+@media (max-width: 780px) {
+  .pricetable--two tbody td.pricetable__price { grid-column: 2; grid-row: 1; margin-top: 0; font-size: 20px; }
+}
+
+/* Что не входит в базовую ставку — под вкладками прайса */
+.price__extra { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 20px clamp(30px, 5vw, 90px); margin-top: clamp(34px, 3.8vw, 54px); padding-top: clamp(26px, 2.8vw, 38px); border-top: 1px solid rgba(255,255,255,.18); }
+.price__extra h3 { margin: 0; font-family: "Onest", sans-serif; font-size: clamp(22px, 2.2vw, 32px); font-weight: 500; line-height: 1.15; letter-spacing: -.04em; color: #fff; }
+.price__extra p { margin: 0; color: #c3ccdc; font-size: 15px; line-height: 1.7; }
+.price__footnote { margin-top: 26px; }
+@media (max-width: 780px) {
+  .price__extra { grid-template-columns: 1fr; }
+}
+
+/* Калькулятор переупаковки: числовые поля в пару, отметки, расшифровка итога */
+.calc__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.calc__input { width: 100%; height: 56px; padding: 0 18px; border: 1px solid var(--line); border-radius: 0; background: #fff; color: var(--ink); font-family: "Onest", sans-serif; font-size: 20px; font-weight: 600; outline: none; font-variant-numeric: tabular-nums; }
+.calc__input:focus { border-color: var(--blue); }
+.calc__checks { display: grid; gap: 10px; }
+.calc__check { position: relative; display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 12px 18px; border: 1px solid var(--line); background: #fff; font-size: 15px; cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+.calc__check:hover { border-color: var(--blue); }
+.calc__check input { position: absolute; opacity: 0; pointer-events: none; }
+.calc__check span { display: flex; align-items: center; gap: 14px; }
+.calc__check span::before { content: ""; flex: none; width: 20px; height: 20px; border: 1px solid #aeb7c5; background: #fff center / 12px no-repeat; transition: background-color .2s ease, border-color .2s ease; }
+.calc__check input:checked + span::before { border-color: var(--blue); background-color: var(--blue); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='m1 5 3.4 3.4L11 1.6' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E"); }
+.calc__check:has(input:checked) { border-color: var(--blue); background: rgba(49,94,181,.05); }
+.calc__check input:focus-visible + span::before { outline: 2px solid var(--blue); outline-offset: 2px; }
+.calc__total--range { font-size: clamp(34px, 3.8vw, 54px); }
+.calc__lines { list-style: none; margin: 18px 0 0; padding: 16px 0 0; border-top: 1px solid var(--line); display: grid; gap: 6px; color: var(--ink); font-size: 14px; line-height: 1.5; }
+.calc__note span { display: block; }
+@media (max-width: 480px) {
+  .calc__pair { grid-template-columns: 1fr; }
+}
+/* Ссылки внутри примечаний и текстов карточек — как в остальных текстах сайта */
+.datatable__note a, .svc__grid p a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.datatable__note a:hover, .svc__grid p a:hover { text-decoration: none; }
+/* Длинный прайс (14 ступеней объема) — строки плотнее */
+.pricetable--dense td { padding-top: 15px; padding-bottom: 15px; }
+/* Три ставки в строке прайса: на телефоне — в один ряд, без переноса третьей */
+@media (max-width: 780px) {
+  .pricetable--three tbody tr { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px; row-gap: 10px; padding: 14px 0; }
+  .pricetable--three td:not(:first-child) { align-self: end; font-size: 15px; white-space: normal; }
+  .pricetable--three td.pricetable__price { font-size: 16px; }
+  .pricetable--three td:not(:first-child)::before { letter-spacing: .08em; }
+}
