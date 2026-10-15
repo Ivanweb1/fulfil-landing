@@ -1902,3 +1902,40 @@ a.contacts-cards__value:hover { color: var(--blue); }
 @media (max-width: 780px) { .svc__grid--4x2 { grid-template-rows: none; } }
 /* Телефон: длинные подписи ставок в прайсе-матрице переносятся, а не обрезаются */
 @media (max-width: 780px) { .pricetable--matrix td:not(:first-child)::before { white-space: normal; overflow-wrap: anywhere; } .calc__select { font-size: 14px; padding-right: 40px; text-overflow: ellipsis; } }
+
+/* ─── Фулфилмент по модели DBS ───────────────────────────── */
+/* Путь заказа: карточка доставки покупателю — акцентная */
+.ops__card--accent { background: var(--navy); color: #fff; }
+.ops__card--accent:hover { background: var(--navy-soft); border-color: transparent; }
+.ops__card--accent .ops__icon { background: rgba(61,220,151,.14); color: var(--green); }
+.ops__card--accent .ops__num { color: rgba(255,255,255,.22); }
+.ops__card--accent p { color: #c3ccdc; }
+.ops__card .h3 a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(49,94,181,.4); }
+
+/* Маркетплейсы: логотипы и названия схем плашками */
+.datatable--mp tbody th { vertical-align: middle; }
+.datatable--mp tbody td { vertical-align: middle; }
+.mp__scheme { display: inline-flex; align-items: center; height: 24px; padding: 0 9px; margin-left: 2px; background: rgba(49,94,181,.09); color: var(--blue); font-size: 12px; font-weight: 700; }
+
+/* Особенности: шесть карточек 3 × 2 */
+.fit--feat .fit__card::after { content: none; }
+.fit--feat .fit__card .h3 { margin-right: 0; }
+
+/* Сравнение схем: колонка DBS — темная, заголовок с плашкой */
+.datatable--own thead th.is-own { background: var(--navy); color: #fff; border-bottom: 0; padding: 18px 20px 14px; }
+.datatable--own tbody td.is-own { background: var(--navy); color: #fff; font-weight: 600; border-bottom-color: rgba(255,255,255,.12); }
+.datatable--own tbody tr:hover td.is-own { background: var(--navy-soft); }
+.datatable--own tbody td:not(.is-own) { color: #6b7587; }
+@media (max-width: 780px) {
+  .datatable--own tbody td.is-own { padding: 10px; }
+  .datatable--own tbody td.is-own::before { color: var(--green); }
+}
+.callout--verdict { margin-top: clamp(28px, 3vw, 40px); padding: clamp(20px, 2.4vw, 30px) clamp(20px, 2.4vw, 30px) clamp(20px, 2.4vw, 30px) clamp(64px, 6vw, 84px); position: relative; background: var(--paper); border-left: 3px solid var(--green); }
+.callout--verdict::before { content: "DBS"; position: absolute; left: clamp(16px, 1.8vw, 24px); top: clamp(20px, 2.4vw, 30px); padding: 4px 6px; background: var(--navy); color: var(--green); font-family: "Onest", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+@media (max-width: 780px) {
+  .datatable--mp tbody th { margin-bottom: 8px; }
+  .callout--verdict { padding: 54px 18px 20px; }
+  .callout--verdict::before { left: 18px; top: 18px; }
+}
+.mp__scheme { white-space: nowrap; }
+@media (max-width: 780px) { .mp__scheme { height: auto; min-height: 22px; padding: 2px 8px; white-space: normal; display: inline; line-height: 1.9; box-decoration-break: clone; -webkit-box-decoration-break: clone; } }
