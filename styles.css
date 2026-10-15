@@ -1637,3 +1637,14 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .journey__step:not(:last-child)::after { display: grid; top: auto; right: auto; bottom: -27px; left: 50%; transform: translateX(-50%) rotate(90deg); }
   .journey__top { margin-bottom: 20px; }
 }
+/* Переупаковка, узкие телефоны: подписи ставок прайса помещаются в колонку,
+   длинный показатель первого экрана не рвется посреди единицы */
+@media (max-width: 400px) {
+  .pricetable--three td:not(:first-child)::before { font-size: 8.5px; letter-spacing: .02em; }
+  .pricetable--three td:not(:first-child) { font-size: 14px; }
+  .pricetable--three td.pricetable__price { font-size: 15px; }
+  .page-hero__metrics strong { font-size: 20px; }
+}
+@media (max-width: 400px) {
+  .page-hero__metrics strong { font-size: 18px; white-space: nowrap; }
+}
