@@ -1593,3 +1593,47 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .pricetable--three td.pricetable__price { font-size: 16px; }
   .pricetable--three td:not(:first-child)::before { letter-spacing: .08em; }
 }
+
+/* Что входит в переупаковку: карточки операций с иконкой, номером и ценой */
+.ops { list-style: none; margin: clamp(34px, 3.8vw, 52px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.ops__card { display: flex; flex-direction: column; padding: clamp(24px, 2.4vw, 34px); background: var(--paper); border: 1px solid transparent; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+.ops__card:hover { background: #fff; border-color: var(--line); box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.ops__head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: clamp(26px, 2.8vw, 40px); }
+.ops__icon { width: 52px; height: 52px; display: grid; place-items: center; background: rgba(49,94,181,.09); color: var(--blue); transition: background .25s ease, color .25s ease; }
+.ops__icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.ops__card:hover .ops__icon { background: var(--blue); color: #fff; }
+.ops__num { font-family: "Onest", sans-serif; font-size: clamp(36px, 3.4vw, 52px); font-weight: 600; line-height: .8; letter-spacing: -.06em; color: #d9dfe8; font-variant-numeric: tabular-nums; transition: color .25s ease; }
+.ops__card:hover .ops__num { color: var(--blue); }
+.ops__card .h3 { margin: 0 0 10px; font-family: "Onest", sans-serif; font-size: clamp(18px, 1.6vw, 22px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.ops__card p { flex: 1; margin: 0; color: #4d586b; font-size: 14px; line-height: 1.6; }
+.ops__tag { align-self: flex-start; display: inline-flex; align-items: center; height: 30px; margin-top: 20px; padding: 0 14px; border: 1px solid var(--blue); color: var(--blue); font-family: "Onest", sans-serif; font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+@media (max-width: 1100px) { .ops { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .ops { grid-template-columns: 1fr; } .ops__head { margin-bottom: 22px; } }
+
+/* Как проходит переупаковка: лента этапов со стрелками, финальный шаг выделен */
+.journey { list-style: none; margin: clamp(34px, 3.8vw, 52px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.journey__step { position: relative; display: flex; flex-direction: column; padding: 26px clamp(18px, 1.8vw, 26px) 28px; background: var(--paper); border-top: 2px solid var(--blue); transition: box-shadow .25s ease, transform .25s ease, background .25s ease; }
+.journey__step:hover { background: #fff; box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.journey__step:not(:last-child)::after { content: "→"; position: absolute; top: 37px; right: -23px; z-index: 1; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--blue); font-size: 14px; line-height: 1; }
+.journey__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+.journey__num { font-family: "Onest", sans-serif; font-size: clamp(34px, 3vw, 46px); font-weight: 600; line-height: .8; letter-spacing: -.06em; color: #d3dae5; font-variant-numeric: tabular-nums; transition: color .25s ease; }
+.journey__step:hover .journey__num { color: var(--blue); }
+.journey__icon { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); background: #fff; color: var(--blue); }
+.journey__icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.journey__step .h3 { margin: 0 0 10px; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.4vw, 19px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.journey__step p { margin: 0; color: #4d586b; font-size: 13.5px; line-height: 1.6; }
+.journey__step--final, .journey__step--final:hover { background: var(--navy); border-top-color: var(--green); }
+.journey__step--final .journey__num, .journey__step--final:hover .journey__num { color: rgba(255,255,255,.22); }
+.journey__step--final .journey__icon { border-color: rgba(255,255,255,.2); background: transparent; color: var(--green); }
+.journey__step--final .h3 { color: #fff; }
+.journey__step--final p { color: #c3ccdc; }
+@media (max-width: 1100px) {
+  .journey { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .journey__step:last-child { grid-column: 1 / -1; }
+  .journey__step:not(:last-child)::after { display: none; }
+}
+@media (max-width: 640px) {
+  .journey { grid-template-columns: 1fr; gap: 22px; }
+  .journey__step:not(:last-child)::after { display: grid; top: auto; right: auto; bottom: -27px; left: 50%; transform: translateX(-50%) rotate(90deg); }
+  .journey__top { margin-bottom: 20px; }
+}
