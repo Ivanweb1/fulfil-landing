@@ -1793,3 +1793,37 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .fit__card .h3 { align-self: center; margin-top: 0; margin-bottom: 0; }
   .fit__card p { grid-column: 1 / -1; margin-top: 14px; }
 }
+
+/* Приемка на хранение: слева заголовок и шкала размеров, справа таблица */
+.intake { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(30px, 4.4vw, 80px); align-items: start; margin-top: clamp(40px, 4.4vw, 60px); padding-top: clamp(30px, 3vw, 44px); border-top: 1px solid rgba(255,255,255,.18); }
+.intake .price__subtitle { margin-top: 0; }
+.intake__scale { display: flex; align-items: flex-end; gap: clamp(10px, 1.3vw, 18px); margin-top: clamp(28px, 3vw, 44px); }
+.intake__scale span { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.intake__scale i { display: block; width: calc(var(--s) * 1px); height: calc(var(--s) * 1px); border: 1.5px solid #7fa2e3; background: rgba(76,120,207,.18); position: relative; }
+.intake__scale i::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; background: #7fa2e3; opacity: .55; transform: translateX(-50%); }
+.intake__scale span:last-child i { border-color: var(--green); background: rgba(61,220,151,.14); }
+.intake__scale span:last-child i::after { background: var(--green); }
+.intake__scale b { color: #fff; font-family: "Onest", sans-serif; font-size: 15px; font-weight: 600; }
+.intake__hint { margin: 14px 0 0; color: #8f9bb2; font-size: 12px; }
+.intake__table .pricetable__wrap--single { border-top: 0; }
+.intake__table .pricetable td:first-child { width: auto; }
+@media (max-width: 900px) { .intake { grid-template-columns: 1fr; } .intake__scale, .intake__range { display: none; } }
+
+/* Сравнение с арендой: колонка хранения — акцентная, у аренды — приглушенная */
+.datatable--versus thead th { vertical-align: bottom; }
+.datatable--versus thead th.is-own { padding: 18px 20px 14px; background: var(--navy); color: #fff; border-bottom: 0; }
+.versus__badge { display: inline-flex; align-items: center; height: 22px; margin-left: 10px; padding: 0 9px; background: var(--green); color: var(--navy); font-size: 9px; letter-spacing: .12em; vertical-align: middle; }
+.datatable--versus tbody td:not(.is-own) { color: #8a94a6; }
+.datatable--versus tbody td:not(.is-own)::after { content: none; }
+.datatable--versus tbody td { position: relative; padding-left: 52px; }
+.datatable--versus tbody td::before { content: ""; position: absolute; left: 20px; top: 21px; width: 20px; height: 20px; border-radius: 50%; background: #e3e8f0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='m2 2 6 6M8 2 2 8' stroke='%238a94a6' stroke-width='1.5'/%3E%3C/svg%3E") center / 8px no-repeat; }
+.datatable--versus tbody td.is-own { background: var(--navy); color: #fff; font-weight: 600; border-bottom-color: rgba(255,255,255,.12); }
+.datatable--versus tbody td.is-own::before { background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='m1 5 3.4 3.4L11 1.6' fill='none' stroke='%230d1d3b' stroke-width='1.8'/%3E%3C/svg%3E") center / 10px no-repeat; }
+.datatable--versus tbody tr:hover td.is-own { background: var(--navy-soft); }
+.datatable--versus tbody th { padding-right: 24px; }
+@media (max-width: 780px) {
+  .datatable--versus tbody td { padding-left: 10px; }
+  .datatable--versus tbody td::before { content: attr(data-label); position: static; width: auto; height: auto; border-radius: 0; background: none; }
+  .datatable--versus tbody td.is-own { padding: 10px; }
+  .datatable--versus tbody td.is-own::before { background: none; color: var(--green); }
+}

@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=50" />
+    <link rel="stylesheet" href="styles.css?v=52" />
   </head>
   <body>
     <header class="site-header">
@@ -138,8 +138,8 @@
         <div class="container">
           <div class="section-heading"><h2>Чем ответственное хранение отличается от аренды склада</h2><p>Аренда дает помещение, хранение дает результат. В первом случае склад нужно запустить: нанять персонал, купить стеллажи и технику, поставить учетную систему и охрану. Во втором все это уже работает, а вы платите за занятый объем и выполненные операции.</p></div>
           <div class="datatable__wrap">
-            <table class="datatable datatable--compare">
-              <thead><tr><th scope="col">Что сравниваем</th><th scope="col">Аренда склада</th><th scope="col" class="is-own">Ответственное хранение</th></tr></thead>
+            <table class="datatable datatable--compare datatable--versus">
+              <thead><tr><th scope="col">Что сравниваем</th><th scope="col">Аренда склада</th><th scope="col" class="is-own">Ответственное хранение <span class="versus__badge">Выгоднее</span></th></tr></thead>
               <tbody>
                 <tr><th scope="row">За что платите</th><td data-label="Аренда">За всю площадь, даже если она занята наполовину</td><td class="is-own" data-label="Хранение">За фактический объем и выполненные операции</td></tr>
                 <tr><th scope="row">Персонал</th><td data-label="Аренда">Кладовщики, грузчики, оператор учета в вашем штате</td><td class="is-own" data-label="Хранение">Работает персонал склада, вы не нанимаете никого</td></tr>
@@ -198,8 +198,14 @@
               </ul>
             </figure>
           </div>
-          <p class="price__subtitle">Сколько стоит приемка на хранение</p>
-          <p class="pricelist__note price__lead">Приемка оплачивается один раз, при поступлении партии, и зависит от габаритов и веса единицы, а не от категории товара.</p>
+          <div class="intake">
+            <div class="intake__aside">
+  <p class="price__subtitle">Сколько стоит приемка на хранение</p>
+  <p class="pricelist__note price__lead">Приемка оплачивается один раз, при поступлении партии, и зависит от габаритов и веса единицы, а не от категории товара.</p>
+              <div class="intake__scale" aria-hidden="true"><span><i style="--s:16"></i><b>7</b></span><span><i style="--s:21"></i><b>10</b></span><span><i style="--s:27"></i><b>13</b></span><span><i style="--s:33"></i><b>16</b></span><span><i style="--s:40"></i><b>20</b></span><span><i style="--s:48"></i><b>30+</b></span></div>
+              <p class="intake__hint" aria-hidden="true">₽ за единицу — от самой компактной до крупногабаритной</p>
+            </div>
+            <div class="intake__table">
           <div class="pricetable__wrap pricetable__wrap--single">
             <table class="pricetable pricetable--two">
               <thead><tr><th scope="col">Габариты и вес единицы</th><th scope="col">Приемка</th></tr></thead>
@@ -212,6 +218,8 @@
                 <tr><td>Свыше 250 литров или тяжелее 50 килограммов</td><td class="pricetable__price">от 30 ₽/шт.</td></tr>
               </tbody>
             </table>
+          </div>
+            </div>
           </div>
           <p class="pricelist__note price__footnote">Цены указаны без НДС по прайсу в редакции от 8 августа 2026 года. Если товар лежит месяцами и поштучный подбор с него не идет, выгоднее долгосрочное хранение с ровной ставкой 60 рублей за кубометр в сутки.</p>
         </div>
