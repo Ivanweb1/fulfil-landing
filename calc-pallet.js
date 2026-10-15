@@ -15,6 +15,10 @@
   const linesEl = root.querySelector('#plLines');
   const noteEl = root.querySelector('#plNote');
   const form = root.querySelector('.calc__form');
+  const barFree = root.querySelector('#plBarFree');
+  const barPaid = root.querySelector('#plBarPaid');
+  const freeText = root.querySelector('#plFreeText');
+  const paidText = root.querySelector('#plPaidText');
   const rub = (value) => `${value.toLocaleString('ru-RU')} ₽`;
   let mode = 'ready';
 
@@ -44,6 +48,13 @@
     const building = qty.value * (config.build[mode] || 0);
     const total = storage + handling + building;
     const places = plural(qty.value, ['паллетоместо', 'паллетоместа', 'паллетомест']);
+
+    /* Шкала срока: доля бесплатных и платных суток */
+    const freeShown = Math.min(term.value, config.freeDays);
+    barFree.style.width = `${(freeShown / term.value) * 100}%`;
+    barPaid.style.width = `${(paidDays / term.value) * 100}%`;
+    freeText.textContent = days(freeShown);
+    paidText.textContent = paidDays ? `${days(paidDays)} × ${rub(config.rate)} за место` : 'нет';
 
     totalEl.textContent = rub(total);
     formulaEl.textContent = `${qty.value.toLocaleString('ru-RU')} ${places} за ${days(term.value)}, без НДС`;

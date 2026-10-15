@@ -1696,3 +1696,37 @@ a.contacts-cards__value:hover { color: var(--blue); }
 .pricetable--unit td:nth-child(2) { width: 22%; }
 @media (max-width: 640px) { .placement__photo b { white-space: nowrap; font-size: 18px; } }
 @media (max-width: 360px) { .placement__photo b { font-size: 16px; } .placement__photo figcaption { gap: 4px 10px; padding: 14px 12px; } }
+
+/* Какой товар подходит: карточки категорий с иконкой и причиной */
+.fit { list-style: none; margin: clamp(34px, 3.8vw, 52px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.fit__card { position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 20px; align-items: start; padding: clamp(22px, 2.2vw, 30px); background: #fff; border: 1px solid transparent; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+.fit__card:hover { border-color: var(--line); box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.fit__card::after { content: ""; position: absolute; top: 18px; right: 18px; width: 22px; height: 22px; border-radius: 50%; background: var(--green-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='m1 5 3.4 3.4L11 1.6' fill='none' stroke='%231f9d68' stroke-width='1.8'/%3E%3C/svg%3E") center / 11px no-repeat; }
+.fit__icon { grid-row: 1 / span 2; width: 52px; height: 52px; display: grid; place-items: center; background: rgba(49,94,181,.09); color: var(--blue); transition: background .25s ease, color .25s ease; }
+.fit__card:hover .fit__icon { background: var(--blue); color: #fff; }
+.fit__icon svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.fit__card .h3 { margin: 4px 30px 10px 0; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.fit__card p { margin: 0; color: #4d586b; font-size: 14px; line-height: 1.55; }
+.fit__label { display: block; margin-bottom: 4px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+@media (max-width: 1100px) { .fit { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .fit { grid-template-columns: 1fr; gap: 10px; }
+  .fit__card { grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; }
+  .fit__icon { width: 44px; height: 44px; }
+  .fit__icon svg { width: 22px; height: 22px; }
+}
+
+/* Калькулятор паллет: шкала срока внизу левой колонки */
+.calc__timeline { margin-top: auto; padding: 22px 24px; background: var(--paper); }
+.calc__bar { display: flex; height: 12px; overflow: hidden; background: #e3e8f0; }
+.calc__bar i { display: block; height: 100%; transition: width .35s cubic-bezier(.2,.8,.2,1); }
+.calc__bar-free { background: var(--green); }
+.calc__bar-paid { background: var(--blue); }
+.calc__legend { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 14px; font-size: 13px; color: #4d586b; }
+.calc__legend span { display: inline-flex; align-items: baseline; gap: 8px; }
+.calc__legend em { font-style: normal; font-weight: 700; color: var(--ink); }
+.calc__dot { width: 10px; height: 10px; flex: none; align-self: center; }
+.calc__dot--free { background: var(--green); }
+.calc__dot--paid { background: var(--blue); }
+@media (max-width: 900px) { .calc__timeline { margin-top: 0; } }
+.calc__fields--top { padding-bottom: 0; }
