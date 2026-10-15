@@ -17,7 +17,7 @@
   const barEl = root.querySelector('#stBar');
   const legendEl = root.querySelector('#stLegend');
   const form = root.querySelector('.calc__form');
-  const rub = (value) => `${Math.round(value).toLocaleString('ru-RU')} ₽`;
+  const rub = (value) => `${Math.round(value).toLocaleString('ru-RU')} ₽`;
   let mode = 'sale';
 
   function plural(n, forms) {

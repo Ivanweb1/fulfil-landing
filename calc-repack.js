@@ -20,8 +20,8 @@
   const form = root.querySelector('.calc__form');
 
   const money = (value) => (Math.round(value * 100) / 100).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
-  const rub = (value) => `${money(value)} ₽`;
-  const range = (min, max, odd) => (odd ? `${money(min)}–${money(max)} ₽` : rub(min));
+  const rub = (value) => `${money(value)} ₽`;
+  const range = (min, max, odd) => (odd ? `${money(min)}–${money(max)} ₽` : rub(min));
 
   function plural(n, forms) {
     const mod10 = n % 10;

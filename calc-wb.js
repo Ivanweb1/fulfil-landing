@@ -14,7 +14,7 @@
   const formulaEl = root.querySelector('#calcFormula');
   const noteEl = root.querySelector('#calcNote');
   const form = root.querySelector('.calc__form');
-  const rub = (value) => `${value.toLocaleString('ru-RU')} ₽`;
+  const rub = (value) => `${value.toLocaleString('ru-RU')} ₽`;
   let type = 'box';
 
   select.innerHTML = config.warehouses.map((item, index) => `<option value="${index}">${item.name}${item.area ? `, ${item.area}` : ''}</option>`).join('');

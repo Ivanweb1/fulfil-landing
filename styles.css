@@ -1807,7 +1807,7 @@ a.contacts-cards__value:hover { color: var(--blue); }
 .intake__hint { margin: 14px 0 0; color: #8f9bb2; font-size: 12px; }
 .intake__table .pricetable__wrap--single { border-top: 0; }
 .intake__table .pricetable td:first-child { width: auto; }
-@media (max-width: 900px) { .intake { grid-template-columns: 1fr; } .intake__scale, .intake__range { display: none; } }
+@media (max-width: 900px) { .intake { grid-template-columns: 1fr; } .intake__scale, .intake__hint { display: none; } }
 
 /* Сравнение с арендой: колонка хранения — акцентная, у аренды — приглушенная */
 .datatable--versus thead th { vertical-align: bottom; }

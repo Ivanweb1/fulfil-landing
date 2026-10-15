@@ -19,7 +19,7 @@
   const barPaid = root.querySelector('#plBarPaid');
   const freeText = root.querySelector('#plFreeText');
   const paidText = root.querySelector('#plPaidText');
-  const rub = (value) => `${value.toLocaleString('ru-RU')} ₽`;
+  const rub = (value) => `${value.toLocaleString('ru-RU')} ₽`;
   let mode = 'ready';
 
   function plural(n, forms) {
