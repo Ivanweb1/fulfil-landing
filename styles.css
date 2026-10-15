@@ -1542,6 +1542,10 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .svc__grid--4 article:nth-child(4n) { padding-right: 0; }
   .svc__grid--4 article:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
   .svc__grid--4 article:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+  /* Шесть карточек на четыре колонки: две последние занимают по две колонки, ряд закрыт до края */
+  .svc__grid--4 article:nth-child(5), .svc__grid--4 article:nth-child(6) { grid-column: span 2; }
+  .svc__grid--4 article:nth-child(6) { padding-right: 0; }
+  .svc__grid--4 article:nth-child(n + 5) p { max-width: 520px; }
 }
 
 /* Прайс из двух колонок: на телефоне цена справа от названия */
