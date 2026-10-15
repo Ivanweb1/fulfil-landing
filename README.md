@@ -18,6 +18,7 @@ Ozon, Яндекс Маркета, модели FBS и политика конф
 - `upakovka.html` — упаковка товаров для маркетплейсов (`/upakovka-tovarov-dlya-marketplejsov/`)
 - `pereupakovka.html` — переупаковка товаров (`/pereupakovka-tovarov/`): сценарии, состав операций, материалы, прайс по четырем вкладкам, калькулятор партии (`calc-repack.js`, цены — в `window.REPACK_CALC` на странице), возвраты, FAQ
 - `palletnoe.html` — паллетное хранение на складе (`/palletnoe-khranenie-na-sklade/`): виды паллет, тарифы за паллетоместо и операции, калькулятор (`calc-pallet.js`, ставки — в `window.PALLET_CALC` на странице), размещение, договор, FAQ
+- `otvetstvennoe-hranenie.html` — ответственное хранение товаров (`/otvetstvennoe-khranenie-tovarov-na-sklade/`): состав услуги, сравнение с арендой, виды хранения, шкала тарифов по сроку, калькулятор (`calc-storage.js`, шкала — в `window.STORAGE_CALC` на странице), склад, договор, FAQ
 - `dostavka.html` — доставка товаров на маркетплейсы (`/dostavka-tovarov-na-marketplejsy/`): площадки, схемы FBO/FBS, тарифы по пяти вкладкам, квиз, требования к приемке, FAQ
 - `dostavka-wb.html` — доставка до склада Wildberries (`/dostavka-do-sklada-wildberries/`): склады, прайс по складам, калькулятор рейса (`calc-wb.js`, цены — в `window.WB_CALC` на странице), FAQ
 - `about.html` — о компании (`/about/`): цифры, команда (слоты под фото и имена), клиенты, склад, гарантии, реквизиты

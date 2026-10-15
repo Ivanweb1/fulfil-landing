@@ -1730,3 +1730,66 @@ a.contacts-cards__value:hover { color: var(--blue); }
 .calc__dot--paid { background: var(--blue); }
 @media (max-width: 900px) { .calc__timeline { margin-top: 0; } }
 .calc__fields--top { padding-bottom: 0; }
+
+/* ─── Ответственное хранение ─────────────────────────────── */
+/* Виды хранения: четыре карточки с тремя характеристиками */
+.kinds { list-style: none; margin: clamp(34px, 3.8vw, 52px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.kinds__card { display: flex; flex-direction: column; padding: clamp(22px, 2.2vw, 30px); background: var(--paper); border-top: 2px solid var(--blue); transition: box-shadow .25s ease, transform .25s ease, background .25s ease; }
+.kinds__card:hover { background: #fff; box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.kinds__icon { width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 22px; background: #fff; color: var(--blue); }
+.kinds__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.kinds__card .h3 { margin: 0 0 16px; font-family: "Onest", sans-serif; font-size: clamp(18px, 1.6vw, 22px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.kinds__card dl { margin: 0; }
+.kinds__card dt { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.kinds__card dd { margin: 6px 0 0; color: #4d586b; font-size: 14px; line-height: 1.5; }
+.kinds__card dt:last-of-type + dd { color: var(--ink); font-weight: 600; }
+@media (max-width: 1100px) { .kinds { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .kinds { grid-template-columns: 1fr; } }
+
+/* Тарифы: пример начисления за 20 дней рядом с объяснением */
+.price__extra--example { align-items: center; }
+.price__extra--example h3 { margin-bottom: 16px; }
+.accrual { margin: 0; padding: clamp(20px, 2.4vw, 30px); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.13); }
+.accrual figcaption { margin-bottom: 14px; color: #9aa6bc; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.accrual__bar { display: flex; height: 14px; gap: 3px; }
+.accrual__bar i { display: block; height: 100%; }
+.accrual__free { background: var(--green); }
+.accrual__mid { background: #7fa2e3; }
+.accrual__high { background: var(--blue-bright); }
+.accrual__legend { list-style: none; margin: 18px 0 0; padding: 0; }
+.accrual__legend li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.1); color: #c3ccdc; font-size: 14px; }
+.accrual__legend li b { width: 10px; height: 10px; flex: none; }
+.accrual__legend span { margin-left: auto; color: #fff; font-family: "Onest", sans-serif; font-weight: 600; font-variant-numeric: tabular-nums; }
+.accrual__legend .accrual__sum { border-bottom: 0; padding-top: 14px; color: #fff; font-weight: 600; }
+.accrual__legend .accrual__sum span { color: var(--green); font-size: 20px; }
+.price .price__subtitle { margin-bottom: 10px; }
+.price__lead { margin: 0 0 18px; color: #c3ccdc; font-size: 15px; }
+
+/* Калькулятор хранения: шкала из сегментов по ступеням прайса */
+.calc__bar { gap: 2px; }
+.calc__seg { display: block; }
+.calc__seg--free { background: var(--green); }
+.calc__seg--paid-1 { background: #a9c0ec; }
+.calc__seg--paid-2 { background: #7fa2e3; }
+.calc__seg--paid-3 { background: var(--blue-bright); }
+.calc__seg--paid-4 { background: var(--blue); }
+.calc__seg--paid-5 { background: var(--navy); }
+.calc__seg--paid-0 { background: var(--blue); }
+.calc__legend--list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; }
+.calc__legend--list span { align-items: center; }
+.calc__legend--list em { font-weight: 600; }
+@media (max-width: 420px) { .calc__legend--list { grid-template-columns: 1fr; } }
+
+/* Почему у нас: шесть карточек 3 × 2 */
+.perks--six { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .perks--six { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .perks--six { grid-template-columns: 1fr; } }
+.section:not(.section--light) .perks__card:not(.perks__card--accent) { background: var(--paper); }
+/* Телефон: первая колонка прайса-матрицы — на всю строку, без ширины десктопа */
+@media (max-width: 780px) { .pricetable--matrix td:first-child { width: auto; } }
+/* Телефон: в карточках условий текст под иконкой на всю ширину */
+@media (max-width: 640px) {
+  .fit__icon { grid-row: auto; }
+  .fit__card .h3 { align-self: center; margin-top: 0; margin-bottom: 0; }
+  .fit__card p { grid-column: 1 / -1; margin-top: 14px; }
+}
