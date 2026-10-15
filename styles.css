@@ -1533,19 +1533,18 @@ a.contacts-cards__value:hover { color: var(--blue); }
 .svc__num { display: block; padding-bottom: 20px; font-family: "Onest", sans-serif; font-size: clamp(30px, 3vw, 44px); font-weight: 600; line-height: .85; letter-spacing: -.06em; color: #ccd4e0; font-variant-numeric: tabular-nums; transition: color .3s ease; }
 .svc__grid--num article:hover .svc__num { color: var(--blue); }
 
-/* Преимущества: шесть карточек, 4 колонки → 2 → 1 */
+/* Карточки в четыре колонки (4 → 2 → 1). --6: шесть карточек, две последние на две колонки */
 @media (min-width: 1101px) {
   .svc__grid--4 { grid-template-columns: repeat(4, 1fr); }
   .svc__grid--4 article:nth-child(3n + 1) { padding-left: clamp(20px, 2.4vw, 38px); border-left: 1px solid var(--line); }
   .svc__grid--4 article:nth-child(3n) { padding-right: clamp(20px, 2.4vw, 38px); }
   .svc__grid--4 article:nth-child(4n + 1) { padding-left: 0; border-left: 0; }
   .svc__grid--4 article:nth-child(4n) { padding-right: 0; }
-  .svc__grid--4 article:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
-  .svc__grid--4 article:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
-  /* Шесть карточек на четыре колонки: две последние занимают по две колонки, ряд закрыт до края */
-  .svc__grid--4 article:nth-child(5), .svc__grid--4 article:nth-child(6) { grid-column: span 2; }
-  .svc__grid--4 article:nth-child(6) { padding-right: 0; }
-  .svc__grid--4 article:nth-child(n + 5) p { max-width: 520px; }
+  .svc__grid--4 article:nth-last-child(-n + 4) { border-bottom: 0; padding-bottom: 0; }
+  .svc__grid--6 article:nth-child(-n + 4) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
+  .svc__grid--6 article:nth-child(5), .svc__grid--6 article:nth-child(6) { grid-column: span 2; }
+  .svc__grid--6 article:nth-child(6) { padding-right: 0; }
+  .svc__grid--6 article:nth-child(n + 5) p { max-width: 520px; }
 }
 
 /* Прайс из двух колонок: на телефоне цена справа от названия */
@@ -1648,3 +1647,52 @@ a.contacts-cards__value:hover { color: var(--blue); }
 @media (max-width: 400px) {
   .page-hero__metrics strong { font-size: 18px; white-space: nowrap; }
 }
+
+/* ─── Паллетное хранение ─────────────────────────────────── */
+/* Прайс «услуга — единица — цена»: на телефоне единица под названием, цена справа */
+.pricetable--unit td:nth-child(2) { white-space: nowrap; }
+@media (max-width: 780px) {
+  .pricetable--unit td:nth-child(2) { grid-column: 1; margin-top: 6px; font-size: 12px; }
+  .pricetable--unit tbody td.pricetable__price { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; font-size: 20px; }
+}
+.price__subtitle { margin: clamp(40px, 4.4vw, 60px) 0 18px; font-family: "Onest", sans-serif; font-size: clamp(22px, 2.2vw, 32px); font-weight: 500; line-height: 1.15; letter-spacing: -.04em; color: #fff; }
+
+/* Калькулятор: варианты поступления товара столбиком */
+.calc__types--stack { grid-template-columns: 1fr; }
+.calc__types--stack .quiz__option { justify-content: flex-start; }
+
+/* Карточки операций и этапов на светлом фоне — белые */
+.section--light .ops__card, .section--light .journey__step:not(.journey__step--final) { background: #fff; }
+.section--light .journey__step:not(.journey__step--final) .journey__icon { background: var(--paper); }
+
+/* Как мы размещаем паллеты: широкое фото склада с цифрами */
+.placement__photo { position: relative; margin: clamp(34px, 3.8vw, 52px) 0 0; overflow: hidden; }
+.placement__photo img { width: 100%; height: clamp(260px, 32vw, 460px); display: block; object-fit: cover; }
+.placement__photo figcaption { position: absolute; left: clamp(16px, 2.4vw, 34px); bottom: clamp(16px, 2.4vw, 34px); display: grid; grid-template-columns: repeat(3, auto); grid-auto-flow: column; grid-template-rows: auto auto; gap: 4px clamp(22px, 3vw, 46px); padding: clamp(16px, 2vw, 26px) clamp(18px, 2.4vw, 32px); background: rgba(13,29,59,.88); color: #fff; }
+.placement__photo b { font-family: "Onest", sans-serif; font-size: clamp(22px, 2.4vw, 34px); font-weight: 600; line-height: 1; letter-spacing: -.05em; }
+.placement__photo span { color: #9aa6bc; font-size: 12px; }
+@media (max-width: 640px) {
+  .placement__photo img { height: 240px; }
+  .placement__photo figcaption { position: static; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 14px; padding: 16px; }
+  .placement__photo b { font-size: 20px; }
+  .placement__photo span { font-size: 11px; line-height: 1.35; }
+}
+
+/* Почему у нас: четыре карточки с крупной цифрой, первая выделена */
+.perks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: clamp(34px, 3.8vw, 52px); }
+.perks__card { display: flex; flex-direction: column; padding: clamp(24px, 2.4vw, 34px); background: #fff; border-top: 2px solid var(--blue); transition: box-shadow .25s ease, transform .25s ease; }
+.perks__card:hover { box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.perks__big { display: block; margin-bottom: clamp(26px, 3vw, 44px); font-family: "Onest", sans-serif; font-size: clamp(32px, 3.2vw, 48px); font-weight: 600; line-height: .9; letter-spacing: -.055em; color: var(--blue); white-space: nowrap; }
+.perks__card .h3 { margin: 0 0 10px; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.perks__card p { margin: 0; color: #4d586b; font-size: 14px; line-height: 1.6; }
+.perks__card--accent { background: var(--navy); border-top-color: var(--green); }
+.perks__card--accent .perks__big { color: var(--green); }
+.perks__card--accent .h3 { color: #fff; }
+.perks__card--accent p { color: #c3ccdc; }
+@media (max-width: 1100px) { .perks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .perks { grid-template-columns: 1fr; } }
+/* Калькулятор паллет: полей мало — ставим их сверху, без растяжки по высоте итога */
+.calc__fields--top { justify-content: flex-start; }
+.pricetable--unit td:nth-child(2) { width: 22%; }
+@media (max-width: 640px) { .placement__photo b { white-space: nowrap; font-size: 18px; } }
+@media (max-width: 360px) { .placement__photo b { font-size: 16px; } .placement__photo figcaption { gap: 4px 10px; padding: 14px 12px; } }
