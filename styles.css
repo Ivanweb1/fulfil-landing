@@ -1827,3 +1827,78 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .datatable--versus tbody td.is-own { padding: 10px; }
   .datatable--versus tbody td.is-own::before { background: none; color: var(--green); }
 }
+
+/* ─── Доставка до склада Ozon ────────────────────────────── */
+/* Куда возим: две группы направлений плитками */
+.routes { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; margin-top: clamp(34px, 3.8vw, 52px); }
+.routes__group { padding: clamp(22px, 2.4vw, 32px); background: var(--paper); }
+.routes__group--region { background: var(--navy); color: #fff; }
+.routes__head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; letter-spacing: -.03em; }
+.routes__count { width: 44px; height: 44px; flex: none; display: grid; place-items: center; background: var(--blue); color: #fff; font-size: 20px; font-weight: 600; }
+.routes__group--region .routes__count { background: var(--green); color: var(--navy); }
+.routes__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.routes__group--region .routes__list { grid-template-columns: 1fr; }
+.routes__list li { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 16px 44px; background: #fff; transition: box-shadow .25s ease, transform .25s ease; }
+.routes__list li:hover { box-shadow: 0 14px 30px rgba(13,29,59,.08); transform: translateY(-2px); }
+.routes__list li::before { content: ""; position: absolute; left: 16px; top: 18px; width: 16px; height: 16px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-6.4-5.6-6.4-11a6.4 6.4 0 0 1 12.8 0c0 5.4-6.4 11-6.4 11z' fill='none' stroke='%23315eb5' stroke-width='1.8'/%3E%3Ccircle cx='12' cy='10' r='2.4' fill='%23315eb5'/%3E%3C/svg%3E") center / contain no-repeat; }
+.routes__group--region .routes__list li { background: rgba(255,255,255,.06); }
+.routes__group--region .routes__list li::before { filter: brightness(2.2) saturate(.6); }
+.routes__list b { font-family: "Onest", sans-serif; font-size: 17px; font-weight: 500; letter-spacing: -.02em; line-height: 1.2; }
+.routes__list span { color: var(--muted); font-size: 12px; }
+.routes__group--region .routes__list span { color: #9aa6bc; }
+@media (max-width: 1100px) { .routes { grid-template-columns: 1fr; } .routes__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } .routes__group--region .routes__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .routes__list, .routes__group--region .routes__list { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 400px) { .routes__list, .routes__group--region .routes__list { grid-template-columns: 1fr; } }
+
+/* Схемы: три карточки с крупной меткой */
+.perks--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .perks--three { grid-template-columns: 1fr; } }
+
+/* Документы поставки: текст и чек-лист */
+.docs { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(28px, 4vw, 70px); align-items: center; margin-top: clamp(40px, 4.4vw, 60px); padding: clamp(26px, 3vw, 44px); background: var(--navy); color: #fff; }
+.docs h3 { margin: 0 0 16px; font-family: "Onest", sans-serif; font-size: clamp(22px, 2.2vw, 30px); font-weight: 500; line-height: 1.15; letter-spacing: -.04em; }
+.docs p { margin: 0; color: #c3ccdc; font-size: 15px; line-height: 1.7; }
+.docs__list { list-style: none; margin: 0; padding: 0; counter-reset: doc; }
+.docs__list li { counter-increment: doc; position: relative; padding: 14px 0 14px 50px; border-bottom: 1px solid rgba(255,255,255,.12); font-size: 15px; font-weight: 500; line-height: 1.35; }
+.docs__list li:last-child { border-bottom: 0; }
+.docs__list li::before { content: counter(doc, decimal-leading-zero); position: absolute; left: 0; top: 13px; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.22); color: #9bb7ed; font-family: "Onest", sans-serif; font-size: 13px; font-weight: 600; }
+.docs__list li:last-child::before { border-color: var(--green); color: var(--green); }
+.docs__list span { display: block; margin-bottom: 3px; color: #8f9bb2; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+@media (max-width: 900px) { .docs { grid-template-columns: 1fr; } }
+
+/* Если склад не принял груз: причины отказа */
+.risks { list-style: none; margin: clamp(34px, 3.8vw, 52px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.risks__card { display: flex; flex-direction: column; padding: clamp(22px, 2.2vw, 30px); background: #fff; border-top: 2px solid #e0565b; transition: box-shadow .25s ease, transform .25s ease; }
+.risks__card:hover { box-shadow: 0 18px 40px rgba(13,29,59,.08); transform: translateY(-3px); }
+.risks__icon { width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 22px; background: #fdecec; color: #d23f45; }
+.risks__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.risks__card .h3 { margin: 0 0 10px; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.risks__card p { margin: 0; color: #4d586b; font-size: 14px; line-height: 1.6; }
+@media (max-width: 1100px) { .risks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .risks { grid-template-columns: 1fr; } }
+
+/* Калькулятор доставки: шкала скидок в регионы */
+.discounts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.discounts li { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; background: #fff; border-bottom: 2px solid var(--blue); }
+.discounts li:nth-child(1) { border-bottom-color: #a9c0ec; }
+.discounts li:nth-child(2) { border-bottom-color: #7fa2e3; }
+.discounts b { font-family: "Onest", sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -.04em; color: var(--blue); }
+.discounts span { color: #4d586b; font-size: 12px; }
+
+/* Дополнительные услуги: четыре карточки, «уточняется» — пунктиром */
+.fit--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.fit--four .fit__card { grid-template-columns: 1fr; row-gap: 16px; }
+.fit--four .fit__icon { grid-row: auto; }
+.fit--four .fit__card .h3 { margin: 0; }
+.fit__card--pending { background: transparent; border: 1px dashed #b9c2d0; }
+.fit__card--pending::after { content: "Уточняется"; width: auto; height: auto; padding: 4px 10px; border-radius: 0; background: #fff3d6; color: #8a6100; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+@media (max-width: 1100px) { .fit--four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .fit--four { grid-template-columns: 1fr; } .fit--four .fit__card .h3 { align-self: start; } .fit--four .fit__card p { margin-top: 0; } }
+
+/* Преимущества: восемь карточек 4 → 2 → 1 */
+.svc__grid--4x2 { grid-template-rows: repeat(6, auto); }
+@media (min-width: 1101px) { .svc__grid--4x2 article:nth-child(-n + 4) { border-bottom: 1px solid var(--line); padding-bottom: 34px; } }
+@media (max-width: 1100px) { .svc__grid--4x2 { grid-template-rows: repeat(12, auto); } }
+@media (max-width: 780px) { .svc__grid--4x2 { grid-template-rows: none; } }
+/* Телефон: длинные подписи ставок в прайсе-матрице переносятся, а не обрезаются */
+@media (max-width: 780px) { .pricetable--matrix td:not(:first-child)::before { white-space: normal; overflow-wrap: anywhere; } .calc__select { font-size: 14px; padding-right: 40px; text-overflow: ellipsis; } }

@@ -16,6 +16,15 @@
   const form = root.querySelector('.calc__form');
   const rub = (value) => `${value.toLocaleString('ru-RU')} ₽`;
   let type = 'box';
+  /* Тексты подсказок можно переопределить в config.notes; по умолчанию — формулировки страницы WB. */
+  const notes = {
+    discount: (percent) => `Учтена скидка ${percent}% за объем отправки.`,
+    regionHint: 'От 5 паллет в одной отправке действует скидка 5%, от 10 — 7%, от 15 — 10%.',
+    moscow: 'При объеме свыше 30 паллет за предыдущий месяц действует пониженная ставка — смотрите таблицу тарифов.',
+    overflow: '',
+    ...config.notes
+  };
+  const readRaw = () => Math.round(Number(qtyInput.value));
 
   select.innerHTML = config.warehouses.map((item, index) => `<option value="${index}">${item.name}${item.area ? `, ${item.area}` : ''}</option>`).join('');
 
@@ -42,14 +51,16 @@
       const [, discount] = config.regionDiscounts.find(([from]) => qty >= from) || [0, 0];
       if (discount) {
         unit = Math.round(unit * (1 - discount));
-        note = `Учтена скидка ${Math.round(discount * 100)}% за объем отправки.`;
+        note = notes.discount(Math.round(discount * 100));
       } else {
-        note = 'От 5 паллет в одной отправке действует скидка 5%, от 10 — 7%, от 15 — 10%.';
+        note = notes.regionHint;
       }
     }
     if (type === 'pallet' && !warehouse.region) {
-      note = 'При объеме свыше 30 паллет за предыдущий месяц действует пониженная ставка — смотрите таблицу тарифов.';
+      note = notes.moscow;
     }
+    /* Количество больше вместимости машины — пояснение вместо скидки */
+    if (notes.overflow && readRaw() > config.maxQty) note = notes.overflow;
 
     const unitName = type === 'box' ? plural(qty, ['короб', 'короба', 'коробов']) : plural(qty, ['паллета', 'паллеты', 'паллет']);
     totalEl.textContent = rub(unit * qty);
