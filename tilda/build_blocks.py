@@ -52,6 +52,11 @@ PAGES = {
     "terms": "Условия использования",
     "dostavka": "Доставка товаров на маркетплейсы",
     "dostavka-wb": "Доставка до склада Wildberries",
+    "pereupakovka": "Переупаковка товаров",
+    "palletnoe": "Паллетное хранение на складе",
+    "otvetstvennoe-hranenie": "Ответственное хранение товаров",
+    "dostavka-ozon": "Доставка до склада Ozon",
+    "dbs": "Фулфилмент по модели DBS",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -71,6 +76,11 @@ PAGE_URLS = {
     "terms.html": "/terms/",
     "dostavka.html": "/dostavka-tovarov-na-marketplejsy/",
     "dostavka-wb.html": "/dostavka-do-sklada-wildberries/",
+    "pereupakovka.html": "/pereupakovka-tovarov/",
+    "palletnoe.html": "/palletnoe-khranenie-na-sklade/",
+    "otvetstvennoe-hranenie.html": "/otvetstvennoe-khranenie-tovarov-na-sklade/",
+    "dostavka-ozon.html": "/dostavka-do-sklada-ozon/",
+    "dbs.html": "/fulfilment-po-modeli-dbs/",
 }
 
 # 3.4 — порог появления кнопки «Наверх», px. Уезжает в data-атрибут блока шапки.
@@ -90,6 +100,11 @@ BACK_TO_TOP = {
     "terms": 600,
     "dostavka": 600,
     "dostavka-wb": 600,
+    "pereupakovka": 600,
+    "palletnoe": 600,
+    "otvetstvennoe-hranenie": 600,
+    "dostavka-ozon": 600,
+    "dbs": 600,
 }
 
 # Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
@@ -110,6 +125,21 @@ HIDDEN_BLOCKS = {
     ("dostavka-wb", "cases"): "кейсов по доставке пока нет",
     ("dostavka-wb", "trust"): "отзывы не согласованы с заказчиком",
     ("dostavka-wb", "team"): "вместо фотографий сотрудников заглушки",
+    ("pereupakovka", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("pereupakovka", "trust"): "отзывы не согласованы с заказчиком",
+    ("pereupakovka", "team"): "вместо фотографий сотрудников заглушки",
+    ("palletnoe", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("palletnoe", "trust"): "отзывы не согласованы с заказчиком",
+    ("palletnoe", "team"): "вместо фотографий сотрудников заглушки",
+    ("otvetstvennoe-hranenie", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("otvetstvennoe-hranenie", "trust"): "отзывы не согласованы с заказчиком",
+    ("otvetstvennoe-hranenie", "team"): "вместо фотографий сотрудников заглушки",
+    ("dostavka-ozon", "cases"): "кейсов по доставке пока нет",
+    ("dostavka-ozon", "trust"): "отзывы не согласованы с заказчиком",
+    ("dostavka-ozon", "team"): "вместо фотографий сотрудников заглушки",
+    ("dbs", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("dbs", "trust"): "отзывы не согласованы с заказчиком",
+    ("dbs", "team"): "вместо фотографий сотрудников заглушки",
 }
 
 # Для этой страницы ТЗ требует FAQPage именно в HEAD. Сборщик не дублирует
@@ -458,7 +488,22 @@ SLUG_TITLES = {
     "about-cta": "Финальная форма",
     "terms-hero": "Первый экран",
     "terms": "Текст условий",
-    "calc": "Калькулятор доставки",
+    "calc": "Калькулятор",
+    "what": "Что это",
+    "when": "Когда нужно",
+    "services": "Услуги",
+    "materials": "Материалы",
+    "returns": "Возвраты",
+    "pallets": "Паллеты",
+    "placement": "Размещение",
+    "goods": "Какие товары",
+    "audience": "Кому подходит",
+    "contract": "Договор",
+    "vs-rent": "Сравнение с арендой",
+    "requirements": "Требования",
+    "refusal": "Причины отказа",
+    "addons": "Дополнительные услуги",
+    "extra": "Дополнительно",
 }
 
 
@@ -578,14 +623,24 @@ def top_level_sections(body: str) -> list[str]:
     return result
 
 
+# Калькуляторы: имя настройки на странице → файл с логикой.
+CALCS = {
+    "WB_CALC": "calc-wb.js",
+    "REPACK_CALC": "calc-repack.js",
+    "PALLET_CALC": "calc-pallet.js",
+    "STORAGE_CALC": "calc-storage.js",
+}
+
+
 def calc_script(source: str) -> str:
-    """Калькулятор доставки WB: прайс со страницы и логика из calc-wb.js
-    уезжают в блок калькулятора — в Тильде отдельных файлов страницы нет."""
-    config = re.search(r"window\.WB_CALC\s*=\s*\{.*?\n\s*\};", source, flags=re.S)
-    if not config:
-        return ""
-    logic = (ROOT / "calc-wb.js").read_text(encoding="utf-8")
-    return f"\n<script>{config.group(0)}</script>\n<script>{logic}</script>"
+    """Калькулятор: прайс со страницы и логика из calc-*.js уезжают в блок
+    калькулятора — в Тильде отдельных файлов страницы нет."""
+    for name, script in CALCS.items():
+        config = re.search(rf"window\.{name}\s*=\s*\{{.*?\n\s*\}};", source, flags=re.S)
+        if config:
+            logic = (ROOT / script).read_text(encoding="utf-8")
+            return f"\n<script>{config.group(0)}</script>\n<script>{logic}</script>"
+    return ""
 
 
 def build_blocks(page: str) -> list[Block]:
