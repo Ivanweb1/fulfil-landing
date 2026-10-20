@@ -149,7 +149,7 @@ FAQ_JSONLD_HEAD_PAGES = {"upakovka"}
 # 3.3 — адрес прайса. Если очистить, в блоках останется метка [[PRICE_PDF]].
 # Ссылка на Google Drive работает только при открытом доступе «всем, у кого есть
 # ссылка»: иначе посетитель попадает на страницу входа Google вместо загрузки.
-PRICE_URL = "https://drive.google.com/uc?export=download&id=1GDuUmNIk33Ach3LO2i7yZ1W-idAFZ0-s"
+PRICE_URL = "https://drive.google.com/uc?export=download&id=1Doz-Co2V56QAH8noWO5zawxSYTFtIpzA"
 PRICE_FILE = "assets/docs/Fulfil_pro_Прайс_на_услуги_2026_финальный.pdf"
 
 # Классы, которые навешивает JS, — при сопоставлении правил их игнорируем.
