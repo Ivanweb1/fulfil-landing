@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=58" />
+    <link rel="stylesheet" href="styles.css?v=59" />
   </head>
   <body>
     <header class="site-header">
@@ -54,24 +54,53 @@
           <div class="main-nav__sub main-nav__sub--narrow">
             <a href="about.html">О компании</a>
             <a href="contacts.html">Контакты</a>
+            <a href="otzyvy.html">Отзывы</a>
           </div>
         </div>
         <a href="#faq">Вопросы</a>
         <a class="main-nav__cta" href="#quiz">Рассчитать стоимость</a>
-        <a class="main-nav__phone" href="tel:+79265352447">+7 (926) 535-24-47</a>
+        <div class="main-nav__contacts">
+          <a class="main-nav__phone" href="tel:+74957488128">+7 (495) 748-81-28</a>
+          <a class="main-nav__phone" href="tel:+79265352447">+7 (926) 535-24-47</a>
+          <button class="button button--compact button--outline main-nav__callback" type="button" data-callback-open>Заказать звонок</button>
+        </div>
         <a class="main-nav__cta main-nav__cta--lk" href="https://lk.fulfil.pro/" target="_blank" rel="noopener">Личный кабинет</a>
       </nav>
       <div class="header-actions">
-        <a class="phone" href="tel:+79265352447">
-          <span>+7 (926) 535-24-47</span>
+        <div class="phone">
+          <a href="tel:+74957488128">+7 (495) 748-81-28</a>
+          <a href="tel:+79265352447">+7 (926) 535-24-47</a>
           <small>09:00–19:00, без выходных</small>
-        </a>
+          <button class="phone__callback" type="button" data-callback-open>Заказать звонок</button>
+        </div>
         <a class="button button--compact" href="#quiz">Рассчитать стоимость <span>↗</span></a>
         <a class="button button--compact button--outline header-actions__lk" href="https://lk.fulfil.pro/" target="_blank" rel="noopener">Личный кабинет</a>
       </div>
       <button class="menu-button" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mainNav">
         <span></span><span></span><span></span>
       </button>
+      <dialog class="callback" aria-labelledby="callbackTitle">
+        <div class="callback__box">
+          <button class="callback__close" type="button" data-callback-close aria-label="Закрыть">×</button>
+          <div class="callback__step">
+            <p class="callback__title" id="callbackTitle">Перезвоним в течение 15&nbsp;минут</p>
+            <p class="callback__lead">Оставьте номер – менеджер свяжется с вами в рабочее время, с 09:00 до 19:00 без выходных</p>
+            <form class="callback__form" data-fx-form="Обратный звонок" data-fx-success="Заявка принята. Менеджер перезвонит в рабочее время." novalidate>
+              <label><span>Имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
+              <label><span>Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+              <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
+              <input type="hidden" name="source" value="Шапка — заказать звонок">
+              <button class="button" type="submit">Жду звонка <span>↗</span></button>
+              <p class="callback__note">Нажимая кнопку, вы соглашаетесь с <a href="privacy-policy.html">политикой конфиденциальности</a></p>
+            </form>
+          </div>
+          <div class="callback__done" hidden>
+            <span class="callback__done-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 12.4 4 4 8-8.8"/></svg></span>
+            <p class="callback__title" role="status">Заявка принята. Менеджер перезвонит в рабочее время</p>
+            <button class="button button--compact button--outline" type="button" data-callback-close>Закрыть</button>
+          </div>
+        </div>
+      </dialog>
     </header>
 
     <main id="top">
@@ -339,22 +368,19 @@
         <div class="container">
           <div class="section-heading"><h2>Нам доверяют: отзывы и клиенты</h2><p>Обрабатываем более 200 000 товаров в месяц. В команде 40 специалистов: упаковщики, грузчики, менеджеры и водители.</p></div>
           <div class="reviews__clients"><span><img src="assets/natura-siberica-full.png" alt="Natura Siberica" loading="lazy"></span><span><img src="assets/askona-full.png" alt="Askona" loading="lazy"></span><span><img src="assets/domix-full.png" alt="Domix" loading="lazy"></span><span><img src="assets/unode50-full.svg" alt="UNOde50" loading="lazy"></span><span><img src="assets/tima-full.png" alt="TimA" loading="lazy"></span><span><img src="assets/hell-energy-full.png" alt="Hell Energy" loading="lazy"></span><span><img src="assets/alvitek-full.png" alt="Alvitek" loading="lazy"></span><span><img src="assets/golden-shark-full.png" alt="Golden Shark" loading="lazy"></span></div>
-          <div class="trust__row trust__row--plain">
-            <article>
-              <span class="trust__source">Яндекс Карты</span>
-              <p>Работаем с Fulfil.pro уже полтора года. Ни одной ошибки в маркировке, отгрузки ежедневные. Перестали получать штрафы от маркетплейсов.</p>
-              <div class="trust__author"><strong>Алексей К.</strong><span>Продавец на Wildberries и Ozon</span></div>
-            </article>
-            <article>
-              <span class="trust__source">Отзовик</span>
-              <p>Перешли сюда от другого фулфилмента. Разница заметна: четкие сроки, фотоотчет по каждой партии, менеджер всегда на связи.</p>
-              <div class="trust__author"><strong>Марина С.</strong><span>Бренд одежды</span></div>
-            </article>
-            <article>
-              <span class="trust__source">Yell</span>
-              <p>Удобно, что забирают товар от поставщика и сами оформляют поставки в ЛК маркетплейса. Экономим минимум 2 часа в день.</p>
-              <div class="trust__author"><strong>Дмитрий П.</strong><span>Поставщик косметики</span></div>
-            </article>
+          <!-- Виджет отзывов Яндекса — тот же, что на странице отзывов. Блок раскрывается
+               (снять hidden и aria-hidden с секции) после включения виджета в Яндекс Бизнесе. -->
+          <div class="reviews__rating trust__rating">
+            <img class="reviews__rating-logo" src="assets/yandex-maps-full.svg" alt="Яндекс Карты" loading="lazy" decoding="async">
+            <b>4,2</b>
+            <span>21 отзыв и 38 оценок</span>
+          </div>
+          <div class="reviews__widget" data-review-widget="https://yandex.ru/maps-reviews-widget/239641188881?comments" data-review-title="Отзывы о Fulfil.pro на Яндекс Картах"></div>
+          <div class="trust__links">
+            <a class="text-link" href="https://yandex.ru/maps/org/fulfil_pro/239641188881/" target="_blank" rel="nofollow noopener">Отзывы на Яндекс.Картах <span>↗</span></a>
+            <a class="text-link" href="https://otzovik.com/reviews/fulfilment_fulfil_pro/" target="_blank" rel="nofollow noopener">Отзывы на Отзовик <span>↗</span></a>
+            <a class="text-link" href="https://www.yell.ru/moscow/com/fulfil-pr_14431477/" target="_blank" rel="nofollow noopener">Отзывы на Yell <span>↗</span></a>
+            <a class="text-link trust__all" href="otzyvy.html">Все отзывы о компании <span>→</span></a>
           </div>
         </div>
       </section>
@@ -446,19 +472,38 @@
       <div class="footer__top">
         <div class="footer__brand">
           <a class="footer__logo" href="index.html" aria-label="Fulfil.pro — на главную"><img src="assets/fulfil-logo.png" alt="Fulfil.pro" width="190" height="60" loading="lazy"></a>
-          <p class="footer__legal">ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ»<br>ИНН 7736328080<br>ОГРН 1217700422830</p>
+          <p class="footer__legal">ООО «ФУЛФИЛМЕНТ.ПЕРВЫЙ», ИНН 7736336757, ОГРН 1217700422830</p>
+          <p class="footer__address">Склад: 141103, Московская область, Щелково, улица Аэродромная, дом 1к18</p>
+          <a class="footer__route" href="contacts.html#address">Как добраться</a>
         </div>
         <div class="footer__col">
           <span class="footer__title">Контакты</span>
+          <a class="footer__phone" href="tel:+74957488128">+7 (495) 748-81-28</a>
           <a class="footer__phone" href="tel:+79265352447">+7 (926) 535-24-47</a>
           <span class="footer__note">09:00–19:00, без выходных</span>
           <a href="mailto:info@fulfil.pro">info@fulfil.pro</a>
-          <a href="https://t.me/fulfilpro" target="_blank" rel="noopener">Telegram @fulfilpro</a>
+          <button class="footer__callback" type="button" data-callback-open>Заказать звонок</button>
         </div>
-        <div class="footer__col">
-          <span class="footer__title">Склад</span>
-          <p>Московская обл., г. Щелково,<br>ул. Аэродромная, д. 1к18</p>
-          <a href="contacts.html#address">Как добраться</a>
+        <nav class="footer__col footer__menu" aria-label="Компания и документы">
+          <span class="footer__title">Компания</span>
+          <ul>
+            <li><a href="about.html">О компании</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+            <li><a href="otzyvy.html">Отзывы</a></li>
+            <li><a href="vakansii.html">Вакансии</a></li>
+            <li><a class="fx-policy-link" href="privacy-policy.html">Политика конфиденциальности</a></li>
+            <li><a href="terms.html">Условия использования</a></li>
+          </ul>
+        </nav>
+        <div class="footer__col footer__menu">
+          <span class="footer__title">Мы на площадках</span>
+          <ul>
+            <li><a href="https://t.me/fulfilpro" target="_blank" rel="noopener">Telegram</a></li>
+            <li><a href="https://vk.com/fulfilpro" target="_blank" rel="noopener">ВКонтакте</a></li>
+            <li><a href="https://yandex.ru/maps/org/fulfil_pro/239641188881/" target="_blank" rel="noopener">Яндекс Карты</a></li>
+            <li><a href="https://2gis.ru/shchelkovo/firm/70000001066755651" target="_blank" rel="noopener">2ГИС</a></li>
+            <li><a href="https://uslugi.yandex.ru/profile/Fulfilpro-1554293" target="_blank" rel="noopener">Яндекс Услуги</a></li>
+          </ul>
         </div>
         <nav class="footer__col footer__services" aria-label="Услуги">
           <span class="footer__title">Услуги</span>
@@ -483,7 +528,7 @@
       </div>
       <div class="footer__bottom">
         <span>2020–2026. Все права защищены.</span>
-        <nav class="footer__links" aria-label="Компания и документы"><a href="about.html">О компании</a><a href="contacts.html">Контакты</a><a class="fx-policy-link" href="privacy-policy.html">Политика конфиденциальности</a><a href="terms.html">Условия использования</a></nav>
+        <p class="footer__contacts"><a href="tel:+74957488128">+7 (495) 748-81-28</a>, <a href="tel:+79265352447">+7 (926) 535-24-47</a>, <a href="mailto:info@fulfil.pro">info@fulfil.pro</a>, <a href="https://t.me/fulfilpro" target="_blank" rel="noopener">Telegram @fulfilpro</a>, 09:00-19:00 без выходных</p>
       </div>
     </footer>
     <button class="back-to-top" type="button" aria-label="Наверх">↑</button>
@@ -625,6 +670,6 @@
       window.QUIZ_SUCCESS = 'Свяжемся в течение 1 часа.';
     </script>
     <script src="forms.js?v=1"></script>
-    <script src="script.js?v=14"></script>
+    <script src="script.js?v=15"></script>
   </body>
 </html>

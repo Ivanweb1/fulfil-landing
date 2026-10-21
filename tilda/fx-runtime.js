@@ -9,7 +9,7 @@
 
   // Меняется при каждой правке рантайма. По ней видно, что на странице
   // остались блоки от прошлой сборки.
-  var VERSION = '2026-10-08.1';
+  var VERSION = '2026-10-21.1';
 
   // В автономной сборке рантайм лежит в каждом блоке. Первая копия берёт
   // управление, остальные только досматривают новые блоки, не заводя ещё один
@@ -1039,7 +1039,9 @@
     if (button) { button.disabled = true; button.textContent = 'Отправляем…'; }
 
     send(collect(form)).then(function () {
-      showToast(form.dataset.fxSuccess || CFG.successText);
+      var dialog = form.closest('.callback');
+      if (dialog) showCallbackDone(dialog);
+      else showToast(form.dataset.fxSuccess || CFG.successText);
       form.reset();
       openPrice();
     }).catch(function () {
@@ -1048,6 +1050,131 @@
       form.dataset.fxBusy = '';
       if (button) { button.disabled = false; button.innerHTML = label; }
     });
+  }
+
+  /* ------------------------------------------------ окно обратного звонка */
+
+  // Окно лежит в блоке шапки. Кнопки «Заказать звонок» есть в шапке,
+  // в мобильном меню и в подвале — ловим их одним обработчиком на документе.
+  // Заявка уходит через ту же форму-приёмник, что и формы расчета (send).
+  function callbackDialog() {
+    return document.querySelector('.fx-block .callback');
+  }
+
+  function showCallbackStep(dialog, done) {
+    var step = dialog.querySelector('.callback__step');
+    var result = dialog.querySelector('.callback__done');
+    if (step) step.hidden = done;
+    if (result) result.hidden = !done;
+  }
+
+  function showCallbackDone(dialog) {
+    showCallbackStep(dialog, true);
+  }
+
+  function openCallback() {
+    var dialog = callbackDialog();
+    if (!dialog) return;
+    var header = document.querySelector('.site-header.is-open');
+    if (header) header.classList.remove('is-open');
+    showCallbackStep(dialog, false);
+    if (typeof dialog.showModal === 'function') {
+      if (!dialog.open) dialog.showModal();
+    } else {
+      dialog.setAttribute('open', '');
+    }
+    var field = dialog.querySelector('input[name="name"]');
+    if (field) field.focus();
+  }
+
+  function closeCallback(dialog) {
+    if (!dialog) return;
+    if (typeof dialog.close === 'function') dialog.close();
+    else dialog.removeAttribute('open');
+  }
+
+  function initCallbackDelegation() {
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!target.closest) return;
+      if (target.closest('[data-callback-open]')) {
+        event.preventDefault();
+        openCallback();
+        return;
+      }
+      if (target.closest('[data-callback-close]')) {
+        closeCallback(target.closest('.callback'));
+        return;
+      }
+      var thumb = target.closest('[data-lightbox]');
+      if (thumb) {
+        openLightbox(thumb);
+        return;
+      }
+      if (target.closest('[data-lightbox-close]') || (target.matches && target.matches('.lightbox'))) {
+        var box = target.closest('.lightbox');
+        if (box && box.close) box.close();
+        return;
+      }
+      // Клик по затемнению вокруг окна
+      if (target.matches && target.matches('.callback')) closeCallback(target);
+    });
+  }
+
+  /* ------------------------------------------- виджеты отзывов, письма */
+
+  // Виджет создаётся, только когда блок доходит до экрана: каждый виджет
+  // тянет сторонние скрипты. Скрытый (hidden) блок не грузится вовсе.
+  var widgetObserver = null;
+
+  function loadWidget(holder) {
+    if (holder.dataset.fxLoaded === '1') return;
+    holder.dataset.fxLoaded = '1';
+    var frame = document.createElement('iframe');
+    frame.src = holder.dataset.reviewWidget;
+    frame.title = holder.dataset.reviewTitle || 'Отзывы';
+    frame.setAttribute('loading', 'lazy');
+    holder.appendChild(frame);
+  }
+
+  function initWidgets(root) {
+    list(root, '[data-review-widget]').forEach(function (holder) {
+      if (holder.hidden || holder.closest('[hidden]')) return;
+      if (!once(holder, 'fxWidget')) return;
+      if (!('IntersectionObserver' in window)) { loadWidget(holder); return; }
+      if (!widgetObserver) {
+        widgetObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            loadWidget(entry.target);
+            widgetObserver.unobserve(entry.target);
+          });
+        }, { rootMargin: '300px 0px' });
+      }
+      widgetObserver.observe(holder);
+    });
+  }
+
+  function openLightbox(thumb) {
+    var box = document.querySelector('.fx-block .lightbox');
+    if (!box || typeof box.showModal !== 'function') return;
+    var image = box.querySelector('.lightbox__img');
+    var source = thumb.querySelector('img');
+    image.src = thumb.dataset.lightbox;
+    image.alt = source ? source.alt : '';
+    box.querySelector('.lightbox__caption').textContent = thumb.dataset.lightboxCaption || '';
+    box.showModal();
+  }
+
+  /* ------------------------------------------------------------ вакансии */
+
+  // Карточек вакансий не осталось — вместо перечня выводим блок «вакансий нет».
+  function initJobs(root) {
+    var section = root.querySelector('.jobs');
+    if (!section || section.querySelector('.job')) return;
+    section.hidden = true;
+    var empty = document.querySelector('.vac-empty');
+    if (empty) empty.hidden = false;
   }
 
   // Слушаем на документе, в фазе перехвата. Вешать обработчик на каждую форму
@@ -1078,6 +1205,8 @@
     initFaq(root);
     initTabs(root);
     initFlow(root);
+    initWidgets(root);
+    initJobs(root);
   }
 
   var delegationReady = false;
@@ -1093,6 +1222,7 @@
       }
       ensureOpenGraphMeta();
       initFormDelegation();
+      initCallbackDelegation();
       initPhoneMask();
       // Маска телефона Тильды берёт страну отсюда и только потом лезет
       // за геолокацией. Задаём заранее, пока форма не построилась.

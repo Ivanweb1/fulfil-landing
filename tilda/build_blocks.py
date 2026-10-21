@@ -57,6 +57,8 @@ PAGES = {
     "otvetstvennoe-hranenie": "Ответственное хранение товаров",
     "dostavka-ozon": "Доставка до склада Ozon",
     "dbs": "Фулфилмент по модели DBS",
+    "vakansii": "Вакансии",
+    "otzyvy": "Отзывы",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -81,6 +83,8 @@ PAGE_URLS = {
     "otvetstvennoe-hranenie.html": "/otvetstvennoe-khranenie-tovarov-na-sklade/",
     "dostavka-ozon.html": "/dostavka-do-sklada-ozon/",
     "dbs.html": "/fulfilment-po-modeli-dbs/",
+    "vakansii.html": "/vakansii/",
+    "otzyvy.html": "/otzyvy/",
 }
 
 # 3.4 — порог появления кнопки «Наверх», px. Уезжает в data-атрибут блока шапки.
@@ -105,6 +109,8 @@ BACK_TO_TOP = {
     "otvetstvennoe-hranenie": 600,
     "dostavka-ozon": 600,
     "dbs": 600,
+    "vakansii": 600,
+    "otzyvy": 600,
 }
 
 # Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
@@ -140,6 +146,7 @@ HIDDEN_BLOCKS = {
     ("dbs", "cases"): "кейсы-заглушки, реальных пока нет",
     ("dbs", "trust"): "отзывы не согласованы с заказчиком",
     ("dbs", "team"): "вместо фотографий сотрудников заглушки",
+    ("otzyvy", "letters"): "сканы благодарственных писем еще не переданы",
 }
 
 # Для этой страницы ТЗ требует FAQPage именно в HEAD. Сборщик не дублирует
@@ -504,6 +511,13 @@ SLUG_TITLES = {
     "refusal": "Причины отказа",
     "addons": "Дополнительные услуги",
     "extra": "Дополнительно",
+    "vac-terms": "Условия работы",
+    "jobs": "Открытые вакансии",
+    "vac-empty": "Текст при отсутствии вакансий",
+    "vac-photos": "Фотографии склада",
+    "otz-yandex": "Отзывы на Яндекс Картах",
+    "otz-platforms": "Где еще есть отзывы",
+    "letters": "Благодарственные письма",
 }
 
 
