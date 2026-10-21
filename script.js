@@ -224,3 +224,119 @@ document.addEventListener('keydown', (event) => {
 window.addEventListener('resize', () => {
   if (window.innerWidth > 1180) setMenu(false);
 }, { passive: true });
+
+/* Окно «Заказать звонок»: кнопка в шапке, в мобильном меню и в подвале.
+   В Тильде то же поведение даёт рантайм (tilda/fx-runtime.js), там заявка уходит
+   в ту же форму-приёмник, что и заявки из форм расчета. */
+const callbackDialog = document.querySelector('.callback');
+const callbackPhonePattern = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+
+function callbackFormatPhone(value) {
+  const digits = value.replace(/\D/g, '').replace(/^[78]/, '').slice(0, 10);
+  if (!digits) return '';
+  let result = `+7 (${digits.slice(0, 3)}`;
+  if (digits.length >= 4) result += `) ${digits.slice(3, 6)}`;
+  if (digits.length >= 7) result += `-${digits.slice(6, 8)}`;
+  if (digits.length >= 9) result += `-${digits.slice(8, 10)}`;
+  return result;
+}
+
+function openCallback() {
+  if (!callbackDialog) return;
+  setMenu(false);
+  callbackDialog.querySelector('.callback__step').hidden = false;
+  callbackDialog.querySelector('.callback__done').hidden = true;
+  if (typeof callbackDialog.showModal === 'function') callbackDialog.showModal();
+  else callbackDialog.setAttribute('open', '');
+  callbackDialog.querySelector('input[name="name"]')?.focus();
+}
+
+function closeCallback() {
+  if (!callbackDialog) return;
+  if (typeof callbackDialog.close === 'function') callbackDialog.close();
+  else callbackDialog.removeAttribute('open');
+}
+
+document.addEventListener('click', (event) => {
+  if (event.target.closest('[data-callback-open]')) openCallback();
+  else if (event.target.closest('[data-callback-close]')) closeCallback();
+});
+
+/* Клик по затемнению вокруг окна закрывает его */
+callbackDialog?.addEventListener('click', (event) => {
+  if (event.target === callbackDialog) closeCallback();
+});
+
+const callbackForm = callbackDialog?.querySelector('.callback__form');
+
+callbackForm?.addEventListener('input', (event) => {
+  const field = event.target;
+  /* Маску ставит forms.js, если он подключен; иначе — здесь */
+  if (field.type === 'tel' && typeof formatPhone !== 'function') field.value = callbackFormatPhone(field.value);
+  field.removeAttribute('aria-invalid');
+});
+
+callbackForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (callbackForm.querySelector('.hp-field input')?.value) return;
+  const name = callbackForm.querySelector('input[name="name"]');
+  const phone = callbackForm.querySelector('input[name="phone"]');
+  const invalid = [name, phone].filter((field) => !field.value.trim() || (field === phone && !callbackPhonePattern.test(field.value.trim())));
+  [name, phone].forEach((field) => field.toggleAttribute('aria-invalid', invalid.includes(field)));
+  if (invalid.length) {
+    invalid[0].focus();
+    return;
+  }
+  callbackForm.reset();
+  callbackDialog.querySelector('.callback__step').hidden = true;
+  callbackDialog.querySelector('.callback__done').hidden = false;
+});
+
+/* Вакансии: если карточек не осталось, вместо перечня выводится текст «Сейчас открытых вакансий нет» */
+const jobsSection = document.querySelector('.jobs');
+if (jobsSection && !jobsSection.querySelector('.job')) {
+  jobsSection.hidden = true;
+  const noJobs = document.querySelector('.vac-empty');
+  if (noJobs) noJobs.hidden = false;
+}
+
+/* Виджеты отзывов (data-review-widget): iframe создается, только когда блок доходит до экрана,
+   чтобы сторонние скрипты не тормозили загрузку страницы. Скрытый блок (hidden) не грузится. */
+function loadReviewWidget(holder) {
+  if (holder.dataset.loaded) return;
+  holder.dataset.loaded = '1';
+  const frame = document.createElement('iframe');
+  frame.src = holder.dataset.reviewWidget;
+  frame.title = holder.dataset.reviewTitle || 'Отзывы';
+  frame.loading = 'lazy';
+  holder.append(frame);
+}
+
+const reviewWidgets = [...document.querySelectorAll('[data-review-widget]')].filter((holder) => !holder.hidden && !holder.closest('[hidden]'));
+if ('IntersectionObserver' in window) {
+  const widgetObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      loadReviewWidget(entry.target);
+      widgetObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: '300px 0px' });
+  reviewWidgets.forEach((holder) => widgetObserver.observe(holder));
+} else {
+  reviewWidgets.forEach(loadReviewWidget);
+}
+
+/* Благодарственные письма: превью открывается в увеличенном виде */
+const lightbox = document.querySelector('.lightbox');
+document.addEventListener('click', (event) => {
+  const thumb = event.target.closest('[data-lightbox]');
+  if (thumb && lightbox) {
+    const image = lightbox.querySelector('.lightbox__img');
+    image.src = thumb.dataset.lightbox;
+    image.alt = thumb.querySelector('img')?.alt || '';
+    lightbox.querySelector('.lightbox__caption').textContent = thumb.dataset.lightboxCaption || '';
+    lightbox.showModal();
+    return;
+  }
+  if (event.target.closest('[data-lightbox-close]') || event.target === lightbox) lightbox?.close();
+});
