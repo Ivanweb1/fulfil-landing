@@ -222,7 +222,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('resize', () => {
-  if (window.innerWidth > 1180) setMenu(false);
+  if (window.innerWidth > 1599) setMenu(false);
 }, { passive: true });
 
 /* Окно «Заказать звонок»: кнопка в шапке, в мобильном меню и в подвале.

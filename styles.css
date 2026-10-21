@@ -39,7 +39,7 @@ button, input, select { font: inherit; }
 .main-nav__phone { display: none; }
 /* На десктопе этот пункт дублирует кнопку справа. Он нужен только
    в бургере, где кнопки нет. */
-@media (min-width: 1181px) { .main-nav__cta { display: none; } }
+@media (min-width: 1600px) { .main-nav__cta { display: none; } }
 
 .button { min-height: 52px; padding: 0 22px; border: 0; border-radius: 4px; display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform .2s ease, background .2s ease; }
 .button:hover { transform: translateY(-2px); background: #244d9b; }
@@ -976,7 +976,7 @@ img.team__photo { display: block; border: 0; }
 }
 
 /* Мобильное меню */
-@media (max-width: 1180px) {
+@media (max-width: 1599px) {
   .site-header.is-open .menu-button span:nth-child(1) { transform: translateY(4.5px) rotate(45deg); }
   .site-header.is-open .menu-button span:nth-child(2) { opacity: 0; }
   .site-header.is-open .menu-button span:nth-child(3) { transform: translateY(-4.5px) rotate(-45deg); }
@@ -1461,13 +1461,13 @@ a.contacts-cards__value:hover { color: var(--blue); }
   .contacts-map__frame, .contacts-map__frame iframe { min-height: 320px; }
 }
 .main-nav__sub--narrow { min-width: 180px; }
-/* Шапка 1181–1366 px: телефон и пункты меню не переносятся */
+/* Телефоны и пункты меню не переносятся на вторую строку */
 .phone span, .phone small, .main-nav > a, .main-nav__toggle { white-space: nowrap; }
-@media (min-width: 1181px) and (max-width: 1366px) {
-  .site-header { gap: 22px; }
-  .main-nav { gap: 18px; font-size: 13px; }
-  .header-actions { gap: 14px; }
-  .header-actions .button--compact { padding-left: 16px; padding-right: 16px; }
+/* 1181–1599 px: пункты меню уходят в бургер, телефоны и кнопки остаются в шапке */
+@media (min-width: 1181px) and (max-width: 1599px) {
+  .main-nav { display: none; }
+  .menu-button { display: flex; }
+  .header-actions { margin-left: auto; gap: 22px; }
 }
 
 /* ─── Условия использования ──────────────────────────────── */
@@ -1941,18 +1941,19 @@ a.contacts-cards__value:hover { color: var(--blue); }
 @media (max-width: 780px) { .mp__scheme { height: auto; min-height: 22px; padding: 2px 8px; white-space: normal; display: inline; line-height: 1.9; box-decoration-break: clone; -webkit-box-decoration-break: clone; } }
 
 /* ─── Шапка: два телефона и обратный звонок ──────────────── */
-/* Блок телефонов: всё по левому краю, ровный шаг строк */
-.phone { align-items: flex-start; gap: 1px; line-height: 1.3; }
-.phone a { white-space: nowrap; letter-spacing: .01em; transition: color .2s ease; }
-.phone a:hover { color: var(--blue); }
-.phone small { margin-top: 2px; }
+/* Блок телефонов: номера слева, режим работы и обратный звонок справа за разделителем */
+.phone { flex-direction: row; align-items: center; line-height: 1.3; }
+.phone__nums { display: flex; flex-direction: column; gap: 2px; }
+.phone__nums a { white-space: nowrap; letter-spacing: .01em; transition: color .2s ease; }
+.phone__nums a:hover { color: var(--blue); }
+.phone__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--line); }
+.phone__meta small { margin: 0; }
 .phone__callback, .footer__callback { padding: 0; border: 0; border-bottom: 1px dashed currentColor; background: none; font: inherit; font-weight: 700; line-height: 1.25; cursor: pointer; transition: color .2s ease; }
-.phone__callback { margin-top: 4px; display: inline-flex; align-items: center; gap: 6px; border-bottom: 0; color: var(--blue); font-size: 11px; white-space: nowrap; }
+.phone__callback { display: inline-flex; align-items: center; gap: 6px; border-bottom: 0; color: var(--blue); font-size: 11px; white-space: nowrap; }
 .phone__callback svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
-.phone__callback:hover { text-decoration: underline; text-underline-offset: 3px; }
-.phone__callback:hover { color: #244d9b; }
+.phone__callback:hover { color: #244d9b; text-decoration: underline; text-underline-offset: 3px; }
 .main-nav__contacts { display: none; }
-@media (max-width: 1180px) {
+@media (max-width: 1599px) {
   .site-header.is-open .main-nav__contacts { display: flex; flex-direction: column; align-items: flex-start; margin-top: 18px; padding: 12px 0 6px; border-top: 1px solid var(--line); }
   .site-header.is-open .main-nav__contacts .main-nav__phone { display: block; margin: 0; padding: 6px 0; border: 0; }
   .site-header.is-open .main-nav__callback { margin-top: 14px; }
@@ -2042,7 +2043,7 @@ html:has(.callback[open]) { overflow: hidden; }
 
 .vac-form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .vac-form__file { grid-column: 1 / 3; }
-.vac-file { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; cursor: pointer; }
+.vac-form .vac-file { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; cursor: pointer; }
 .vac-file__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .vac-file__button { min-height: 52px; padding: 0 20px; display: inline-flex; align-items: center; gap: 12px; border: 1.5px solid rgba(255,255,255,.4); border-radius: 4px; color: #fff; font-size: 13px; font-weight: 700; transition: border-color .2s ease, background .2s ease; }
 .vac-file__button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -2068,6 +2069,8 @@ html:has(.callback[open]) { overflow: hidden; }
   .vac-form { grid-template-columns: 1fr; }
   .vac-form__file { grid-column: auto; }
   .vac-form > .button { justify-self: stretch; }
+  .vac-form .vac-file { flex-direction: column; align-items: stretch; gap: 10px; }
+  .vac-file__button { justify-content: center; }
   .vac-empty__box .button { width: 100%; }
 }
 
@@ -2116,3 +2119,10 @@ html:has(.callback[open]) { overflow: hidden; }
 .trust__rating { max-width: 762px; margin: clamp(30px, 3.4vw, 44px) auto 0; justify-content: center; }
 .trust__rating + .reviews__widget { margin-top: 0; }
 .trust__all { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* 1600–1799 px: меню на месте, пункты чуть плотнее, чтобы телефоны встали в ряд */
+@media (min-width: 1600px) and (max-width: 1799px) {
+  .main-nav { gap: 22px; }
+  .site-header { gap: 26px; }
+  .header-actions { gap: 20px; }
+}
