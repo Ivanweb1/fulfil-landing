@@ -9,7 +9,7 @@
 
   // Меняется при каждой правке рантайма. По ней видно, что на странице
   // остались блоки от прошлой сборки.
-  var VERSION = '2026-10-21.2';
+  var VERSION = '2026-10-21.3';
 
   // В автономной сборке рантайм лежит в каждом блоке. Первая копия берёт
   // управление, остальные только досматривают новые блоки, не заводя ещё один
@@ -197,7 +197,7 @@
       if (event.key === 'Escape') setMenu(false);
     });
     window.addEventListener('resize', function () {
-      if (window.innerWidth > 1599) setMenu(false);
+      if (window.innerWidth > 1180) setMenu(false);
     }, { passive: true });
   }
 
