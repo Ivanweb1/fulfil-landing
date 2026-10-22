@@ -715,7 +715,10 @@ def build_blocks(page: str) -> list[Block]:
                           ("successMessage", "QUIZ_SUCCESS"),
                           ("nextLabel", "QUIZ_NEXT_LABEL"),
                           ("contactTitle", "QUIZ_CONTACT_TITLE"),
-                          ("scheme", "QUIZ_SCHEME")):
+                          ("scheme", "QUIZ_SCHEME"),
+                          ("source", "QUIZ_SOURCE"),
+                          ("formName", "QUIZ_FORM_NAME"),
+                          ("successToast", "QUIZ_SUCCESS_TOAST")):
             found = re.search(rf"window\.{name}\s*=\s*'([^']*)'", source)
             if found:
                 config[key] = found.group(1)

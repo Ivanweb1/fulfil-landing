@@ -4,7 +4,7 @@ const toast = document.querySelector('.toast');
 if (!window.CUSTOM_FORM_HANDLER) form?.addEventListener('submit', (event) => {
   event.preventDefault();
   if (!form.reportValidity()) return;
-  toast.textContent = 'Спасибо! Заявка принята — менеджер свяжется с вами.';
+  toast.textContent = form.dataset.fxSuccess || 'Спасибо! Заявка принята — менеджер свяжется с вами.';
   toast.classList.add('is-visible');
   form.reset();
   window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
@@ -36,6 +36,11 @@ const quizNext = document.querySelector('#quizNext');
 const quizBack = document.querySelector('#quizBack');
 const quizHint = document.querySelector('.quiz__hint');
 const quizAnswers = quizSteps.map(() => []);
+// Поле описания (step.note) и контакт шага со способом связи (step.contact)
+// живут вне разметки, чтобы перерисовка и «Назад» их не стирали.
+const quizNotes = quizSteps.map(() => '');
+let quizContactName = '';
+let quizContactValue = '';
 let quizStep = 0;
 let quizStage = 'questions';
 
@@ -50,7 +55,7 @@ function renderQuiz() {
   if (!quizContent) return;
 
   if (quizStage === 'done') {
-    quizContent.innerHTML = `<div class="quiz__question">Спасибо! ${quizSuccess}</div>`;
+    quizContent.innerHTML = `<div class="quiz__question">${window.QUIZ_SUCCESS_TOAST || `Спасибо! ${quizSuccess}`}</div>`;
     renderQuizProgress(quizSteps.length);
     quizHint?.classList.add('is-hidden');
     if (quizBack) quizBack.hidden = true;
@@ -73,13 +78,24 @@ function renderQuiz() {
 
   const step = quizSteps[quizStep];
   if (!step) return;
-  quizContent.innerHTML = `<div class="quiz__question">${step.question}</div><div class="quiz__options">${step.options.map((option) => `<button class="quiz__option${quizAnswers[quizStep].includes(option) ? ' selected' : ''}" type="button">${option}</button>`).join('')}</div>`;
+  const attr = (value) => String(value || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  let extra = '';
+  if (step.note) {
+    extra += `<div class="quiz__contact quiz__contact--note"><label><span class="quiz__note-label">${step.note}</span><input name="quiz-note" autocomplete="off" placeholder="Необязательно" value="${attr(quizNotes[quizStep])}"></label></div>`;
+  }
+  if (step.contact) {
+    const channel = quizAnswers[quizStep][0] || '';
+    const telegram = channel === 'Telegram';
+    const placeholder = telegram ? 'Телефон или @username' : (channel ? '+7 (___) ___-__-__' : 'Сначала выберите способ связи');
+    extra += `<div class="quiz__contact"><label><span class="sr-only">Ваше имя</span><input name="quiz-name" autocomplete="name" placeholder="Ваше имя — необязательно" value="${attr(quizContactName)}"></label><label><span class="sr-only">Контакт</span><input name="quiz-contact" ${telegram ? 'type="text" data-raw="true" autocomplete="off"' : 'type="tel" inputmode="tel" autocomplete="tel"'} placeholder="${placeholder}" value="${attr(quizContactValue)}" ${channel ? '' : 'disabled'}></label></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="privacy-policy.html">политикой конфиденциальности</a> и <a href="terms.html">условиями использования</a></p>`;
+  }
+  quizContent.innerHTML = `<div class="quiz__question">${step.question}</div><div class="quiz__options">${step.options.map((option) => `<button class="quiz__option${quizAnswers[quizStep].includes(option) ? ' selected' : ''}" type="button">${option}</button>`).join('')}</div>${extra}<p class="quiz__error" role="alert"></p>`;
   if (quizStepNumber) quizStepNumber.textContent = String(quizStep + 1).padStart(2, '0');
   renderQuizProgress(quizStep);
   quizHint?.classList.remove('is-hidden');
-  if (quizHint) quizHint.textContent = step.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант';
+  if (quizHint) quizHint.textContent = step.hint || (step.multi ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант');
   if (quizBack) quizBack.disabled = quizStep === 0;
-  if (quizNext) quizNext.innerHTML = quizStep === quizSteps.length - 1 ? `${quizToContactLabel} <span>→</span>` : `${quizNextLabel} <span>→</span>`;
+  if (quizNext) quizNext.innerHTML = step.contact ? `${quizSubmitLabel} <span>↗</span>` : (quizStep === quizSteps.length - 1 ? `${quizToContactLabel} <span>→</span>` : `${quizNextLabel} <span>→</span>`);
 }
 
 quizContent?.addEventListener('click', (event) => {
@@ -87,6 +103,23 @@ quizContent?.addEventListener('click', (event) => {
   if (!option || quizStage !== 'questions') return;
   const answers = quizAnswers[quizStep];
   const position = answers.indexOf(option.textContent);
+  const step = quizSteps[quizStep];
+  if (step.contact) {
+    answers.splice(0, answers.length, option.textContent);
+    renderQuiz();
+    return;
+  }
+  if (step.exclusive) {
+    if (option.textContent === step.exclusive) answers.splice(0, answers.length, option.textContent);
+    else {
+      const exclusive = answers.indexOf(step.exclusive);
+      if (exclusive !== -1) answers.splice(exclusive, 1);
+      if (position === -1) answers.push(option.textContent);
+      else answers.splice(answers.indexOf(option.textContent), 1);
+    }
+    renderQuiz();
+    return;
+  }
   if (!quizSteps[quizStep].multi) {
     quizContent.querySelectorAll('.quiz__option').forEach((other) => { if (other !== option) other.classList.remove('selected'); });
     answers.length = 0;
@@ -103,7 +136,43 @@ quizContent?.addEventListener('click', (event) => {
   else answers.splice(position, 1);
 });
 
+quizContent?.addEventListener('input', (event) => {
+  if (event.target.name === 'quiz-note') quizNotes[quizStep] = event.target.value;
+  if (event.target.name === 'quiz-name') quizContactName = event.target.value;
+  if (event.target.name === 'quiz-contact') quizContactValue = event.target.value;
+  const error = quizContent.querySelector('.quiz__error');
+  if (error) error.textContent = '';
+});
+
+function quizContactError(channel) {
+  const value = quizContactValue.trim();
+  const digits = value.replace(/\D/g, '').replace(/^[78]/, '');
+  if (!value) return 'Укажите контакт для связи.';
+  if (channel === 'Telegram') {
+    if (!/^@[A-Za-z0-9_]{5,32}$/.test(value) && digits.length !== 10) return 'Укажите номер телефона или Telegram username в формате @username.';
+  } else if (digits.length !== 10) return 'Введите номер телефона полностью.';
+  return '';
+}
+
 quizNext?.addEventListener('click', () => {
+  const step = quizSteps[quizStep];
+  const error = quizContent?.querySelector('.quiz__error');
+  // Как и рантайм Тильды: без ответа на текущий вопрос дальше не пускаем.
+  if (quizStage === 'questions' && !quizAnswers[quizStep].length) {
+    if (error) error.textContent = step.contact ? 'Выберите способ связи.' : 'Выберите хотя бы один вариант.';
+    return;
+  }
+  if (quizStage === 'questions' && step.contact) {
+    const message = quizContactError(quizAnswers[quizStep][0]);
+    if (message) {
+      if (error) error.textContent = message;
+      quizContent.querySelector('[name="quiz-contact"]')?.focus();
+      return;
+    }
+    quizStage = 'done';
+    renderQuiz();
+    return;
+  }
   if (quizStage === 'contact') quizStage = 'done';
   else if (quizStep < quizSteps.length - 1) quizStep += 1;
   else quizStage = 'contact';

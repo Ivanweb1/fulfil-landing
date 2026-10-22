@@ -299,7 +299,7 @@
 
   function readQuizConfig(root) {
     var holder = root.querySelector('script.fx-quiz-config');
-    var fallback = { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '', toContactLabel: '', submitLabel: '', nextLabel: '', contactTitle: '', scheme: '' };
+    var fallback = { steps: DEFAULT_QUIZ, countContact: false, marketplace: '', formName: 'Квиз-расчёт', successMessage: '', successToast: '', toContactLabel: '', submitLabel: '', nextLabel: '', contactTitle: '', scheme: '', source: '' };
     if (!holder) return fallback;
     try {
       var parsed = JSON.parse(holder.textContent);
@@ -309,11 +309,13 @@
         marketplace: parsed.marketplace || '',
         formName: parsed.formName || 'Квиз-расчёт',
         successMessage: parsed.successMessage || '',
+        successToast: parsed.successToast || '',
         toContactLabel: parsed.toContactLabel || '',
         submitLabel: parsed.submitLabel || '',
         nextLabel: parsed.nextLabel || '',
         contactTitle: parsed.contactTitle || '',
-        scheme: parsed.scheme || ''
+        scheme: parsed.scheme || '',
+        source: parsed.source || ''
       };
     } catch (error) {
       console.error('[fx] Не разобран конфиг квиза', error);
@@ -341,6 +343,9 @@
     var back = root.querySelector('#quizBack, .fx-quiz-back');
     var hint = root.querySelector('.quiz__hint');
     var answers = steps.map(function () { return []; });
+    // Необязательные текстовые поля шагов (step.note) — хранятся отдельно от
+    // вариантов, чтобы «Назад» и перерисовка при выборе их не теряли.
+    var notes = steps.map(function () { return ''; });
     var step = 0;
     var stage = 'questions';
     var contactName = '';
@@ -371,12 +376,15 @@
     }
 
     function sendQuiz(channel) {
-      var details = steps.map(function (item, index) {
-        return item.question + ' — ' + (answers[index].length ? answers[index].join(', ') : 'нет ответа');
+      var details = [];
+      steps.forEach(function (item, index) {
+        details.push(item.question + ' — ' + (answers[index].length ? answers[index].join(', ') : 'нет ответа'));
+        if (item.note && notes[index].trim()) details.push(item.note + ' — ' + notes[index].trim());
       });
       if (channel) details.push('Контакт — ' + contactValue.trim());
       if (config.marketplace) details.unshift('Маркетплейс — ' + config.marketplace);
       if (config.scheme) details.unshift('Схема — ' + config.scheme);
+      if (config.source) details.push('Источник — ' + config.source);
       next.disabled = true;
       next.textContent = 'Отправляем…';
       return send({
@@ -387,7 +395,7 @@
       }).then(function () {
         stage = 'done';
         render();
-        showToast(CFG.successText);
+        showToast(config.successToast || CFG.successText);
       }).catch(function () {
         next.disabled = false;
         next.innerHTML = 'Повторить отправку <span>↗</span>';
@@ -441,12 +449,16 @@
       var current = steps[step];
       if (!current) return;
       var contact = '';
+      if (current.note) {
+        contact += '<div class="quiz__contact quiz__contact--note"><label><span class="quiz__note-label">' + current.note + '</span>' +
+          '<input name="quiz-note" autocomplete="off" placeholder="Необязательно" value="' + attr(notes[step]) + '"></label></div>';
+      }
       if (current.contact) {
         var channel = answers[step][0] || '';
         var telegram = channel === 'Telegram';
         var disabled = !channel;
         var placeholder = telegram ? 'Телефон или @username' : (disabled ? 'Сначала выберите способ связи' : '+7 (___) ___-__-__');
-        contact = '<div class="quiz__contact">' +
+        contact += '<div class="quiz__contact">' +
           '<label><span class="sr-only">Ваше имя</span><input name="quiz-name" autocomplete="name" placeholder="Ваше имя — необязательно" value="' + attr(contactName) + '"></label>' +
           '<label><span class="sr-only">Контакт</span><input name="quiz-contact" ' +
           (telegram ? 'type="text" data-fx-raw="1" autocomplete="off"' : 'type="tel" inputmode="tel" autocomplete="tel"') +
@@ -473,6 +485,7 @@
     content.addEventListener('input', function (event) {
       if (event.target.name === 'quiz-name') contactName = event.target.value;
       if (event.target.name === 'quiz-contact') contactValue = event.target.value;
+      if (event.target.name === 'quiz-note') notes[step] = event.target.value;
       quizError('');
     });
 

@@ -212,6 +212,9 @@ h1 span { color: var(--blue); }
 .quiz__contact-wrap .quiz__contact { margin-top: 18px; }
 .quiz__contact label { display: block; }
 .quiz__contact label input { width: 100%; }
+.quiz__options + .quiz__contact { margin-top: 18px; }
+.quiz__contact--note { grid-template-columns: 1fr; margin-top: 18px; }
+.quiz__note-label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .quiz__contact input:disabled { color: #8d96a6; background: #f2f4f7; cursor: not-allowed; }
 .quiz__error { min-height: 20px; margin: 14px 0 0; color: #c0392b; font-size: 12px; line-height: 1.45; }
 .quiz__success { max-width: 760px; padding: 28px 0; border-top: 1px solid var(--line); }
@@ -1056,6 +1059,7 @@ img.team__photo { display: block; border: 0; }
 .pricetable tbody tr { transition: background .25s ease; }
 .pricetable tbody tr:hover { background: rgba(255,255,255,.045); }
 .pricetable .pricetable__price { color: #fff; font-family: "Onest", sans-serif; font-size: clamp(20px, 2vw, 28px); font-weight: 600; letter-spacing: -.04em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pricetable .pricetable__price span { display: block; margin-top: 4px; color: #9bb7ed; font-family: "Manrope", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0; white-space: normal; }
 .pricetable .pricetable__price--plain { color: #9bb7ed; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; white-space: normal; }
 /* Цена словами («по прайсу выбранного вида упаковки») переносится, иначе nowrap
    растягивает колонку и подпись единицы ломается на две строки. */

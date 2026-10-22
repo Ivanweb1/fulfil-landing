@@ -92,8 +92,9 @@ document.querySelectorAll('.lead-card, .final-form').forEach((form) => {
 const quizNextButton = document.querySelector('#quizNext');
 
 quizNextButton?.addEventListener('click', (event) => {
-  const contact = document.querySelector('.quiz__contact');
-  if (!contact) return;
+  const contact = document.querySelector('.quiz__contact:not(.quiz__contact--note)');
+  /* Шаг со способом связи и контактом проверяет сам квиз в script.js. */
+  if (!contact || contact.querySelector('[name="quiz-contact"]')) return;
   const fields = [...contact.querySelectorAll('input')];
   fields.forEach((field) => { field.required = true; });
   if (validateFields(fields)) return;
