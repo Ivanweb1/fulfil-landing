@@ -346,6 +346,10 @@
     // Необязательные текстовые поля шагов (step.note) — хранятся отдельно от
     // вариантов, чтобы «Назад» и перерисовка при выборе их не теряли.
     var notes = steps.map(function () { return ''; });
+    // Ветка шага (step.alt): если в шаге alt.from выбраны только варианты из
+    // alt.when, вместо диапазонов показываем поле объёма и выбор единицы.
+    var altChoice = steps.map(function () { return ''; });
+    var altValue = steps.map(function () { return ''; });
     var step = 0;
     var stage = 'questions';
     var contactName = '';
@@ -358,6 +362,35 @@
     function quizError(message) {
       var holder = content.querySelector('.quiz__error');
       if (holder) holder.textContent = message || '';
+    }
+
+    // step.exclusive — строка или список самостоятельных вариантов: выбор
+    // такого варианта снимает остальные, выбор обычного снимает их.
+    function exclusives(item) {
+      return item.exclusive ? [].concat(item.exclusive) : [];
+    }
+
+    function altActive(index) {
+      var alt = steps[index].alt;
+      if (!alt) return false;
+      var source = answers[alt.from || 0] || [];
+      return source.length > 0 && source.every(function (value) { return alt.when.indexOf(value) !== -1; });
+    }
+
+    function altError(index) {
+      var alt = steps[index].alt;
+      if (!altChoice[index]) return 'Выберите единицу объёма или «' + alt.unknown + '».';
+      if (altChoice[index] !== alt.unknown && !(parseFloat(altValue[index].replace(',', '.')) > 0)) return 'Укажите объём числом.';
+      return '';
+    }
+
+    function answerText(item, index) {
+      if (altActive(index)) {
+        var alt = item.alt;
+        return (alt.question || item.question) + ' — ' +
+          (altChoice[index] === alt.unknown ? alt.unknown : altValue[index].trim() + ' (' + altChoice[index] + ')');
+      }
+      return item.question + ' — ' + (answers[index].length ? answers[index].join(', ') + (item.answerSuffix || '') : 'нет ответа');
     }
 
     function contactError(channel) {
@@ -378,7 +411,7 @@
     function sendQuiz(channel) {
       var details = [];
       steps.forEach(function (item, index) {
-        details.push(item.question + ' — ' + (answers[index].length ? answers[index].join(', ') : 'нет ответа'));
+        details.push(answerText(item, index));
         if (item.note && notes[index].trim()) details.push(item.note + ' — ' + notes[index].trim());
       });
       if (channel) details.push('Контакт — ' + contactValue.trim());
@@ -448,6 +481,27 @@
 
       var current = steps[step];
       if (!current) return;
+      if (altActive(step)) {
+        var alt = current.alt;
+        var unknown = altChoice[step] === alt.unknown;
+        content.innerHTML = '<div class="quiz__question">' + (alt.question || current.question) + '</div>' +
+          (alt.sub ? '<p class="quiz__sub">' + alt.sub + '</p>' : '') +
+          '<div class="quiz__contact quiz__contact--note"><label><span class="quiz__note-label">' + alt.field + '</span>' +
+          '<input name="quiz-volume" inputmode="decimal" autocomplete="off" placeholder="' + (unknown ? 'Не требуется' : 'Например, 20') + '" value="' + attr(unknown ? '' : altValue[step]) + '"' + (unknown ? ' disabled' : '') + '></label></div>' +
+          '<div class="quiz__options">' + alt.units.concat(alt.unknown).map(function (option) {
+            var selected = altChoice[step] === option ? ' selected' : '';
+            return '<button class="quiz__option' + selected + '" type="button" data-option="' + attr(option) + '" data-alt="1">' + option + '</button>';
+          }).join('') + '</div><p class="quiz__error" role="alert"></p>';
+        if (stepNumber) stepNumber.textContent = String(step + 1).padStart(2, '0');
+        renderProgress(step);
+        if (hint) {
+          hint.classList.remove('is-hidden');
+          hint.textContent = 'Укажите объём и единицу или отметьте, что объём пока неизвестен';
+        }
+        if (back) back.disabled = step === 0;
+        if (next) next.innerHTML = nextLabel + ' <span>→</span>';
+        return;
+      }
       var contact = '';
       if (current.note) {
         contact += '<div class="quiz__contact quiz__contact--note"><label><span class="quiz__note-label">' + current.note + '</span>' +
@@ -466,7 +520,8 @@
           '</div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с ' +
           '<a href="' + CFG.policyUrl + '" target="_blank" rel="noopener">политикой конфиденциальности</a></p>';
       }
-      content.innerHTML = '<div class="quiz__question">' + current.question + '</div><div class="quiz__options">' +
+      content.innerHTML = '<div class="quiz__question">' + current.question + '</div>' +
+        (current.sub ? '<p class="quiz__sub">' + current.sub + '</p>' : '') + '<div class="quiz__options">' +
         current.options.map(function (option) {
           var selected = answers[step].indexOf(option) !== -1 ? ' selected' : '';
           return '<button class="quiz__option' + selected + '" type="button" data-option="' + attr(option) + '">' + option + '</button>';
@@ -486,6 +541,7 @@
       if (event.target.name === 'quiz-name') contactName = event.target.value;
       if (event.target.name === 'quiz-contact') contactValue = event.target.value;
       if (event.target.name === 'quiz-note') notes[step] = event.target.value;
+      if (event.target.name === 'quiz-volume') altValue[step] = event.target.value;
       quizError('');
     });
 
@@ -495,6 +551,11 @@
       var current = answers[step];
       var value = option.getAttribute('data-option') || option.textContent;
       var position = current.indexOf(value);
+      if (option.hasAttribute('data-alt')) {
+        altChoice[step] = altChoice[step] === value ? '' : value;
+        render();
+        return;
+      }
       // Мультивыбор работает только там, где он задан в конфиге шага.
       if (!steps[step].multi) {
         list(content, '.quiz__option').forEach(function (other) {
@@ -510,12 +571,14 @@
         if (steps[step].contact) render();
         return;
       }
-      if (value === steps[step].exclusive) {
+      var own = exclusives(steps[step]);
+      if (own.indexOf(value) !== -1) {
         current.length = 0;
-        current.push(value);
+        if (position === -1) current.push(value);
       } else {
-        var exclusive = current.indexOf(steps[step].exclusive);
-        if (exclusive !== -1) current.splice(exclusive, 1);
+        for (var i = current.length - 1; i >= 0; i--) {
+          if (own.indexOf(current[i]) !== -1) current.splice(i, 1);
+        }
         if (position === -1) current.push(value);
         else current.splice(current.indexOf(value), 1);
       }
@@ -556,6 +619,16 @@
           next.disabled = false;
           showToast(CFG.errorText);
         });
+        return;
+      }
+      if (altActive(step)) {
+        var altMessage = altError(step);
+        if (altMessage) {
+          quizError(altMessage);
+          return;
+        }
+        step += 1;
+        render();
         return;
       }
       if (!answers[step].length) {

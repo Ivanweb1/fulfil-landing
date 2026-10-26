@@ -214,6 +214,8 @@ h1 span { color: var(--blue); }
 .quiz__contact label input { width: 100%; }
 .quiz__options + .quiz__contact { margin-top: 18px; }
 .quiz__contact--note { grid-template-columns: 1fr; margin-top: 18px; }
+.quiz__question:has(+ .quiz__sub) { margin-bottom: 12px; }
+.quiz__sub { margin: 0 0 22px; max-width: 660px; color: var(--muted); font-size: 15px; line-height: 1.5; }
 .quiz__note-label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .quiz__contact input:disabled { color: #8d96a6; background: #f2f4f7; cursor: not-allowed; }
 .quiz__error { min-height: 20px; margin: 14px 0 0; color: #c0392b; font-size: 12px; line-height: 1.45; }
@@ -1069,6 +1071,9 @@ img.team__photo { display: block; border: 0; }
 .pricetable tr.pricetable__free td:first-child, .pricetable tr.pricetable__free .pricetable__price { color: var(--green); }
 .pricetable tr.pricetable__free .pricetable__price { font-size: clamp(17px, 1.5vw, 21px); }
 /* Примечание под таблицей своей вкладки (страница доставки) */
+.pricetable tr.pricetable__note:hover { background: none; }
+.pricetable tr.pricetable__note td { padding-top: 14px; padding-bottom: 14px; width: auto; color: #9bb7ed; font-family: "Manrope", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0; white-space: normal; }
+@media (max-width: 780px) { .pricetable tr.pricetable__note { display: block; padding: 14px 0; } .pricetable tr.pricetable__note td { padding: 0; } }
 .pricelist__note { max-width: 920px; margin: 20px 0 0; color: #9aa6bc; font-size: 13px; line-height: 1.65; }
 .pricelist__note a, .price .tariffs-footer > p a { color: #9bb7ed; text-decoration: underline; text-underline-offset: 3px; }
 .pricelist__note a:hover, .price .tariffs-footer > p a:hover { color: #fff; }

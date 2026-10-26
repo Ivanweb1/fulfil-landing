@@ -39,6 +39,17 @@ const quizAnswers = quizSteps.map(() => []);
 // Поле описания (step.note) и контакт шага со способом связи (step.contact)
 // живут вне разметки, чтобы перерисовка и «Назад» их не стирали.
 const quizNotes = quizSteps.map(() => '');
+// Ветка шага (step.alt) — как в рантайме Тильды: если в шаге alt.from выбраны
+// только варианты из alt.when, вместо диапазонов поле объёма и выбор единицы.
+const quizAltChoice = quizSteps.map(() => '');
+const quizAltValue = quizSteps.map(() => '');
+const quizExclusives = (step) => (step.exclusive ? [].concat(step.exclusive) : []);
+function quizAltActive(index) {
+  const alt = quizSteps[index].alt;
+  if (!alt) return false;
+  const source = quizAnswers[alt.from || 0] || [];
+  return source.length > 0 && source.every((value) => alt.when.includes(value));
+}
 let quizContactName = '';
 let quizContactValue = '';
 let quizStep = 0;
@@ -79,6 +90,18 @@ function renderQuiz() {
   const step = quizSteps[quizStep];
   if (!step) return;
   const attr = (value) => String(value || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  if (quizAltActive(quizStep)) {
+    const alt = step.alt;
+    const unknown = quizAltChoice[quizStep] === alt.unknown;
+    quizContent.innerHTML = `<div class="quiz__question">${alt.question || step.question}</div>${alt.sub ? `<p class="quiz__sub">${alt.sub}</p>` : ''}<div class="quiz__contact quiz__contact--note"><label><span class="quiz__note-label">${alt.field}</span><input name="quiz-volume" inputmode="decimal" autocomplete="off" placeholder="${unknown ? 'Не требуется' : 'Например, 20'}" value="${attr(unknown ? '' : quizAltValue[quizStep])}"${unknown ? ' disabled' : ''}></label></div><div class="quiz__options">${alt.units.concat(alt.unknown).map((option) => `<button class="quiz__option${quizAltChoice[quizStep] === option ? ' selected' : ''}" type="button" data-alt="1">${option}</button>`).join('')}</div><p class="quiz__error" role="alert"></p>`;
+    if (quizStepNumber) quizStepNumber.textContent = String(quizStep + 1).padStart(2, '0');
+    renderQuizProgress(quizStep);
+    quizHint?.classList.remove('is-hidden');
+    if (quizHint) quizHint.textContent = 'Укажите объём и единицу или отметьте, что объём пока неизвестен';
+    if (quizBack) quizBack.disabled = quizStep === 0;
+    if (quizNext) quizNext.innerHTML = `${quizNextLabel} <span>→</span>`;
+    return;
+  }
   let extra = '';
   if (step.note) {
     extra += `<div class="quiz__contact quiz__contact--note"><label><span class="quiz__note-label">${step.note}</span><input name="quiz-note" autocomplete="off" placeholder="Необязательно" value="${attr(quizNotes[quizStep])}"></label></div>`;
@@ -89,7 +112,7 @@ function renderQuiz() {
     const placeholder = telegram ? 'Телефон или @username' : (channel ? '+7 (___) ___-__-__' : 'Сначала выберите способ связи');
     extra += `<div class="quiz__contact"><label><span class="sr-only">Ваше имя</span><input name="quiz-name" autocomplete="name" placeholder="Ваше имя — необязательно" value="${attr(quizContactName)}"></label><label><span class="sr-only">Контакт</span><input name="quiz-contact" ${telegram ? 'type="text" data-raw="true" autocomplete="off"' : 'type="tel" inputmode="tel" autocomplete="tel"'} placeholder="${placeholder}" value="${attr(quizContactValue)}" ${channel ? '' : 'disabled'}></label></div><p class="quiz__privacy">Нажимая на кнопку, вы соглашаетесь с <a href="privacy-policy.html">политикой конфиденциальности</a> и <a href="terms.html">условиями использования</a></p>`;
   }
-  quizContent.innerHTML = `<div class="quiz__question">${step.question}</div><div class="quiz__options">${step.options.map((option) => `<button class="quiz__option${quizAnswers[quizStep].includes(option) ? ' selected' : ''}" type="button">${option}</button>`).join('')}</div>${extra}<p class="quiz__error" role="alert"></p>`;
+  quizContent.innerHTML = `<div class="quiz__question">${step.question}</div>${step.sub ? `<p class="quiz__sub">${step.sub}</p>` : ''}<div class="quiz__options">${step.options.map((option) => `<button class="quiz__option${quizAnswers[quizStep].includes(option) ? ' selected' : ''}" type="button">${option}</button>`).join('')}</div>${extra}<p class="quiz__error" role="alert"></p>`;
   if (quizStepNumber) quizStepNumber.textContent = String(quizStep + 1).padStart(2, '0');
   renderQuizProgress(quizStep);
   quizHint?.classList.remove('is-hidden');
@@ -104,16 +127,21 @@ quizContent?.addEventListener('click', (event) => {
   const answers = quizAnswers[quizStep];
   const position = answers.indexOf(option.textContent);
   const step = quizSteps[quizStep];
+  if (option.hasAttribute('data-alt')) {
+    quizAltChoice[quizStep] = quizAltChoice[quizStep] === option.textContent ? '' : option.textContent;
+    renderQuiz();
+    return;
+  }
   if (step.contact) {
     answers.splice(0, answers.length, option.textContent);
     renderQuiz();
     return;
   }
-  if (step.exclusive) {
-    if (option.textContent === step.exclusive) answers.splice(0, answers.length, option.textContent);
+  const own = quizExclusives(step);
+  if (own.length) {
+    if (own.includes(option.textContent)) answers.splice(0, answers.length, ...(position === -1 ? [option.textContent] : []));
     else {
-      const exclusive = answers.indexOf(step.exclusive);
-      if (exclusive !== -1) answers.splice(exclusive, 1);
+      for (let i = answers.length - 1; i >= 0; i -= 1) if (own.includes(answers[i])) answers.splice(i, 1);
       if (position === -1) answers.push(option.textContent);
       else answers.splice(answers.indexOf(option.textContent), 1);
     }
@@ -140,6 +168,7 @@ quizContent?.addEventListener('input', (event) => {
   if (event.target.name === 'quiz-note') quizNotes[quizStep] = event.target.value;
   if (event.target.name === 'quiz-name') quizContactName = event.target.value;
   if (event.target.name === 'quiz-contact') quizContactValue = event.target.value;
+  if (event.target.name === 'quiz-volume') quizAltValue[quizStep] = event.target.value;
   const error = quizContent.querySelector('.quiz__error');
   if (error) error.textContent = '';
 });
@@ -157,6 +186,20 @@ function quizContactError(channel) {
 quizNext?.addEventListener('click', () => {
   const step = quizSteps[quizStep];
   const error = quizContent?.querySelector('.quiz__error');
+  if (quizStage === 'questions' && quizAltActive(quizStep)) {
+    const alt = step.alt;
+    const choice = quizAltChoice[quizStep];
+    let message = '';
+    if (!choice) message = `Выберите единицу объёма или «${alt.unknown}».`;
+    else if (choice !== alt.unknown && !(parseFloat(quizAltValue[quizStep].replace(',', '.')) > 0)) message = 'Укажите объём числом.';
+    if (message) {
+      if (error) error.textContent = message;
+      return;
+    }
+    quizStep += 1;
+    renderQuiz();
+    return;
+  }
   // Как и рантайм Тильды: без ответа на текущий вопрос дальше не пускаем.
   if (quizStage === 'questions' && !quizAnswers[quizStep].length) {
     if (error) error.textContent = step.contact ? 'Выберите способ связи.' : 'Выберите хотя бы один вариант.';
