@@ -188,7 +188,7 @@
               </article>
               <article class="contacts-logistics">
                 <h3>Логистическая доступность</h3>
-                <p>Удобное расположение для доставки до складов маркетплейсов: Коледино, Электросталь, Подольск, Хоругвино.</p>
+                <p>Удобное расположение для доставки до складов маркетплейсов: Коледино, Обухово, Подольск, Хоругвино, Пушкино.</p>
                 <div class="contacts-logistics__note">
                   <span class="contacts-logistics__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 7.2h10.6v8.9H3.2z"/><path d="M13.8 10.3h3.9l3.1 3.1v2.8h-7z"/><circle cx="7.3" cy="17.9" r="1.9"/><circle cx="17.5" cy="17.9" r="1.9"/></svg></span>
                   <span>Для клиентов из регионов: принимаем товар от ПЭК, СДЭК и любых других ТК. Отправьте груз - примем и обработаем.</span>
@@ -216,15 +216,35 @@
 
       <section class="section section--navy final-cta contacts-final" id="form">
         <div class="container">
-          <div class="section-heading"><h2>Напишите нам</h2></div>
-          <form class="final-form" data-fx-form="Обратная связь — Контакты" data-fx-success="Спасибо! Сообщение отправлено — свяжемся в течение 1 часа." novalidate>
+          <div class="section-heading"><h2>Напишите нам</h2><p>Оставьте контакт — свяжемся с вами в течение 30 минут в рабочее время.</p></div>
+          <form class="final-form" data-fx-form="Обратная связь — Контакты" data-fx-success="Спасибо! Сообщение отправлено. Свяжемся с вами в течение 30 минут в рабочее время." novalidate>
             <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
             <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
             <label><span class="sr-only">Комментарий</span><input name="comment" placeholder="Комментарий (необязательно)"></label>
             <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
             <input type="hidden" name="source" value="Контакты — форма обратной связи">
+            <input type="hidden" name="request_type" data-fx-label="Тип обращения">
             <button class="button button--light" type="submit">Отправить <span>↗</span></button>
           </form>
+          <script>
+            /* Кнопка «Записаться на экскурсию» помечает заявку типом обращения (п. 7 ТЗ от 23.10).
+               Без нажатия поле пустое и в заявку не попадает; после отправки метка снимается.
+               Слушаем документ: в Тильде блоки экскурсии и формы рисуются отдельно. */
+            (function () {
+              if (window.fxVisitType) return;
+              window.fxVisitType = true;
+              function field() { return document.querySelector('#form input[name="request_type"]'); }
+              document.addEventListener('click', function (event) {
+                if (!event.target.closest || !event.target.closest('.contacts-visit__cta')) return;
+                var input = field();
+                if (input) input.value = 'экскурсия на склад';
+              });
+              document.addEventListener('reset', function (event) {
+                var input = field();
+                if (input && event.target === input.form) input.value = '';
+              }, true);
+            })();
+          </script>
           <p class="final-note">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy/">политикой конфиденциальности</a> и <a href="/terms/">условиями использования</a></p>
         </div>
       </section>
