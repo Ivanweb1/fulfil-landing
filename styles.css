@@ -2150,3 +2150,30 @@ html:has(.callback[open]) { overflow: hidden; }
   .header-actions { gap: 14px; }
   .header-actions .button--compact { padding-left: 16px; padding-right: 16px; }
 }
+
+/* Копакинг, маркировка, кросс-докинг: модификаторы готовых блоков */
+.perks--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 700px) { .perks--two { grid-template-columns: 1fr; } }
+.perks__card ul { margin: 0; padding-left: 18px; color: #4d586b; font-size: 14px; line-height: 1.65; }
+.perks__card--accent ul { color: #c3ccdc; }
+.perks__card p a, .perks__card li a, .fit__card p a, .risks__card p a, .journey__step p a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.perks__card--accent p a, .perks__card--accent li a { color: #9bb7ed; }
+.perks__big--text { font-size: clamp(26px, 2.4vw, 36px); }
+.section:not(.section--navy) .price__subtitle { color: var(--ink); }
+.callout--lead { margin-top: clamp(30px, 3.4vw, 46px); font-size: clamp(16px, 1.4vw, 18px); }
+.callout + .price__subtitle, .callout--lead + .price__subtitle { margin-top: clamp(40px, 4.4vw, 60px); }
+.price .discounts { max-width: 720px; margin: 0 0 8px; }
+.price .discounts--top { margin-top: clamp(26px, 2.8vw, 38px); }
+.discounts--wide { max-width: 720px; margin-top: clamp(30px, 3.4vw, 46px); }
+@media (max-width: 560px) { .discounts { grid-template-columns: 1fr; } }
+.fit__card--muted { background: var(--paper); }
+.fit__card--muted::after { display: none; }
+.price__extra--estimate { align-items: start; }
+.price__extra--estimate ul:not(.accrual__legend) { margin: 0; padding-left: 18px; color: #c3ccdc; font-size: 15px; line-height: 1.7; }
+.price__extra--estimate > div > .h3 { margin: 0 0 16px; font-family: "Onest", sans-serif; font-size: clamp(20px, 1.8vw, 26px); font-weight: 500; line-height: 1.15; letter-spacing: -.04em; color: #fff; }
+.accrual .h3 { margin: 0 0 4px; font-family: "Onest", sans-serif; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; line-height: 1.25; letter-spacing: -.03em; color: #fff; }
+.journey__step--final p a { color: #9bb7ed; }
+.section:not(.section--light) .fit__card:not(.fit__card--muted) { background: var(--paper); }
+.section:not(.section--light) .fit__card--muted { background: #e9edf3; }
+.price__lead--after { max-width: 920px; margin: clamp(26px, 2.8vw, 38px) 0 0; line-height: 1.7; }
+.docs__text:only-child, .docs__text h3:last-child { margin-bottom: 0; }

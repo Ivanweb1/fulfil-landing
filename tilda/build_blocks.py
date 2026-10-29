@@ -59,6 +59,9 @@ PAGES = {
     "dbs": "Фулфилмент по модели DBS",
     "vakansii": "Вакансии",
     "otzyvy": "Отзывы",
+    "kopaking": "Копакинг для маркетплейсов",
+    "markirovka": "Маркировка товаров для маркетплейсов",
+    "kross-doking": "Кросс-докинг для маркетплейсов",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -85,6 +88,9 @@ PAGE_URLS = {
     "dbs.html": "/fulfilment-po-modeli-dbs/",
     "vakansii.html": "/vakansii/",
     "otzyvy.html": "/otzyvy/",
+    "kopaking.html": "/kopaking-dlya-marketplejsov/",
+    "markirovka.html": "/markirovka-tovarov-dlya-marketplejsov/",
+    "kross-doking.html": "/kross-doking-dlya-marketplejsov/",
 }
 
 # 3.4 — порог появления кнопки «Наверх», px. Уезжает в data-атрибут блока шапки.
@@ -111,6 +117,9 @@ BACK_TO_TOP = {
     "dbs": 600,
     "vakansii": 600,
     "otzyvy": 600,
+    "kopaking": 600,
+    "markirovka": 600,
+    "kross-doking": 600,
 }
 
 # Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
@@ -147,6 +156,14 @@ HIDDEN_BLOCKS = {
     ("dbs", "trust"): "отзывы не согласованы с заказчиком",
     ("dbs", "team"): "вместо фотографий сотрудников заглушки",
     ("otzyvy", "letters"): "сканы благодарственных писем еще не переданы",
+    ("kopaking", "trust"): "отзывы не согласованы с заказчиком",
+    ("kopaking", "team"): "вместо фотографий сотрудников заглушки",
+    ("markirovka", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("markirovka", "trust"): "отзывы не согласованы с заказчиком",
+    ("markirovka", "team"): "вместо фотографий сотрудников заглушки",
+    ("kross-doking", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("kross-doking", "trust"): "отзывы не согласованы с заказчиком",
+    ("kross-doking", "team"): "вместо фотографий сотрудников заглушки",
 }
 
 # Для этой страницы ТЗ требует FAQPage именно в HEAD. Сборщик не дублирует
@@ -518,6 +535,13 @@ SLUG_TITLES = {
     "otz-yandex": "Отзывы на Яндекс Картах",
     "otz-platforms": "Где еще есть отзывы",
     "letters": "Благодарственные письма",
+    "kits": "Виды наборов",
+    "barcode": "Штрихкод и маркировка набора",
+    "control": "Контроль",
+    "roles": "Кто что делает",
+    "codes": "Работа с кодами",
+    "errors": "Ошибки маркировки",
+    "waiting": "Ожидание отгрузки",
 }
 
 
@@ -643,6 +667,7 @@ CALCS = {
     "REPACK_CALC": "calc-repack.js",
     "PALLET_CALC": "calc-pallet.js",
     "STORAGE_CALC": "calc-storage.js",
+    "KIT_CALC": "calc-kit.js",
 }
 
 
