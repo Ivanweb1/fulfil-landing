@@ -2165,7 +2165,12 @@ html:has(.callback[open]) { overflow: hidden; }
 .price .discounts { max-width: 720px; margin: 0 0 8px; }
 .price .discounts--top { margin-top: clamp(26px, 2.8vw, 38px); }
 .discounts--wide { max-width: 720px; margin-top: clamp(30px, 3.4vw, 46px); }
-@media (max-width: 560px) { .discounts { grid-template-columns: 1fr; } }
+@media (max-width: 560px) {
+  .discounts { grid-template-columns: 1fr; gap: 6px; }
+  .discounts li { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .discounts b { flex: none; font-size: 20px; }
+  .discounts span { text-align: right; }
+}
 .fit__card--muted { background: var(--paper); }
 .fit__card--muted::after { display: none; }
 .price__extra--estimate { align-items: start; }
@@ -2177,3 +2182,5 @@ html:has(.callback[open]) { overflow: hidden; }
 .section:not(.section--light) .fit__card--muted { background: #e9edf3; }
 .price__lead--after { max-width: 920px; margin: clamp(26px, 2.8vw, 38px) 0 0; line-height: 1.7; }
 .docs__text:only-child, .docs__text h3:last-child { margin-bottom: 0; }
+.accrual__legend span { white-space: nowrap; padding-left: 8px; }
+.nobr { white-space: nowrap; }
