@@ -112,7 +112,7 @@
           <div class="callback__step">
             <p class="callback__title" id="callbackTitle">Перезвоним в течение 15&nbsp;минут</p>
             <p class="callback__lead">Оставьте номер – менеджер свяжется с вами в рабочее время, с 09:00 до 19:00 без выходных</p>
-            <form class="callback__form" data-fx-form="Обратный звонок" data-fx-success="Заявка принята. Менеджер перезвонит в рабочее время." novalidate>
+            <form class="callback__form t-form-off" data-fx-form="Обратный звонок" data-fx-success="Заявка принята. Менеджер перезвонит в рабочее время." novalidate>
               <label><span>Имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
               <label><span>Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
               <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
@@ -217,31 +217,48 @@
       <section class="section section--navy final-cta contacts-final" id="form">
         <div class="container">
           <div class="section-heading"><h2>Напишите нам</h2><p>Оставьте контакт — свяжемся с вами в течение 30 минут в рабочее время.</p></div>
-          <form class="final-form" data-fx-form="Обратная связь — Контакты" data-fx-success="Спасибо! Сообщение отправлено. Свяжемся с вами в течение 30 минут в рабочее время." novalidate>
+          <form class="final-form t-form-off" data-fx-form="Обратная связь — Контакты" data-fx-success="Спасибо! Сообщение отправлено. Свяжемся с вами в течение 30 минут в рабочее время." novalidate>
             <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
             <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
             <label><span class="sr-only">Комментарий</span><input name="comment" placeholder="Комментарий (необязательно)"></label>
             <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
             <input type="hidden" name="source" value="Контакты — форма обратной связи">
-            <input type="hidden" name="request_type" data-fx-label="Тип обращения">
             <button class="button button--light" type="submit">Отправить <span>↗</span></button>
           </form>
           <script>
             /* Кнопка «Записаться на экскурсию» помечает заявку типом обращения (п. 7 ТЗ от 23.10).
-               Без нажатия поле пустое и в заявку не попадает; после отправки метка снимается.
-               Слушаем документ: в Тильде блоки экскурсии и формы рисуются отдельно. */
+               Тип уходит отдельным полем «Тип обращения»: при нажатии кнопки кладём его скрытым полем
+               в форму-приёмник Тильды, без нажатия поля в заявке нет. После отправки форма очищается —
+               тогда снимаем и метку. Слушаем документ: в Тильде блоки экскурсии и формы рисуются отдельно. */
             (function () {
               if (window.fxVisitType) return;
               window.fxVisitType = true;
-              function field() { return document.querySelector('#form input[name="request_type"]'); }
+              /* Капча Тильды может занять больше минуты, а живая база ждёт подтверждения 60 секунд. */
+              if (window.FX_CONFIG && window.FX_CONFIG.submitTimeout < 300000) window.FX_CONFIG.submitTimeout = 300000;
+              var NAME = 'Тип обращения';
+              function donor() {
+                var forms = document.querySelectorAll('form.js-form-proccess');
+                for (var i = 0; i < forms.length; i++) if (!forms[i].closest('.fx-block')) return forms[i];
+                return null;
+              }
+              function mark(value) {
+                var target = donor();
+                if (!target) return;
+                var hidden = target.querySelector('input[type="hidden"][name="' + NAME + '"]');
+                if (!value) { if (hidden) hidden.remove(); return; }
+                if (!hidden) {
+                  hidden = document.createElement('input');
+                  hidden.type = 'hidden';
+                  hidden.name = NAME;
+                  target.appendChild(hidden);
+                }
+                hidden.value = value;
+              }
               document.addEventListener('click', function (event) {
-                if (!event.target.closest || !event.target.closest('.contacts-visit__cta')) return;
-                var input = field();
-                if (input) input.value = 'экскурсия на склад';
+                if (event.target.closest && event.target.closest('.contacts-visit__cta')) mark('экскурсия на склад');
               });
               document.addEventListener('reset', function (event) {
-                var input = field();
-                if (input && event.target === input.form) input.value = '';
+                if (event.target.closest && event.target.closest('#form')) mark('');
               }, true);
             })();
           </script>

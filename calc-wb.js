@@ -5,6 +5,9 @@
    параметры перевозки — нет (п. 17.1 ТЗ от 24.10). */
 
 (() => {
+  /* Капча Тильды на отправке может занять больше минуты, а живая база ждёт подтверждения
+     только 60 секунд и показывает ошибку при ушедшей заявке. */
+  if (window.FX_CONFIG && window.FX_CONFIG.submitTimeout < 300000) window.FX_CONFIG.submitTimeout = 300000;
   const config = window.WB_CALC;
   const root = document.querySelector('#calc');
   if (!config || !root) return;

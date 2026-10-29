@@ -89,7 +89,7 @@
           <div class="callback__step">
             <p class="callback__title" id="callbackTitle">Перезвоним в течение 15&nbsp;минут</p>
             <p class="callback__lead">Оставьте номер – менеджер свяжется с вами в рабочее время, с 09:00 до 19:00 без выходных</p>
-            <form class="callback__form" data-fx-form="Обратный звонок" data-fx-success="Заявка принята. Менеджер перезвонит в рабочее время." novalidate>
+            <form class="callback__form t-form-off" data-fx-form="Обратный звонок" data-fx-success="Заявка принята. Менеджер перезвонит в рабочее время." novalidate>
               <label><span>Имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
               <label><span>Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
               <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
@@ -123,7 +123,7 @@
                 <a class="text-link" href="#tariffs">Смотреть тарифы <span>↓</span></a>
               </div>
 
-            <form class="lead-card" id="hero-form" data-fx-success="Спасибо! Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время." novalidate>
+            <form class="lead-card t-form-off" id="hero-form" data-fx-success="Спасибо! Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время." novalidate>
               <div class="h2">Рассчитать доставку</div>
               <p class="lead-card__subtitle">Подготовим предварительный расчёт в течение 30 минут в рабочее время.</p>
               <div class="field-row">
@@ -221,7 +221,7 @@
                 </tbody>
               </table>
             </div>
-            <p class="pricelist__note">От 15 паллет — индивидуальный расчёт. Тариф за одну паллету зависит от количества паллет в конкретной отправке. Другие направления — по запросу.</p>
+            <p class="pricelist__note" style="max-width:none">От 15 паллет — индивидуальный расчёт. Тариф за одну паллету зависит от количества паллет в конкретной отправке. Другие направления — по запросу.</p>
           </div>
           <div class="pricelist" id="pricepanel-2" role="tabpanel" aria-labelledby="pricetab-2" hidden>
             <div class="pricetable__wrap">
@@ -324,7 +324,7 @@
             <output class="calc__total" id="calcTotal" for="calcWh calcQty" aria-live="polite">—</output>
             <p class="calc__formula" id="calcFormula">Выберите склад, тип грузоместа и количество — покажем ориентировочную стоимость.</p>
             <p class="calc__note" id="calcNote"></p>
-            <form class="calc__form" data-form-name="Калькулятор доставки до склада WB" novalidate>
+            <form class="calc__form t-form-off" data-form-name="Калькулятор доставки до склада WB" novalidate>
               <p class="calc__note">Не знаете точный объём или пункт сдачи? Оставьте контакт — менеджер уточнит детали и подготовит предварительный расчёт доставки.</p>
               <span class="calc__label" id="calcChannelLabel" style="margin-top: 22px">Способ связи</span>
               <div class="calc__types" role="group" aria-labelledby="calcChannelLabel" style="grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 10px">
@@ -508,7 +508,7 @@
       <section class="section section--navy final-cta" id="cta">
         <div class="container">
           <div class="section-heading"><h2>Получите расчет стоимости доставки</h2><p>Оставьте контакты — рассчитаем стоимость рейса на нужный склад Wildberries по вашему объему. Консультация бесплатная, цена фиксируется до выезда машины.</p></div>
-          <form class="final-form" data-fx-success="Спасибо! Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время." novalidate>
+          <form class="final-form t-form-off" data-fx-success="Спасибо! Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время." novalidate>
             <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
             <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
             <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
