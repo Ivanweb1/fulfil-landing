@@ -126,9 +126,9 @@
                 <a class="text-link" href="#tariffs">Смотреть тарифы <span>↓</span></a>
               </div>
 
-            <form class="lead-card" id="hero-form" novalidate>
+            <form class="lead-card" id="hero-form" data-fx-success="Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время." novalidate>
               <div class="h2">Рассчитать доставку</div>
-              <p class="lead-card__subtitle">Расчет по вашему направлению и объему за 1 час</p>
+              <p class="lead-card__subtitle">Подготовим предварительный расчёт в течение 30 минут в рабочее время.</p>
               <div class="field-row">
                 <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required /></label>
                 <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required /></label>
@@ -136,7 +136,7 @@
               <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off" /></label>
               <input type="hidden" name="service" value="delivery" />
               <input type="hidden" name="source" value="Доставка товаров на маркетплейсы — первый экран" />
-              <button class="button button--dark" type="submit">Получить расчет <span>↗</span></button>
+              <button class="button button--dark" type="submit">Получить предварительный расчёт <span>↗</span></button>
               <div class="lead-card__foot">
                 <p class="privacy">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy/">политикой конфиденциальности</a> и <a href="/terms/">условиями использования</a></p>
                 <p class="legal"><span>✓</span> Работаем по договору. Оплата по факту отгрузок</p>
@@ -236,16 +236,16 @@
               <table class="pricetable">
                 <thead><tr><th scope="col">Что везем</th><th scope="col">Стоимость</th><th scope="col">Единица</th></tr></thead>
                 <tbody>
-                  <tr><td>Короб на региональный склад</td><td class="pricetable__price">от 1 000 ₽</td><td>за место</td></tr>
-                  <tr><td>Паллета, отправка от 1 до 4 паллет</td><td class="pricetable__price">от 6 000 ₽</td><td>за паллету</td></tr>
-                  <tr><td>Отправка от 5 до 9 паллет</td><td class="pricetable__price">скидка 5%</td><td>на паллету</td></tr>
-                  <tr><td>Отправка от 10 до 14 паллет</td><td class="pricetable__price">скидка 7%</td><td>на паллету</td></tr>
-                  <tr><td>Отправка от 15 паллет</td><td class="pricetable__price">скидка 10%</td><td>на паллету</td></tr>
+                  <tr><td>Короб на региональный склад</td><td class="pricetable__price">от 1 800 ₽</td><td>за место</td></tr>
+                  <tr><td>Отправка 1–4 паллет</td><td class="pricetable__price">от 7 100 ₽</td><td>за один паллет</td></tr>
+                  <tr><td>Отправка 5–9 паллет</td><td class="pricetable__price">от 6 350 ₽</td><td>за один паллет</td></tr>
+                  <tr><td>Отправка 10–14 паллет</td><td class="pricetable__price">от 5 900 ₽</td><td>за один паллет</td></tr>
+                  <tr><td>Отправка от 15 паллет</td><td class="pricetable__price pricetable__price--plain">индивидуальный расчёт</td><td>—</td></tr>
                   <tr><td>Направления вне списка</td><td class="pricetable__price pricetable__price--plain">по запросу</td><td>—</td></tr>
                 </tbody>
               </table>
             </div>
-            <p class="pricelist__note">Возим на региональные склады Wildberries и Ozon: Котовск, Казань, Воронеж, Екатеринбург, Тверь, Омск, Новосибирск, Санкт-Петербург. В регионах скидка считается по числу паллет в конкретной отправке, а не по обороту за месяц.</p>
+            <p class="pricelist__note">Возим на региональные склады Wildberries и Ozon: Котовск, Казань, Воронеж, Екатеринбург, Тверь, Омск, Новосибирск, Санкт-Петербург. Паллетные ставки указаны за один паллет. В регионах тарифная ступень зависит от количества паллет в конкретной отправке, а не от оборота за месяц.</p>
           </div>
           <div class="pricelist" id="pricepanel-2" role="tabpanel" aria-labelledby="pricetab-2" hidden>
             <div class="pricetable__wrap">
@@ -272,12 +272,11 @@
                   <tr><td>Обработка заказа FBS объемом до 1 л</td><td class="pricetable__price">от 25 ₽</td><td>за заказ</td></tr>
                   <tr><td>Приемка товара на склад</td><td class="pricetable__price">от 7 ₽</td><td>за единицу</td></tr>
                   <tr><td>Итого за заказ вместе с приемкой</td><td class="pricetable__price">от 32 ₽</td><td>за заказ</td></tr>
-                  <tr><td>Скидка при объеме от 6 000 заказов в месяц</td><td class="pricetable__price">до 15%</td><td>на тариф</td></tr>
                   <tr class="pricetable__free"><td>Доставка и сдача на сортировочный центр по плановому маршруту</td><td class="pricetable__price">Включено</td><td>—</td></tr>
                 </tbody>
               </table>
             </div>
-            <p class="pricelist__note">В тариф FBS входит подбор товара с хранения, печать и нанесение транспортного штрихкода, передача данных Честного Знака, доставка и сдача на сортировочный центр маркетплейса. Отдельно платить за рейс не нужно. Стоимость растет с объемом товарной единицы, дополнительная <a href="upakovka.html">упаковка</a> оплачивается отдельно.</p>
+            <p class="pricelist__note">В тариф FBS входит подбор товара с хранения, печать и нанесение транспортного штрихкода, передача данных Честного Знака, доставка и сдача на сортировочный центр маркетплейса. Отдельно платить за рейс не нужно. Стоимость растет с объемом товарной единицы, дополнительная <a href="upakovka.html">упаковка</a> оплачивается отдельно. Скидки FBS зависят от месячного объёма и количества SKU.</p>
           </div>
           <div class="pricelist" id="pricepanel-4" role="tabpanel" aria-labelledby="pricetab-4" hidden>
             <div class="pricetable__wrap">
@@ -299,20 +298,20 @@
           </div>
           <div class="tariffs-footer">
             <div class="tariff-actions"><a class="button button--light" href="#quiz">Рассчитать стоимость <span>↗</span></a><a class="text-link" href="#cta">Получить прайс-лист <span>→</span></a></div>
-            <p>Цены указаны без НДС по прайсу в редакции от 8 августа 2026 года. Полный перечень операций — в разделе <a href="tarify.html">тарифы</a>. Точная стоимость рейса зависит от логистического центра: оставьте заявку, и менеджер пришлет расчет по вашему маршруту.</p>
+            <p>Цены указаны без НДС по прайсу в редакции от 12 октября 2026 года. Полный перечень операций — в разделе <a href="tarify.html">тарифы</a>. Точная стоимость рейса зависит от логистического центра: оставьте заявку, и менеджер пришлет расчет по вашему маршруту.</p>
           </div>
         </div>
       </section>
 
       <section class="section quiz" id="quiz">
         <div class="container section-heading">
-          <h2>Рассчитайте стоимость доставки за 1 минуту</h2>
-          <p>Ответьте на три вопроса — менеджер подготовит расчет по вашему направлению и объему груза. Консультация и расчет бесплатные, стоимость рейса фиксируется до выезда машины.</p>
+          <h2>Получите предварительный расчёт стоимости доставки</h2>
+          <p>Выберите услугу и оставьте контакт для связи с менеджером.</p>
         </div>
         <div class="container quiz__widget">
           <div class="quiz__rail">
             <span class="quiz__rail-label">Шаг</span>
-            <div class="quiz__counter"><b id="quizStepNum">01</b><i></i><span id="quizTotal">03</span></div>
+            <div class="quiz__counter"><b id="quizStepNum">01</b><i></i><span id="quizTotal">02</span></div>
             <div class="quiz__segments" id="quizProgress" aria-hidden="true"></div>
           </div>
           <div class="quiz__body">
@@ -343,7 +342,7 @@
             <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 7.2h10.6v8.9H3.2z"/><path d="M13.8 10.3h3.9l3.1 3.1v2.8h-7z"/><circle cx="7.3" cy="17.9" r="1.9"/><circle cx="17.5" cy="17.9" r="1.9"/></svg></span><div class="h3">Собственный автопарк</div></div><p>Машины вместимостью от 12 до 33 паллет. Транспорт подбирается под объем поставки, дробить груз на лишние рейсы не нужно.</p></article>
             <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4z"/><path d="M4 10.4h16"/><path d="M8.4 3.6v4.4M15.6 3.6v4.4"/><path d="m9.2 15 1.9 1.9 3.7-3.9"/></svg></span><div class="h3">Ежедневные отгрузки</div></div><p>На склады маркетплейсов в Москве и области машины уходят каждый день. Заказы по схеме FBS отгружаются в день сборки.</p></article>
             <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.2V12l3.2 2"/></svg></span><div class="h3">Без доплат за ожидание</div></div><p>Стоимость рейса фиксируется до выезда. Очередь на приемке не превращается в дополнительный счет за простой машины.</p></article>
-            <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.4 9.6 8.6-5 8.6 5v10H3.4z"/><path d="M8.6 19.6v-6h6.8v6"/></svg></span><div class="h3">Склад 4 600 м²</div></div><p>Теплый склад класса А в Щелково, Московская область, ул. Аэродромная, д. 1к18. 4000 паллетомест: груз может ждать отгрузки на месте.</p></article>
+            <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.4 9.6 8.6-5 8.6 5v10H3.4z"/><path d="M8.6 19.6v-6h6.8v6"/></svg></span><div class="h3">4 600 м² складских площадей</div></div><p>Тёплые складские помещения с адресным хранением в WMS. Общая вместимость — 3 000 паллетомест, четыре уровня хранения. Один из складов расположен по адресу: Московская область, г. Щёлково, ул. Аэродромная, д. 1к18.</p></article>
             <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.4 5h17.2v11H3.4z"/><path d="M8.4 20.4h7.2"/><path d="M12 16v4.4"/><path d="M7.2 8.8h9.6"/><path d="M7.2 12.2h5.6"/></svg></span><div class="h3">Оформление поставки</div></div><p>Заводим поставку в личном кабинете площадки, берем штрихкод, бронируем слот и оформляем пропуск. Перевозчики этого не делают.</p></article>
             <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 7.4h11.2v9.2H3.2z"/><path d="m14.4 11.4 6.4-3.4v8l-6.4-3.4z"/><circle cx="6.4" cy="10.4" r="1.1"/></svg></span><div class="h3">Видеофиксация</div></div><p>Приемка, пересчет и сборка поставки снимаются на видео. При споре о количестве или состоянии груза есть запись.</p></article>
             <article class="adv"><div class="adv__head"><span class="adv__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3.4 7.7 2.6v6.2c0 4.1-3.2 7-7.7 8.5-4.5-1.5-7.7-4.4-7.7-8.5V6z"/><path d="m8.7 12.1 2.5 2.5 4.1-4.6"/></svg></span><div class="h3">Ответственность по договору</div></div><p>Несем материальную ответственность за груз с момента приемки на склад и до отметки о сдаче на складе маркетплейса.</p></article>
@@ -356,7 +355,7 @@
         <div class="container">
           <div class="section-heading"><h2>Как мы работаем</h2><p>Пять шагов от заявки до отметки о приемке. На стороне клиента остаются только исходные данные: что за товар, куда его везти и откуда забрать. Все остальное — подготовка, документы, слот, пропуск и рейс — на нашей стороне.</p></div>
           <div class="start__row start__row--line">
-            <article><span class="start__num">1</span><div class="h3">Заявка и расчет</div><div class="start__text"><p>Уточняем направление, объем груза и схему работы. Готовим расчет стоимости рейса в течение часа и фиксируем цену.</p></div></article>
+            <article><span class="start__num">1</span><div class="h3">Заявка и расчет</div><div class="start__text"><p>Уточняем направление, объем груза и схему работы. Подготовим предварительный расчёт в течение 30 минут в рабочее время.</p></div></article>
             <article><span class="start__num">2</span><div class="h3">Забор или приемка</div><div class="start__text"><p>Забираем груз у вас или у поставщика либо принимаем его на складе. Пересчитываем, проверяем состояние, фиксируем на видео.</p></div></article>
             <article><span class="start__num">3</span><div class="h3">Подготовка поставки</div><div class="start__text"><p>Упаковываем и маркируем, если это нужно, собираем паллеты, заводим поставку в личном кабинете и получаем штрихкод.</p></div></article>
             <article><span class="start__num">4</span><div class="h3">Слот и рейс</div><div class="start__text"><p>Бронируем слот приемки, оформляем пропуск на машину и водителя, подаем транспорт в назначенное время.</p></div></article>
@@ -483,17 +482,17 @@
       <section class="section section--navy final-cta" id="cta">
         <div class="container">
           <div class="section-heading"><h2>Получите расчет стоимости доставки</h2><p>Оставьте контакты — рассчитаем стоимость рейса по вашему направлению и объему груза. Консультация бесплатная, цена фиксируется до выезда машины.</p></div>
-          <form class="final-form" novalidate>
+          <form class="final-form" data-fx-success="Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время." novalidate>
             <label><span class="sr-only">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required></label>
             <label><span class="sr-only">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
             <label class="hp-field" aria-hidden="true" tabindex="-1"><span>Не заполняйте это поле</span><input name="company" tabindex="-1" autocomplete="off"></label>
             <input type="hidden" name="service" value="delivery">
             <input type="hidden" name="source" value="Доставка товаров на маркетплейсы — финальная форма">
-            <button class="button button--light" type="submit">Получить расчет <span>↗</span></button>
+            <button class="button button--light" type="submit">Получить предварительный расчёт <span>↗</span></button>
           </form>
           <p class="final-note">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy/">политикой конфиденциальности</a> и <a href="/terms/">условиями использования</a></p>
           <ul class="final-badges">
-            <li>Ответ в течение 1 часа</li>
+            <li>Подготовим предварительный расчёт в течение 30 минут в рабочее время.</li>
             <li>Оплата по факту отгрузок</li>
             <li>Договор с материальной ответственностью</li>
             <li>Склад: Московская обл., Щелково, ул. Аэродромная, д. 1к18</li>
@@ -661,17 +660,17 @@
     </script>
 
     <script>
-      window.QUIZ_COUNT_CONTACT = true;
       window.QUIZ_STEPS = [
-        { question: 'Куда нужно доставить груз?', options: ['Склад маркетплейса в Москве или области', 'Сортировочный центр или пункт приема заказов', 'Региональный склад площадки', 'Пока не определились с площадкой'], multi: false },
-        { question: 'Какой объем груза в рейсе?', options: ['До 5 паллет', '6 — 15 паллет', '16 — 33 паллеты', 'Отдельные заказы по схеме FBS'], multi: false }
+        { question: 'Какая услуга вам нужна?', options: ['Доставка на склад маркетплейса', 'Забор товара у поставщика', 'Доставка заказов FBS', 'Забор возвратов', 'Нужна консультация'], multi: false },
+        { question: 'Как с вами связаться?', options: ['Телефон', 'WhatsApp', 'Telegram'], multi: false, contact: true, hint: 'Менеджер свяжется с вами, уточнит детали и подготовит предварительный расчёт доставки.' }
       ];
       window.QUIZ_SERVICE = 'delivery';
+      window.QUIZ_FORM_NAME = 'Квиз — Доставка на маркетплейсы';
+      window.QUIZ_SOURCE = 'Доставка на маркетплейсы';
       window.QUIZ_NEXT_LABEL = 'Далее';
-      window.QUIZ_TO_CONTACT_LABEL = 'Далее';
-      window.QUIZ_CONTACT_TITLE = 'Куда отправить расчет?';
-      window.QUIZ_SUBMIT_LABEL = 'Получить расчет';
-      window.QUIZ_SUCCESS = 'Свяжемся в течение 1 часа.';
+      window.QUIZ_SUBMIT_LABEL = 'Получить предварительный расчёт';
+      window.QUIZ_SUCCESS = 'Подготовим предварительный расчёт в течение 30 минут в рабочее время.';
+      window.QUIZ_SUCCESS_TOAST = 'Заявка отправлена. Подготовим предварительный расчёт в течение 30 минут в рабочее время.';
     </script>
     <script src="forms.js?v=1"></script>
     <script src="script.js?v=17"></script>
