@@ -62,6 +62,9 @@ PAGES = {
     "kopaking": "Копакинг для маркетплейсов",
     "markirovka": "Маркировка товаров для маркетплейсов",
     "kross-doking": "Кросс-докинг для маркетплейсов",
+    "uslugi-3pl": "Услуги 3PL оператора",
+    "pechat-etiketok": "Печать этикеток для маркетплейсов",
+    "lamoda": "Фулфилмент для Lamoda",
 }
 
 # Адреса страниц в Тильде — подставляются вместо ссылок на .html файлы.
@@ -91,6 +94,9 @@ PAGE_URLS = {
     "kopaking.html": "/kopaking-dlya-marketplejsov/",
     "markirovka.html": "/markirovka-tovarov-dlya-marketplejsov/",
     "kross-doking.html": "/kross-doking-dlya-marketplejsov/",
+    "uslugi-3pl.html": "/uslugi-3pl-operatora/",
+    "pechat-etiketok.html": "/pechat-etiketok-dlya-marketplejsov/",
+    "lamoda.html": "/fulfilment-dlya-lamoda/",
 }
 
 # 3.4 — порог появления кнопки «Наверх», px. Уезжает в data-атрибут блока шапки.
@@ -120,6 +126,9 @@ BACK_TO_TOP = {
     "kopaking": 600,
     "markirovka": 600,
     "kross-doking": 600,
+    "uslugi-3pl": 600,
+    "pechat-etiketok": 600,
+    "lamoda": 600,
 }
 
 # Блоки, которые в Тильде собираются, но остаются скрытыми: контент ещё не
@@ -164,6 +173,15 @@ HIDDEN_BLOCKS = {
     ("kross-doking", "cases"): "кейсы-заглушки, реальных пока нет",
     ("kross-doking", "trust"): "отзывы не согласованы с заказчиком",
     ("kross-doking", "team"): "вместо фотографий сотрудников заглушки",
+    ("uslugi-3pl", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("uslugi-3pl", "trust"): "отзывы не согласованы с заказчиком",
+    ("uslugi-3pl", "team"): "вместо фотографий сотрудников заглушки",
+    ("pechat-etiketok", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("pechat-etiketok", "trust"): "отзывы не согласованы с заказчиком",
+    ("pechat-etiketok", "team"): "вместо фотографий сотрудников заглушки",
+    ("lamoda", "cases"): "кейсы-заглушки, реальных пока нет",
+    ("lamoda", "trust"): "отзывы не согласованы с заказчиком",
+    ("lamoda", "team"): "вместо фотографий сотрудников заглушки",
 }
 
 # Для этой страницы ТЗ требует FAQPage именно в HEAD. Сборщик не дублирует
@@ -542,6 +560,9 @@ SLUG_TITLES = {
     "codes": "Работа с кодами",
     "errors": "Ошибки маркировки",
     "waiting": "Ожидание отгрузки",
+    "includes": "Что входит",
+    "labels": "Виды этикеток",
+    "prep": "Подготовка товара",
 }
 
 
@@ -668,6 +689,7 @@ CALCS = {
     "PALLET_CALC": "calc-pallet.js",
     "STORAGE_CALC": "calc-storage.js",
     "KIT_CALC": "calc-kit.js",
+    "LABEL_CALC": "calc-label.js",
 }
 
 
