@@ -2228,3 +2228,30 @@ html:has(.callback[open]) { overflow: hidden; }
 }
 .price__extra--estimate { border-top: 0; padding-top: 0; }
 @media (max-width: 360px) { .page-hero h1 { font-size: 36px; } }
+
+/* Пять карточек без пустой ячейки: 3 в первом ряду, 2 широкие во втором (на планшете последняя — во всю ширину) */
+@media (min-width: 1101px) {
+  .svc__grid--5 { grid-template-columns: repeat(6, 1fr); }
+  .svc__grid--5 article { grid-column: span 2; }
+  .svc__grid--5 article:nth-child(n + 4) { grid-column: span 3; }
+  .svc__grid--5 article:nth-child(3) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
+  .svc__grid--5 article:nth-child(5) { padding-right: 0; }
+  .svc__grid--5 article:nth-child(n + 4) p { max-width: 560px; }
+  .fit--five { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .fit--five .fit__card { grid-column: span 2; }
+  .fit--five .fit__card:nth-child(n + 4) { grid-column: span 3; }
+}
+@media (min-width: 781px) and (max-width: 1100px) {
+  .svc__grid--5 article:nth-child(4) { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
+  .svc__grid--5 article:nth-child(5) { grid-column: 1 / -1; padding-right: 0; }
+  .fit--five .fit__card:nth-child(5) { grid-column: 1 / -1; }
+}
+.svc__grid + .datatable__note { margin-top: clamp(30px, 3.4vw, 44px); }
+
+/* Формат этикетки: контур в пропорции к размеру */
+.label-size { display: inline-flex; align-items: center; gap: 14px; }
+.label-size__box { flex: none; width: 32px; height: 40px; display: grid; place-items: center; }
+.label-size i { flex: none; display: block; border: 1.5px solid var(--blue); border-radius: 2px; background: repeating-linear-gradient(90deg, rgba(49,94,181,.35) 0 1.5px, transparent 1.5px 4px) center 30% / 60% 30% no-repeat, rgba(49,94,181,.06); }
+.datatable tbody tr:has(.datatable__logo) td { vertical-align: middle; }
+.tariffs-notes a { color: #9bb7ed; text-decoration: underline; text-underline-offset: 3px; }
+.tariffs-notes a:hover { color: #fff; }

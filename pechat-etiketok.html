@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=63" />
+    <link rel="stylesheet" href="styles.css?v=64" />
   </head>
   <body>
     <header class="site-header">
@@ -164,7 +164,7 @@
       <section class="section labels" id="labels">
         <div class="container">
           <div class="section-heading"><h2>Какие этикетки печатаем и клеим</h2><p>Этикетка для маркетплейса – это не одна наклейка, а несколько разных: на товар, на короб и на паллету. Каждую площадка проверяет на своем этапе приемки, и каждая печатается по своему шаблону. Мы закрываем весь набор, который нужен для поставки.</p></div>
-          <div class="svc__grid">
+          <div class="svc__grid svc__grid--5">
             <article><span class="svc__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.4v11.2M7 6.4v11.2M9.6 6.4v11.2M13 6.4v11.2M15.4 6.4v11.2M18 6.4v11.2M20.4 6.4v11.2"/></svg></span><div class="h3">Этикетка товара</div><p>Этикетка товара содержит штрихкод площадки, артикул, размер и цвет – в том виде, в каком ее формирует ваш личный кабинет. Клеится на каждую единицу или на ее <a href="upakovka.html">упаковку</a> так, чтобы штрихкод лежал на ровной стороне и не уходил в складку пакета.</p></article>
             <article><span class="svc__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7z"/><path d="M14 14h1.4M17 14v1.6M14 17h3"/></svg></span><div class="h3">Код Честного Знака</div><p>Для товаров с обязательной маркировкой печатаем код, который предоставляете вы, отдельно или вместе со штрихкодом площадки, если это два разных стикера. Код Честного Знака – двумерный код DataMatrix, и его читаемость проверяется так же, как у штрихкода.</p></article>
             <article><span class="svc__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3.4 8 4.2v8.8l-8 4.2-8-4.2V7.6z"/><path d="m4 7.6 8 4.2 8-4.2"/><path d="M12 11.8v8.8"/></svg></span><div class="h3">Этикетка короба</div><p>Этикетка короба – маркировка грузового места для поставки: по ней склад площадки понимает, что лежит внутри и к какой поставке относится короб. Этикетка нужна на каждом коробе, даже если состав у них одинаковый.</p></article>
@@ -202,20 +202,20 @@
             <table class="datatable">
               <thead><tr><th scope="col">Площадка</th><th scope="col">Что печатается</th><th scope="col">Типовой формат</th></tr></thead>
               <tbody>
-                <tr><th scope="row">Wildberries</th><td data-label="Что печатается">Этикетка товара со штрихкодом</td><td data-label="Формат"><span class="datatable__accent">58 × 40 мм</span></td></tr>
-                <tr><th scope="row">Ozon</th><td data-label="Что печатается">Этикетка отправления по FBS</td><td data-label="Формат"><span class="datatable__accent">75 × 120 мм</span></td></tr>
-                <tr><th scope="row">Яндекс Маркет</th><td data-label="Что печатается">Ярлык заказа по FBS</td><td data-label="Формат"><span class="datatable__accent">100 × 150 мм</span></td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/wildberries-full.svg" alt="Wildberries" width="1001" height="155" loading="lazy" /></th><td data-label="Что печатается">Этикетка товара со штрихкодом</td><td data-label="Формат"><span class="label-size"><span class="label-size__box"><i style="width:29px;height:20px" aria-hidden="true"></i></span><span class="datatable__accent">58 × 40 мм</span></span></td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/ozon-full.svg" alt="Ozon" width="751" height="164" loading="lazy" /></th><td data-label="Что печатается">Этикетка отправления по FBS</td><td data-label="Формат"><span class="label-size"><span class="label-size__box"><i style="width:25px;height:40px" aria-hidden="true"></i></span><span class="datatable__accent">75 × 120 мм</span></span></td></tr>
+                <tr><th scope="row"><img class="datatable__logo" src="assets/yandex-market-full.svg" alt="Яндекс Маркет" width="190" height="32" loading="lazy" /></th><td data-label="Что печатается">Ярлык заказа по FBS</td><td data-label="Формат"><span class="label-size"><span class="label-size__box"><i style="width:27px;height:40px" aria-hidden="true"></i></span><span class="datatable__accent">100 × 150 мм</span></span></td></tr>
               </tbody>
             </table>
           </div>
           <p class="datatable__note">Состав этикетки тоже задает кабинет. Как правило, на этикетке товара есть штрихкод, артикул продавца, наименование, размер и цвет. При поставке по FBO маркируются товар и каждый короб поставки. При работе по FBS ярлык печатается под конкретный заказ, когда он поступил, и клеится на собранное отправление.</p>
           <p class="datatable__note">Формат в таблице – типовой. Точный размер и состав данных задает шаблон, который выдает кабинет площадки: если площадка его поменяла, печатаем по новому файлу.</p>
           <h3 class="price__subtitle">Общие правила наклейки</h3>
-          <ul class="fc__list rules-list">
-            <li>штрихкод не заклеивается скотчем и не перекрывается другими наклейками;</li>
-            <li>этикетка целая, без разрывов и склеек из нескольких частей;</li>
-            <li>клеится на ровную сторону упаковки, без складок и пузырей;</li>
-            <li>на одной единице нет старых штрихкодов, которые сканер может прочитать вместо нового.</li>
+          <ul class="fit fit--four" aria-label="Общие правила наклейки">
+            <li class="fit__card"><span class="fit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.4v11.2M7 6.4v11.2M9.6 6.4v11.2M13 6.4v11.2M15.4 6.4v11.2M18 6.4v11.2M20.4 6.4v11.2"/></svg></span><div class="h3">Штрихкод открыт</div><p>Штрихкод не заклеивается скотчем и не перекрывается другими наклейками.</p></li>
+            <li class="fit__card"><span class="fit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.6 3.4h12.8v17.2H5.6z"/><path d="M8.6 8h6.8M8.6 11.4h6.8M8.6 14.8h4"/></svg></span><div class="h3">Этикетка целая</div><p>Этикетка целая, без разрывов и склеек из нескольких частей.</p></li>
+            <li class="fit__card"><span class="fit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.4 15.6 15.6 3.4l5 5L8.4 20.6z"/><path d="m7 12 1.8 1.8M9.8 9.2l1.8 1.8M12.6 6.4l1.8 1.8"/></svg></span><div class="h3">Ровная сторона</div><p>Клеится на ровную сторону упаковки, без складок и пузырей.</p></li>
+            <li class="fit__card"><span class="fit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><path d="M4 12h16"/></svg></span><div class="h3">Без старых кодов</div><p>На одной единице нет старых штрихкодов, которые сканер может прочитать вместо нового.</p></li>
           </ul>
         </div>
       </section>
